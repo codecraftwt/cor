@@ -4,15 +4,19 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
-import GenerativePress from './pages/GenerativePress'; // Import the new page
+import GenerativePress from './pages/GenerativePress'; 
 import Header from './components/Header';
+import BlogPage from './pages/BlogPage';
+import CreatorOnboard from './pages/CreatorOnboard';
+import SignInPage from './pages/SignInPage';
+import NewPasswordPage from './pages/NewPasswordPage';
+import SignUpPage from './pages/SignUpPage';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   const MainLayout = () => {
     const location = useLocation();
-    const hideLayout = location.pathname === '/generativepress';
+    const hideLayout = location.pathname === '/generativepress' || location.pathname === '/blog' || location.pathname === '/creator-onboard' || location.pathname === '/sign-in' || location.pathname === '/create-pass' || location.pathname === '/sign-up';
+
 
     return (
       <Container fluid className="p-0" style={{ height: '100vh', width:hideLayout?'98vw':'95vw' }}>
@@ -34,12 +38,17 @@ function App() {
             </Col>
           )}
 
-          <Col xs={hideLayout ? 12 : 10} className="p-4" style={{ marginLeft: hideLayout ? 0 : '17.67%' }}>
+          <Col xs={hideLayout ? 12 : 10} className="" style={{ marginLeft: hideLayout ? 0 : '17.67%' }}>
             {!hideLayout && <Header />}
 
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/sign-in" element={<SignInPage />} />
+              <Route path="/create-pass" element={<NewPasswordPage />} />
               <Route path="/generativepress" element={<GenerativePress />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/creator-onboard" element={<CreatorOnboard />} />
               <Route path="/explore" element={<Dashboard />} />
             </Routes>
           </Col>

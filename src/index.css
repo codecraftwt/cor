@@ -1,7 +1,3 @@
-/* import "primereact/resources/themes/lara-light-indigo/theme.css";  // Theme
-import "primereact/resources/primereact.min.css";  // Core CSS
-import "primeicons/primeicons.css";  // Icons */
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -16,17 +12,6 @@ import "primeicons/primeicons.css";  // Icons */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-/* 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-} */
-
 body {
   margin: 0;
   padding: 0;
@@ -40,38 +25,25 @@ body {
   background-position: center;
 }
 
-/* h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.onboard-left-side {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #ebf7f7;
+  background-image: url('../src/assets/Mask\ group.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-*/
 .list-group-item {
   background-color: transparent !important;
-  /* Remove background color */
   border: none !important;
-  /* Remove border */
 }
 
-/* src/App.css or src/pages/Dashboard.css */
 .header-shadow {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -95,7 +67,6 @@ button:focus-visible {
 }
 
 .onbording {
-  /* background-image: url('./../public/Mask_group.svg'), */
   background-image: url('/public/Mask_group.svg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -110,27 +81,30 @@ button:focus-visible {
   z-index: 1;
 }
 
-[data-pc-section="toolbar"].ql-toolbar.ql-snow{
+[data-pc-section="toolbar"].ql-toolbar.ql-snow {
   border-top: none;
-    border-left: none;
-    padding-top: 21px;
-    padding-left: 67px;
-    border-right: none;
+  border-left: none;
+  padding-top: 21px;
+  padding-left: 67px;
+  border-right: none;
 }
 
-[data-pc-section="content"].ql-container.ql-snow{
+[data-pc-section="content"].ql-container.ql-snow {
   height: 320px;
   border-left: none;
   border-right: none;
   padding-left: 56px;
 }
-.p-chips{
+
+.p-chips {
   padding: 10px;
 }
-.p-chips-multiple-container{
+
+.p-chips-multiple-container {
   margin: 0;
   padding: 0;
 }
+
 .p-chips-token {
   cursor: default;
   display: inline-flex;
@@ -144,23 +118,95 @@ button:focus-visible {
   font-size: 14px;
   font-weight: 600;
 }
-.p-chips-token-label{
+
+.p-chips-token-label {
   margin-right: 10px;
 }
+
 .generativeform {
-  scrollbar-width: none;         /* Firefox */
-  -ms-overflow-style: none;      /* IE and Edge */
-  overflow: hidden;              /* Disable scrolling */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow: hidden;
 }
 
-/* For WebKit-based browsers (Chrome, Safari) */
 .generativeform::-webkit-scrollbar {
-  display: none;                 /* Chrome, Safari */
+  display: none;
 }
 
-/* :host :ng-deep .CircularProgressbar .CircularProgressbar-path {
-  stroke: black !important;
-} */
+.CircularProgressbar .CircularProgressbar-path {
+  stroke: #0C3944 !important;
+}
+
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: #FFFFFF !important;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+  fill: #0C3944 !important;
+  font-size: 30px !important;
+  dominant-baseline: central !important;
+  text-anchor: middle;
+  font-weight: 700;
+}
+
+.whiteCircle {
+  width: 80px;
+  height: 80px;
+  background: white;
+  top: 17px;
+  left: 17px;
+  position: absolute;
+  z-index: 0;
+  border-radius: 50px;
+}
+
+.step-box {
+  width: 120px;
+  height: 6px;
+  border-radius: 4px;
+  background-color: #517EB833;
+}
+
+.active-step {
+  background-color: #9BE3F9;
+}
+
+.gradient-border {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, rgb(90, 120, 242), rgb(0, 0, 0));
+  padding: 2px;
+}
+
+.content {
+  background: white;
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-size: 16px;
+}
+
+.react-tel-input .form-control {
+  height: 100% !important;
+  width: 100% !important;
+  border: none !important;
+}
+
+.react-tel-input .flag-dropdown {
+  background: transparent !important;
+  border: none !important;
+
+}
+.react-tel-input .form-control:focus{
+  box-shadow: unset !important;
+}
 
 @media (prefers-color-scheme: light) {
   :root {

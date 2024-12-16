@@ -22,6 +22,7 @@ const cardData = [
     button1: { text: "Preview", icon: eye },
     button2: { text: "Create", icon: chart },
     bgColor: "#99EDEB",
+    route: "generativepress", 
   },
   {
     id: 2,
@@ -31,15 +32,16 @@ const cardData = [
     button1: { text: "Preview", icon: eye },
     button2: { text: "Create", icon: chart },
     bgColor: "#FFD281",
+    route: "blog", 
   },
 ];
 
 // Reusable Card Component
-const CardComponent = ({ icon, title, description, button1, button2, bgColor }) => {
+const CardComponent = ({ icon, title, description, button1, button2, bgColor,route }) => {
   const navigate = useNavigate();
 
   const handelRout =()=>{
-    navigate('generativepress')
+    navigate(route)
   }
 
   return (
@@ -108,10 +110,11 @@ const OnboardingSection = ({ percentage, setPercentage }) => (
     }}
   >
     <Card.Body>
-      <div className="d-flex align-items-center justify-content-start">
-        <div style={{ width: '114px', height: '114px' }}>
+      <div className="d-flex align-items-center justify-content-start position-relative">
+        <div style={{ width: '114px', height: '114px' ,zIndex:'2'}}>
           <CircularProgressbar value={percentage} text={`${percentage}%`} />
         </div>
+          <p className='whiteCircle'></p>
       </div>
       <Card.Text style={{ fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>
         Complete your
@@ -157,6 +160,7 @@ const Dashboard = () => {
                   button1={card.button1}
                   button2={card.button2}
                   bgColor={card.bgColor}
+                  route={card.route}
                 />
               ))}
             </Card.Body>

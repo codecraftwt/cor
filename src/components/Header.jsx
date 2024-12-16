@@ -10,7 +10,7 @@ import Mneu from '../assets/menu.svg';
 
 const Header = () => {
     const location = useLocation();
-    const isGenerativePress = location.pathname === '/generativepress';
+    const isGenerativePress = location.pathname === '/generativepress' || location.pathname === '/blog';
 
     const navLinks = [
         { path: "/", label: "Dashboard" },
@@ -25,7 +25,7 @@ const Header = () => {
     ];
 
     return (
-        <Row className="mb-4 py-3 header-shadow" style={{ backgroundColor: '#f8f9fa' }}>
+        <Row className="mb-4 py-3 header-shadow" style={{ backgroundColor: '#f8f9fa',marginTop:'20px',marginLeft:'3px' }}>
             <Col xs={5} md={5} className="d-flex align-items-center">
             {isGenerativePress&&(
                 <>
