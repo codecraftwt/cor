@@ -12,6 +12,12 @@
     padding: 0px 20px !important;
     border-bottom: 1px solid #C4D7DB !important;
 }
+.css-19qwjc1 .MuiDataGrid-row{
+    max-height: unset !important;
+    min-height: unset !important;
+    border-bottom: 1px solid #DFF1F5 !important;
+    padding: 20px !important;
+}
 .css-jupps9-MuiInputBase-root-MuiOutlinedInput-root{
     height: 52px !important;
 }
