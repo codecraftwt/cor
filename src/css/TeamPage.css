@@ -8,6 +8,9 @@
     border-radius: 10px !important;
     background: #fff !important;
 }
+.css-19qwjc1{
+    --DataGrid-rowBorderColor:unset !important
+}
 .css-gvoll6{
     padding: 0px 20px !important;
     border-bottom: 1px solid #C4D7DB !important;
