@@ -19,7 +19,7 @@ const SignInForm = () => {
 
     return (
         <div className='w-100 d-flex' style={{ minHeight: '84vh' }}>
-            <Card className="p-4 m-auto" style={{ width: '453px', background: 'transparent', border: 'none' }}>
+            <Card className=" m-auto" style={{ width: '453px', background: 'transparent', border: 'none' }}>
                 {showForgotPassword ? (
                     <>
                         <h2>Reset your password</h2>

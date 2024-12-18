@@ -1,0 +1,45 @@
+.css-5wdp45-MuiDataGrid-root{
+    border: 1px solid #C4D7DB !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+}
+.css-jupps9-MuiInputBase-root-MuiOutlinedInput-root{
+    height: 52px !important;
+}
+.css-1ll44ll-MuiOutlinedInput-notchedOutline{
+    border: 0 !important;
+}
+.css-1lt5qva-MuiCardContent-root{
+    padding: 60px !important;
+}
+.css-1gqmilo-MuiDataGrid-columnHeaderTitle{
+    color: #0C3944 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+.css-yseucu-MuiDataGrid-columnHeaderRow{
+    padding: 0px 20px !important;
+    border-bottom: 1px solid #C4D7DB !important;
+}
+.css-5wdp45-MuiDataGrid-root .MuiDataGrid-virtualScrollerContent .MuiDataGrid-row{
+    max-height: unset !important;
+    min-height: unset !important;
+    border-bottom: 1px solid #DFF1F5 !important;
+    padding: 20px !important;
+}
+.css-16yc7an-MuiInputBase-root-MuiInput-root-MuiSelect-root{
+    width: unset !important;
+}
+.css-5wdp45-MuiDataGrid-root{
+    --DataGrid-rowBorderColor:unset !important
+}
+.css-5wdp45-MuiDataGrid-root .MuiDataGrid-cellEmpty{
+    width: unset !important;
+}
+.css-5wdp45-MuiDataGrid-root .MuiDataGrid-cell:focus,
+.css-5wdp45-MuiDataGrid-root .MuiDataGrid-cell:focus-within{
+    outline: unset !important;
+}
+.css-16yc7an-MuiInputBase-root-MuiInput-root-MuiSelect-root::before{
+    border-bottom: unset !important;
+}

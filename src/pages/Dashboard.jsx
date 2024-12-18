@@ -137,10 +137,10 @@ const Dashboard = () => {
   const [percentage, setPercentage] = useState(70);
 
   return (
-    <Container fluid className="p-0">
+    <Container fluid className="">
       <Row>
         {/* Left Section */}
-        <Col md={9} className="mb-4">
+        <Col md={7} sm={12} lg={9} className="mb-4">
           <Card
             className="header-shadow"
             style={{ padding: '35px', borderRadius: '30px', height: '735px', border: 'none' }}
@@ -168,7 +168,7 @@ const Dashboard = () => {
         </Col>
 
         {/* Right Section */}
-        <Col md={3} className="mb-4">
+        <Col md={5} sm={12} lg={3} className="mb-4">
           <OnboardingSection percentage={percentage} setPercentage={setPercentage} />
 
           <Card

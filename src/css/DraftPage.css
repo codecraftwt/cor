@@ -1,0 +1,20 @@
+.css-1dc80h3-MuiTableCell-root,
+.css-ph3e6n-MuiTableCell-root{
+    border: unset !important;
+}
+.css-1xtozoh-MuiTableRow-root:hover{
+    background-color: #F1F5F8 !important;
+}
+.css-y2ff7i-MuiPaper-root-MuiTableContainer-root{
+    box-shadow: unset !important;
+}
+.css-1xtozoh-MuiTableRow-root{
+    box-shadow: var(--Paper-shadow) !important;
+}
+.css-1wslxbi-MuiTableCell-root,
+.css-1n2oumu-MuiTableCell-root{
+    border-bottom: unset !important;
+}
+.css-1a7iywq-MuiTableHead-root .css-1xtozoh-MuiTableRow-root{
+    box-shadow: unset !important;
+}

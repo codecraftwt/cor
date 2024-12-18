@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
   font-weight: 400;
 
@@ -13,6 +14,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 body {
+  font-family: "Urbanist", serif !important;
   margin: 0;
   padding: 0;
   display: flex;
@@ -90,10 +92,11 @@ body {
 }
 
 [data-pc-section="content"].ql-container.ql-snow {
-  height: 320px;
+  max-height: 57vh !important;
   border-left: none;
   border-right: none;
   padding-left: 56px;
+  border: unset !important;
 }
 
 .p-chips {
@@ -124,14 +127,38 @@ body {
 }
 
 .generativeform {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  overflow: hidden;
+  scrollbar-width: none; /* Hide scrollbar by default */
+  -ms-overflow-style: none; /* For IE and Edge */
+  overflow: hidden; /* Hide overflow */
+  box-sizing: border-box; /* Include padding and border in width/height */
+  padding-bottom: 8px; /* Add padding to compensate for scrollbar */
 }
 
 .generativeform::-webkit-scrollbar {
-  display: none;
+  display: none; /* Hide scrollbar by default */
 }
+
+.generativeform:hover {
+  scrollbar-width: thin; /* Show a thin scrollbar on hover */
+  -ms-overflow-style: auto; /* For IE and Edge */
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.generativeform:hover::-webkit-scrollbar {
+  display: block; /* Display scrollbar on hover */
+  width: 8px; /* Set scrollbar width */
+}
+
+.generativeform:hover::-webkit-scrollbar-thumb {
+  background: #888; /* Scrollbar thumb color */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.generativeform:hover::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Scrollbar track color */
+  border-radius: 4px; /* Rounded corners */
+}
+
 
 .CircularProgressbar .CircularProgressbar-path {
   stroke: #0C3944 !important;
@@ -212,6 +239,8 @@ body {
   :root {
     color: #213547;
     background-color: transparent;
+  font-family: "Urbanist", serif !important;
+
   }
 
   a:hover {
@@ -220,5 +249,30 @@ body {
 
   button {
     background-color: #f9f9f9;
+  }
+}
+.toggle{
+  display: none !important;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+  .toggle{
+    display: block !important;
+  }
+  /* .main-body */
+
+  .body-content {
+    width: 100% !important;
+    margin-left: 2px !important;
+  }
+  .dashboard{
+    margin-left: 16px !important;
+  }
+}
+@media (min-width: 768px) {
+  .left-side-content {
+    display: none !important;
   }
 }

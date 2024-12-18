@@ -54,7 +54,7 @@ const GenerativePress = () => {
             formData={formData}
             handleInputChange={handleInputChange}
             generateButtonText="Generate Press Release"
-            editor={<TextEditor />} 
+            editor={<TextEditor  />} 
         />
     );
 };

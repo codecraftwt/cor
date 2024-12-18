@@ -8,11 +8,13 @@ const LayoutComman = ({ title, form }) => {
             <div className="position-absolute mt-4">
                 <img src={logo} alt="Logo" />
             </div>
-            <Row>
+            <Row className={!title ? 'd-flex align-items-center justify-content-center' : ''}>
                 {title ? (
                     <Col
                         md={3}
-                        className="onboard-left-side p-0 d-flex justify-content-center"
+                        lg={3}
+                        sm={0}
+                        className="onboard-left-side p-0 d-flex justify-content-center d-none d-md-flex"
                     >
                         <p
                             style={{
@@ -28,7 +30,7 @@ const LayoutComman = ({ title, form }) => {
                         </p>
                     </Col>
                 ) : null}
-                <Col md={title ? 9 : 12} className="p-5">
+                <Col md={title ? 9 : 12} lg={8} sm={12} className="p-5 mt-5">
                     {form}
                 </Col>
             </Row>

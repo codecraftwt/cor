@@ -1,6 +1,6 @@
 import { Chips } from "primereact/chips";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 
 const OnBoardForm = () => {
     const [step, setStep] = useState(1);
@@ -38,7 +38,7 @@ const OnBoardForm = () => {
     };
 
     const commonStyles = {
-        width: '453px',
+        // width: '453px',
         height: '60px',
         boxShadow: "inset 0 4px 8px #0C39440F, 0 4px 8px #517EB814",
         backgroundBlendMode: "overlay",
@@ -50,14 +50,14 @@ const OnBoardForm = () => {
     return (
         <>
             <h2>Complete the registration</h2>
-            <p style={{width:'690px'}}>
+            <p >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel tristique massa. Integer ipsum felis, aliquam non magna a, commodo laoreet nulla.
             </p>
 
-            <hr style={{width:'690px'}}/>
+            <hr />
 
             {/* Step Divs */}
-            <div className="step-container d-flex justify-content-around" style={{width:'690px'}}>
+            <div className="step-container d-flex justify-content-around gap-2" >
                 {[1, 2, 3, 4, 5].map((item) => (
                     <div
                         key={item}
@@ -69,37 +69,43 @@ const OnBoardForm = () => {
 
             {/* Form Section */}
             <div className="form-section">
+
                 {formFields.map((field, index) => (
-                    <Form.Group key={index} className='d-flex flex-column mt-3'>
-                        <Form.Label style={{ fontSize: '20px', fontWeight: '600', margin: '0px' }}>
-                            {field.label}
-                        </Form.Label>
-                        {field.name === 'location' && (
-                            <p style={{ fontSize: '12px', fontWeight: '400' }} className='mb-2'>
-                                consectetur adipiscing elit sed vel tristique
-                            </p>
-                        )}
-                        {field.type === 'text' ? (
-                            <Form.Control
-                                style={{ ...commonStyles }}
-                                type="text"
-                                placeholder={field.placeholder}
-                                value={formData[field.name]}
-                                onChange={(e) => handleChange(e, field.name)}
-                            />
-                        ) : (
-                            <Chips
-                                style={{ ...commonStyles }}
-                                value={formData[field.name] || []} // Ensure it's always an array
-                                onChange={(e) => handleChange(e, field.name)} // Update the value correctly
-                                placeholder={field.placeholder}
-                            />
-                        )}
-                    </Form.Group>
+                    <Row>
+                        <Col md={8}>
+                            <Form.Group key={index} className='d-flex flex-column mt-3'>
+                                <Form.Label style={{ fontSize: '20px', fontWeight: '600', margin: '0px' }}>
+                                    {field.label}
+                                </Form.Label>
+                                {field.name === 'location' && (
+                                    <p style={{ fontSize: '12px', fontWeight: '400' }} className='mb-2'>
+                                        consectetur adipiscing elit sed vel tristique
+                                    </p>
+                                )}
+                                {field.type === 'text' ? (
+                                    <Form.Control
+                                        style={{ ...commonStyles }}
+                                        type="text"
+                                        placeholder={field.placeholder}
+                                        value={formData[field.name]}
+                                        onChange={(e) => handleChange(e, field.name)}
+                                    />
+                                ) : (
+                                    <Chips
+                                        style={{ ...commonStyles }}
+                                        value={formData[field.name] || []} // Ensure it's always an array
+                                        onChange={(e) => handleChange(e, field.name)} // Update the value correctly
+                                        placeholder={field.placeholder}
+                                    />
+                                )}
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
                 ))}
 
                 {/* Buttons */}
-                <div className="button-group mt-4">
+                <div className="button-group mt-4 d-flex gap-2">
                     <Button style={{ width: '148px', height: '48px', borderRadius: '30px', fontWeight: '800', fontSize: '20px', background: 'white', borderColor: 'black', color: 'black' }} onClick={prevStep} disabled={step === 1}>
                         Prev
                     </Button>
