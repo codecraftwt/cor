@@ -43,3 +43,9 @@
 .css-16yc7an-MuiInputBase-root-MuiInput-root-MuiSelect-root::before{
     border-bottom: unset !important;
 }
+.MuiOutlinedInput-notchedOutline{
+    display: none !important;
+}
+.MuiInputBase-root{
+    height: 100% !important;
+}
