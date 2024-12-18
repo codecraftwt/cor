@@ -58,6 +58,12 @@
 .css-5wdp45-MuiDataGrid-root .MuiDataGrid-cell:focus-within{
     outline: unset !important;
 }
+.css-19qwjc1 .MuiDataGrid-cell:focus-within{
+    outline: unset !important;
+}
+.css-131vf6y::before{
+    border-bottom: unset !important;
+}
 .css-16yc7an-MuiInputBase-root-MuiInput-root-MuiSelect-root::before{
     border-bottom: unset !important;
 }
