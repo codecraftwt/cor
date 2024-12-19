@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -10,6 +11,8 @@ import {
   Grid,
   FormControl,
   FormLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -23,8 +26,59 @@ const ProfilePage = () => {
     email: "",
     phoneNumber: "",
   });
-
+  const [countries, setCountries] = useState([]);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    handleGetCountries();
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const authData = JSON.parse(localStorage.getItem("authData"));
+      const token = authData?.token;
+      console.log(token, 'token');
+
+      if (token) {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const { user } = response.data;
+        setFormData({
+          firstName: user.first_name,
+          lastName: user.last_name,
+          company: user.company_id,
+          country: user.country.id, // Store the country ID
+          email: user.email,
+          phoneNumber: user.phone_number,
+        });
+      } else {
+        console.error("No auth token found");
+      }
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    }
+  };
+
+  const handleGetCountries = () => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/countries`)
+      .then(response => {
+        setCountries(response.data.countries);
+      })
+      .catch(error => {
+        console.error('Error fetching countries:', error);
+      });
+  }
+
+  const handleCountryChange = (event) => {
+    setFormData({
+      ...formData,
+      country: event.target.value,
+    });
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -81,19 +135,41 @@ const ProfilePage = () => {
       phoneNumber: "",
     });
     setErrors({});
+    fetchData();
+
     console.log("Form reset.");
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (validate()) {
-      console.log("Form submitted successfully:", formData);
+      try {
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        const response = await axios.put(
+          `${import.meta.env.VITE_API_BASE_URL}/profile`,
+          {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            phone_number: `+${formData.phoneNumber}`,
+            country_id: formData.country,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Profile updated successfully:", response.data);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      }
     } else {
       console.log("Form validation failed.");
     }
   };
 
   const commonStyles = {
-    // width: "333px",
     height: "52px",
     boxShadow: "inset 0 4px 8px #0C39440F, 0 4px 8px #517EB814",
     backgroundBlendMode: "overlay",
@@ -110,7 +186,6 @@ const ProfilePage = () => {
             Profile
           </Typography>
           <Box component="form" sx={{ mt: 5 }}>
-            {/* First Name and Last Name */}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={5}>
                 <FormControl fullWidth>
@@ -149,7 +224,6 @@ const ProfilePage = () => {
                 </FormControl>
               </Grid>
             </Grid>
-            {/* Company and Country */}
             <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={12} sm={5}>
                 <FormControl fullWidth>
@@ -161,9 +235,7 @@ const ProfilePage = () => {
                     fullWidth
                     variant="outlined"
                     value={formData.company}
-                    onChange={(e) =>
-                      handleInputChange("company", e.target.value)
-                    }
+                    disabled
                   />
                 </FormControl>
               </Grid>
@@ -172,19 +244,21 @@ const ProfilePage = () => {
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     Country of Residence
                   </FormLabel>
-                  <TextField
+                  <Select
                     style={{ ...commonStyles }}
                     fullWidth
-                    variant="outlined"
                     value={formData.country}
-                    onChange={(e) =>
-                      handleInputChange("country", e.target.value)
-                    }
-                  />
+                    onChange={handleCountryChange}
+                  >
+                    {countries.map((country) => (
+                      <MenuItem key={country.id} value={country.id}>
+                        {country.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
               </Grid>
             </Grid>
-            {/* Email and Phone Number */}
             <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={12} sm={5}>
                 <FormControl fullWidth>
@@ -196,9 +270,7 @@ const ProfilePage = () => {
                     fullWidth
                     variant="outlined"
                     value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    error={!!errors.email}
-                    helperText={errors.email}
+                    disabled
                   />
                 </FormControl>
               </Grid>
@@ -225,7 +297,6 @@ const ProfilePage = () => {
                 </FormControl>
               </Grid>
             </Grid>
-            {/* Buttons */}
             <Box
               sx={{
                 mt: 4,
@@ -242,9 +313,9 @@ const ProfilePage = () => {
                   width: "100px",
                   height: "40px",
                   borderRadius: "30px",
-                  color:'black',
-                  borderColor:'black',
-                  textTransform:'capitalize'
+                  color: "black",
+                  borderColor: "black",
+                  textTransform: "capitalize",
                 }}
               >
                 Cancel
@@ -257,9 +328,8 @@ const ProfilePage = () => {
                   width: "100px",
                   height: "40px",
                   borderRadius: "30px",
-                  background:'black',
-                  textTransform:'capitalize'
-
+                  background: "black",
+                  textTransform: "capitalize",
                 }}
               >
                 Save

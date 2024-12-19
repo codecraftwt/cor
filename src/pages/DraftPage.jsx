@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Typography,
     Container,
@@ -27,6 +27,7 @@ import doc from '../assets/document-text.svg';
 import doc2 from '../assets/document-text2.svg';
 import { Image } from "react-bootstrap";
 import { styled as style } from 'styled-components';
+import axios from "axios";
 
 
 const StyledTableCell = styled(TableCell)({
@@ -44,16 +45,16 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
 
     return (
         <>
-            <Typography variant="h6" gutterBottom style={{ marginTop: "40px",fontSize:'20pzx',fontWeight:'600' }}>
+            <Typography variant="h6" gutterBottom style={{ marginTop: "40px", fontSize: '20pzx', fontWeight: '600' }}>
                 {title}
             </Typography>
             <TableContainer component={Paper} style={{ marginTop: "20px" }}>
                 <Table>
                     {showHeader && (
                         <TableHead className="d-flex">
-                            <TableRow className="d-flex justify-content-between w-100" style={{boxShadow:'unset'}}>
-                                <StyledTableCell style={{ width: '300px' ,marginRight:'82px', borderBottom:'none'}}>Title</StyledTableCell>
-                                <TableCell style={{ width: '132px',marginRight:'20px' }}>
+                            <TableRow className="d-flex justify-content-between w-100" style={{ boxShadow: 'unset' }}>
+                                <StyledTableCell style={{ width: '300px', marginRight: '82px', borderBottom: 'none' }}>Title</StyledTableCell>
+                                <TableCell style={{ width: '132px', marginRight: '20px' }}>
                                     <TableSortLabel
                                         active={sortBy === "app"}
                                         direction={sortBy === "app" ? sortOrder : "asc"}
@@ -73,7 +74,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                         By
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell style={{ width: '259px',borderBottom:'none' }}>
+                                <TableCell style={{ width: '259px', borderBottom: 'none' }}>
                                     <TableSortLabel
                                         active={sortBy === "date"}
                                         direction={sortBy === "date" ? sortOrder : "asc"}
@@ -90,7 +91,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                     <TableBody className="d-flex flex-column justify-content-center mb-2" style={{ gap: '5px' }}>
                         {data.map((row, index) => (
                             <TableRow key={index} className="d-flex justify-content-between align-items-center" style={{ border: '1px solid #7CADB9', borderRadius: '10px', overflow: 'hidden', height: '93px' }}>
-                                
+
                                 <TableCell className="d-flex align-items-center">
                                     <CustomDiv
                                         bgColor={row.app === "Press Release"
@@ -98,14 +99,14 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                             : row.app === "Blog Post"
                                                 ? "#FAEECD"
                                                 : "#E0E0E0"}
-                                        // borderRadius={isActive ? item.borderRadius : "20px"}
+                                    // borderRadius={isActive ? item.borderRadius : "20px"}
                                     >
                                         {
-                                            row.app === "Press Release"&&(
+                                            row.app === "Press Release" && (
                                                 <Image src={doc} width="20" height="20" className="mr-2" />
 
                                             )
-                                            
+
                                         }
                                         {
                                             row.app === "Blog Post" && (
@@ -141,7 +142,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                         variant="outlined"
                                         color="primary"
                                         size="small"
-                                        style={{ marginLeft: "30px", border: 'none',minWidth:'20px' }}
+                                        style={{ marginLeft: "30px", border: 'none', minWidth: '20px' }}
                                     >
                                         {/* <EditIcon /> */}
                                         <img src={editIcon} alt="Edit Icon" />
@@ -150,7 +151,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                         variant="outlined"
                                         color="secondary"
                                         size="small"
-                                        style={{ marginLeft: "10px", border: 'none' ,minWidth:'20px'}}
+                                        style={{ marginLeft: "10px", border: 'none', minWidth: '20px' }}
                                     >
                                         <img src={deleteIcon} alt="Edit Icon" />
 
@@ -166,20 +167,52 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
 };
 
 const DraftPage = () => {
-    const dummyData = [
-        { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Press Release", by: "mo@02com", date: "2024-12-16" },
-        { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Blog Post", by: "mo@02com", date: "2024-12-17" },
-        { title: "Sed do eiusmod tempor incididunt ut labore1234567...", app: "Blog Post", by: "john@domain.com", date: "2024-12-15" },
-        { title: "Ut enim ad minim veniam, quis nostrud12345345...", app: "Blog Post", by: "jane@domain.com", date: "2024-12-12" },
-        { title: "Duis aute irure dolor in reprehenderit1234567...", app: "Blog Post", by: "alex@domain.com", date: "2024-12-10" },
-    ];
+    const [dummyData, setDummyData] = useState([])
+    // const dummyData1 = [
+    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Press Release", by: "mo@02com", date: "2024-12-19" },
+    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Blog Post", by: "mo@02com", date: "2024-12-19" },
+    //     { title: "Sed do eiusmod tempor incididunt ut labore1234567...", app: "Blog Post", by: "john@domain.com", date: "2024-12-19" },
+    //     { title: "Ut enim ad minim veniam, quis nostrud12345345...", app: "Blog Post", by: "jane@domain.com", date: "2024-12-19" },
+    //     { title: "Duis aute irure dolor in reprehenderit1234567...", app: "Blog Post", by: "alex@domain.com", date: "2024-12-12" },
+
+    //     { title: 'd Announces New Advertising Initiative', app: 'Press Release', by: 'ahmad@test.com', date: '2024-12-11' }
+    // ];
+
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const authData = JSON.parse(localStorage.getItem("authData"));
+                const token = authData?.token;
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const pressReleases = response.data.press_releases.map(pr => {
+                    const date = new Date(pr.updated_at);
+                    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                    return {
+                        title: pr.title,
+                        app: "Press Release",
+                        by: pr.user_email,
+                        date: formattedDate,
+                    };
+                });
+                setDummyData(pressReleases)
+                setData(pressReleases);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const categorizeData = (data) => {
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
-        const pastWeek = new Date(today);
-        pastWeek.setDate(today.getDate() - 7);
 
         const recent = [];
         const yesterdayData = [];
@@ -192,13 +225,14 @@ const DraftPage = () => {
                 recent.push(item);
             } else if (itemDate.toDateString() === yesterday.toDateString()) {
                 yesterdayData.push(item);
-            } else if (itemDate >= pastWeek && itemDate < yesterday) {
+            } else if (itemDate < yesterday) {
                 pastWeekData.push(item);
             }
         });
 
         return { recent, yesterday: yesterdayData, pastWeek: pastWeekData };
     };
+
 
     const [sortConfig, setSortConfig] = useState({ key: "date", order: "asc" });
     const { recent, yesterday, pastWeek } = categorizeData(dummyData);

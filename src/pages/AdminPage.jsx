@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Chips } from 'primereact/chips';
 import { Card, Form, Button, Row, Col, Container } from 'react-bootstrap';
+import axios from 'axios';
+import { useToast } from '../utils/ToastContext';
+import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
+    const navigate = useNavigate();
+    const { showToast } = useToast();
     const [companyName, setCompanyName] = useState('');
     const [companyLocations, setCompanyLocations] = useState([]);
     const [websites, setWebsites] = useState([]);
@@ -15,11 +20,42 @@ const AdminPage = () => {
             companyName,
             companyLocations,
             websites,
-            currentPassword,
-            newPassword,
-            confirmPassword,
+            // currentPassword,
+            // newPassword,
+            // confirmPassword,
         };
         console.log('Saved Data:', data);
+    };
+
+    const changePassword = async() => {
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/change-password`;
+
+        try {
+            const response = await axios.post(apiUrl, {
+                current_password: currentPassword,
+                new_password: newPassword,
+                confirm_password: confirmPassword
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            
+            showToast('password change successfully', 'success');
+            console.log(response,'response');
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('current password is incorrect', 'error');
+        }
+        
+        
     };
 
     const handleCancel = () => {
@@ -30,6 +66,11 @@ const AdminPage = () => {
         setNewPassword('');
         setConfirmPassword('');
     };
+
+    const handleResetPassword=()=>{
+        localStorage.setItem('resetPass',true)
+        navigate('/sign-in')
+    }
 
     const labelStyle = {
         fontWeight: '600', fontSize: '16px', lineHeight: '19.2px', color: '#000'
@@ -168,7 +209,7 @@ const AdminPage = () => {
                                     borderColor: 'black',
                                     fontSize: '14px',
                                     fontWeight: '800',
-                                }} onClick={handleSave}>Save</Button>
+                                }} onClick={changePassword}>Save</Button>
                             </div>
                         </Card.Body>
 
@@ -207,7 +248,7 @@ const AdminPage = () => {
                                                 borderColor: 'black',
                                                 fontSize: '14px',
                                                 fontWeight: '800',
-                                            }} onClick={handleSave}>Reset Password</Button>
+                                            }} onClick={handleResetPassword}>Reset Password</Button>
                                         </Col>
                                     </Row>
                                 </Card>

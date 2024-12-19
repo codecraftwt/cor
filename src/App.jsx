@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+// App.js
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col } from 'react-bootstrap';
-import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
+import { Container, Row, Col, ToastContainer } from 'react-bootstrap';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import { isAuthenticated } from './utils/auth';
 
 // Pages
 import Dashboard from './pages/Dashboard';
@@ -30,7 +32,7 @@ const initialRouteConfig = [
   { path: '/generativepress', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
   { path: '/blog', element: <BlogPage />, hideSidebar: true, hideHeader: false },
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: false },
-  { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false },
+  { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false }, // Ensure explore route is included
 ];
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
@@ -44,8 +46,7 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
   return (
     <Container fluid className="p-0" style={{ height: '100vh', width: '97vw' }}>
       <Row className="no-gutters" style={{ height: '100%' }}>
-        {/* Conditional Sidebar */}
-        {isSidebarVisible && !hideSidebar && (
+        {!hideSidebar && (
           <Col
             xs={2}
             className="bg-light sidebar p-4"
@@ -63,14 +64,13 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
         )}
         <Col
           xs={12}
-          md={hideSidebar || !isSidebarVisible ? 12 : 10}
+          md={hideSidebar  ? 12 : 10}
           className="body-content"
           style={{
-            marginLeft: hideSidebar || !isSidebarVisible ? '1%' : '17.67%',
+            marginLeft: hideSidebar  ? '1%' : '17.67%',
             transition: 'margin-left 0.3s ease',
           }}
         >
-          {/* Conditional Header */}
           {!hideHeader && <Header toggleSidebar={toggleSidebar} />}
           {children}
         </Col>
@@ -82,6 +82,13 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
 const AppRoutes = () => {
   const location = useLocation();
   const [routeConfig, setRouteConfig] = useState(initialRouteConfig);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !=='/create-pass') {
+      navigate('/sign-in');
+    }
+  }, [location.pathname, navigate]);
 
   const currentRoute = routeConfig.find((route) => route.path === location.pathname) || {};
   const { hideSidebar = false, hideHeader = false } = currentRoute;
@@ -99,7 +106,6 @@ const AppRoutes = () => {
   };
 
   const handleBackNavigation = () => {
-    // Reset the state for `/blog` and `/generativepress` when navigating back
     setRouteConfig(
       routeConfig.map((route) =>
         route.path === '/blog' || route.path === '/generativepress'
@@ -109,8 +115,7 @@ const AppRoutes = () => {
     );
   };
 
-  React.useEffect(() => {
-    // Listen for back/forward navigation
+  useEffect(() => {
     window.addEventListener('popstate', handleBackNavigation);
     return () => {
       window.removeEventListener('popstate', handleBackNavigation);
@@ -118,16 +123,11 @@ const AppRoutes = () => {
   }, [routeConfig]);
 
   return (
-    <Layout
-      hideSidebar={hideSidebar}
-      hideHeader={hideHeader}
-      onToggle={handleToggle}
-    >
+    <Layout hideSidebar={hideSidebar} hideHeader={hideHeader} onToggle={handleToggle}>
       <Routes>
         {routeConfig.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />
         ))}
-        {/* Redirect to home if route doesn't match */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Layout>
@@ -136,6 +136,8 @@ const AppRoutes = () => {
 
 const App = () => (
   <Router>
+            <ToastContainer />
+
     <AppRoutes />
   </Router>
 );

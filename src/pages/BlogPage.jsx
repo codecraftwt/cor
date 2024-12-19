@@ -1,9 +1,8 @@
-// src/pages/BlogPage.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GenerativeAndBlogLayout from '../components/GenerativeAndBlogLayout';
 import TextEditor from '../components/TextEditor';
+import axios from 'axios';
 
 const formFields = [
   {
@@ -49,9 +48,44 @@ const BlogPage = () => {
   const [formData, setFormData] = useState({
     spokesperson: [],
   });
+  const [editorData, setEditorData] = useState('');
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSubmit = async() => {
+    const payload = {
+      press_release_type: formData.pressType,
+      press_release_company: formData.companyDescription,
+      spokes_mens: formData.spokesperson,
+      press_release_facts: formData.factsNotes,
+      press_release_content: formData.releaseReason,
+  };
+  try {
+    const authData = JSON.parse(localStorage.getItem("authData"));
+    const token = authData?.token;
+    if (token) {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/generate-and-save-draft-press-release`, payload, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.status === 200) {
+            console.log('Press release generated successfully:', response.data);
+            // Update the editor data with the response content_as_html
+            setEditorData(response.data.content_as_html);
+        } else {
+            console.error('Failed to generate press release:', response.statusText);
+            // Optionally, display an error message
+        }
+    }
+} catch (error) {
+    console.error('An error occurred:', error);
+    // Optionally, display an error message
+}
   };
 
   return (
@@ -62,7 +96,8 @@ const BlogPage = () => {
       formData={formData}
       handleInputChange={handleInputChange}
       generateButtonText="Generate Blog Post"
-      editor={<TextEditor />} 
+      editor={<TextEditor value={editorData} onChange={setEditorData} />} 
+      onGenerate={handleSubmit} // Pass the submit handler to the layout
     />
   );
 };

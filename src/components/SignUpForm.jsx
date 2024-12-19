@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Card, Row, Col } from "react-bootstrap";
 import "react-phone-number-input/style.css";
+import axios from "axios";
 import googlelogo from "../assets/icons8-google.svg";
 import { useNavigate } from "react-router-dom";
 import 'react-phone-input-2/lib/style.css';
 import PhoneInput from "react-phone-input-2";
-
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -19,9 +19,10 @@ const SignUpForm = () => {
     password: "",
   });
 
-  // State to manage phone input
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errors, setErrors] = useState({});
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   const commonStyles = {
     height: "52px",
@@ -32,11 +33,30 @@ const SignUpForm = () => {
     backgroundColor: "#FFFFFF",
   };
 
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/countries`)
+      .then(response => {
+        setCountries(response.data.countries);
+      })
+      .catch(error => {
+        console.error('Error fetching countries:', error);
+      });
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handleCountryChange = (e) => {
+    const selected = countries.find(country => country.id === parseInt(e.target.value));
+    setSelectedCountry(selected);
+    setFormData({
+      ...formData,
+      location: selected ? selected.name : "",
     });
   };
 
@@ -47,6 +67,7 @@ const SignUpForm = () => {
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Enter a valid email";
     if (formData.password.length < 8) newErrors.password = "Password must be at least 8 characters";
     if (!phoneNumber || phoneNumber.length < 10) newErrors.phoneNumber = "Enter a valid phone number";
+    if (!selectedCountry) newErrors.location = "Select a location";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -54,9 +75,30 @@ const SignUpForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+          // navigate("/explore");
+
     if (validateForm()) {
-      console.log("Form Submitted:", { ...formData, phoneNumber });
-      navigate("/dashboard");
+      const payload = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone_number: `+${phoneNumber}`,
+        country_of_residence: selectedCountry.country_code,
+        password: formData.password,
+        company_name: formData.company,
+        company_location_id:1,
+        country_id: selectedCountry.id,
+      };
+
+      axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload)
+        .then(response => {
+          console.log('User registered successfully:', response.data);
+          navigate("/");
+        })
+        .catch(error => {
+          console.error('Error registering user:', error);
+          // Handle errors appropriately
+        });
     }
   };
 
@@ -64,7 +106,6 @@ const SignUpForm = () => {
     <div className="w-100 d-flex" style={{ minHeight: "84vh" }}>
       <Card className="m-auto" style={{ width: "690px", background: "transparent", border: "none" }}>
         <>
-          {/* Google Sign-in Button */}
           <Button
             className="w-100 mb-3"
             style={{
@@ -86,7 +127,6 @@ const SignUpForm = () => {
             <hr className="w-50" />
           </div>
 
-          {/* Dynamic Form */}
           <Form onSubmit={handleSubmit}>
             <Row>
               <Col md={6}>
@@ -136,13 +176,19 @@ const SignUpForm = () => {
                 <Form.Group controlId="location" className="mb-3">
                   <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Location</Form.Label>
                   <Form.Control
+                    as="select"
                     style={commonStyles}
-                    type="text"
                     name="location"
-                    placeholder="Select Location"
-                    value={formData.location}
-                    onChange={handleChange}
-                  />
+                    value={selectedCountry ? selectedCountry.id : ""}
+                    onChange={handleCountryChange}
+                    isInvalid={!!errors.location}
+                  >
+                    <option value="">Select Location</option>
+                    {countries.map(country => (
+                      <option key={country.id} value={country.id}>{country.name}</option>
+                    ))}
+                  </Form.Control>
+                  <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
@@ -165,7 +211,7 @@ const SignUpForm = () => {
               <Col md={6}>
                 <Form.Group controlId="phoneNumber" className="mb-3">
                   <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Phone Number</Form.Label>
-                   <PhoneInput
+                  <PhoneInput
                     country={"us"}
                     value={phoneNumber}
                     onChange={setPhoneNumber}
@@ -192,8 +238,6 @@ const SignUpForm = () => {
                 </Form.Group>
               </Col>
             </Row>
-
-            {/* Submit Button */}
             <Button
               style={{
                 background: "linear-gradient(135deg, #5A78F2, #000000)",

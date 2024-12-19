@@ -63,7 +63,7 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor,rou
           />
           <div>
             <Card.Text className="m-0">{title}</Card.Text>
-            <Card.Title>{description}</Card.Title>
+            <Card.Title style={{color:'#0C3944'}}>{description}</Card.Title>
           </div>
         </div>
         <div className="card-buttons">

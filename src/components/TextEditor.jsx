@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'react-quill/dist/quill.snow.css'; 
-import { Editor } from "primereact/editor";
+import { Editor } from 'primereact/editor';
 
-const TextEditor = () => {
+const TextEditor = ({ value, onChange }) => {
     return (
-        <Editor  style={{ height: '610px' }} />
+        <Editor 
+            value={value}
+            onTextChange={(e) => onChange(e.htmlValue)}
+            style={{ height: '610px' }} 
+        />
     );
 };
+
 export default TextEditor;

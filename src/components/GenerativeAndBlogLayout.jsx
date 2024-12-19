@@ -1,10 +1,9 @@
 import React from 'react';
-import { Card, Button, Col, Container, Row, Form } from 'react-bootstrap';
+import { Card, Button, Col, Row, Form } from 'react-bootstrap';
 import { Chips } from 'primereact/chips';
 import styled from 'styled-components';
 import arrowleft from '../assets/arrow-left.svg';
 import magicpen from '../assets/magicpen.svg';
-import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 
 // Custom styled label
@@ -21,6 +20,7 @@ const GenerativeAndBlogLayout = ({
   handleInputChange,
   generateButtonText,
   editor,
+  onGenerate, // New prop for handling generate button click
 }) => {
   const navigate = useNavigate();
 
@@ -34,18 +34,18 @@ const GenerativeAndBlogLayout = ({
     };
 
     return (
-      <Row className="mb-3">
+      <Row className="mb-3" key={controlId}>
         <Col xs={12}>
           <CustomLabel>{label}</CustomLabel>
         </Col>
         <Col xs={12}>
-          <Form.Group controlId={controlId} key={controlId}>
+          <Form.Group controlId={controlId}>
             {type === 'chips' ? (
               <Chips
                 value={formData[controlId] || []}
                 onChange={(e) => handleInputChange(controlId, e.value)}
                 placeholder={placeholder}
-                style={{...commonStyles,width:'100%'}}
+                style={{...commonStyles, width: '100%'}}
               />
             ) : (
               <Form.Control
@@ -64,10 +64,6 @@ const GenerativeAndBlogLayout = ({
 
   return (
     <>
-    {/* // <Container fluid className="mt-2 mb-4"> */}
-    
-      {/* Header Section */}
-      {/* <Header /> */}
       <div className="d-flex flex-column flex-md-row mb-3 align-items-center">
         <Button onClick={() => navigate(-1)} className="d-flex mb-2 mb-md-0 border-0 bg-transparent">
           <img src={arrowleft} alt="Back Arrow" />
@@ -78,10 +74,8 @@ const GenerativeAndBlogLayout = ({
         </div>
       </div>
 
-      {/* Form and Editor Section */}
       <Card className="border-0 header-shadow" style={{ borderRadius: '35px' }}>
         <Row>
-          {/* Form Section */}
           <Col xs={12} lg={5}>
             <Card
               className="border-0 mb-3 mb-lg-0"
@@ -110,7 +104,7 @@ const GenerativeAndBlogLayout = ({
                   background: 'linear-gradient(135deg, #5A78F2, #000000)',
                 }}
               >
-                <Button className="bg-transparent border-0">
+                <Button className="bg-transparent border-0" onClick={onGenerate}>
                   <img src={magicpen} alt="Magic Pen" className="me-2" />
                   {generateButtonText}
                 </Button>
@@ -118,8 +112,7 @@ const GenerativeAndBlogLayout = ({
             </Card>
           </Col>
 
-          {/* Text Editor Section */}
-          <Col xs={12} lg={7} className='d-flex flex-column justify-content-between'>
+          <Col xs={12} lg={7} className="d-flex flex-column justify-content-between">
             {editor}
             <div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
               <Button
@@ -149,7 +142,6 @@ const GenerativeAndBlogLayout = ({
           </Col>
         </Row>
       </Card>
-    {/* // </Container> */}
     </>
   );
 };

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
     Box,
     Typography,
@@ -17,42 +18,47 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import circle from '../assets/circle-add.svg';
-
 import './../css/TeamPage.css';
-
-// Dummy data
-const initialRows = [
-    {
-        id: 1,
-        name: 'Mohammed Jomani',
-        email: 'mm@02.com',
-        last_active: '2nd Nov 2024',
-        role: 'Admin',
-    },
-    {
-        id: 2,
-        name: 'Rajesh Kanthan',
-        email: 'rk@02.com',
-        last_active: 'Pending Invite',
-        role: 'Collaborator',
-    },
-    {
-        id: 3,
-        name: 'Ahmed Khalifa',
-        email: 'ah@02.com',
-        last_active: 'Pending Invite',
-        role: 'Guest',
-    },
-];
 
 // Roles dropdown options
 const roleOptions = ['Admin', 'Collaborator', 'Guest'];
 
 const TeamsTable = () => {
     const theme = useTheme();
-    const [rows, setRows] = useState(initialRows);
+    const [rows, setRows] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [filteredRows, setFilteredRows] = useState(initialRows);
+    const [filteredRows, setFilteredRows] = useState([]);
+
+    useEffect(() => {
+        // Fetch data from API
+        const fetchData = async () => {
+            try {
+                const authData = JSON.parse(localStorage.getItem("authData"));
+                const token = authData?.token;
+                if (token) {
+                    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-members`,{
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                        },
+                      });
+                    const users = response.data.users.map(user => ({
+                        id: user.id,
+                        name: `${user.first_name} ${user.last_name}`,
+                        email: user.email,
+                        last_active: user.last_active_at ? new Date(user.last_active_at).toLocaleDateString() : 'Pending Invite',
+                        role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)
+                    }));
+                    setRows(users);
+                    setFilteredRows(users);
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     // Function to handle role change
     const handleRoleChange = (id, newRole) => {
@@ -78,8 +84,7 @@ const TeamsTable = () => {
         {
             field: 'name',
             headerName: 'Name',
-            //   flex: 1,
-            width: '500',
+            width: 500,
             renderCell: (params) => (
                 <Box>
                     <Typography variant="body1" fontWeight="bold">
@@ -94,14 +99,13 @@ const TeamsTable = () => {
         {
             field: 'last_active',
             headerName: 'Last Active',
-            //   flex: 1,
             width: 150,
             renderCell: (params) => (
                 <Chip
                     label={params.value}
                     sx={{
                         backgroundColor: params.value === 'Pending Invite' ? '#FAEECD' : '#DEBBF4',
-                        color: params.value === 'Pending Invite' ? '#000' : '#000', 
+                        color: '#000',
                     }}
                     size="small"
                 />
@@ -110,7 +114,6 @@ const TeamsTable = () => {
         {
             field: 'role',
             headerName: 'Role',
-            //   flex: 1,
             width: 280,
             renderCell: (params) => (
                 <Select
@@ -130,7 +133,6 @@ const TeamsTable = () => {
     ];
 
     const commonStyles = {
-        // width: '333px',
         height: '52px',
         boxShadow: "inset 0 4px 8px #0C39440F, 0 4px 8px #517EB814",
         backgroundBlendMode: "overlay",
@@ -184,7 +186,7 @@ const TeamsTable = () => {
 
                         {/* Invite Button */}
                         <Button variant="contained" color="primary" size="medium" style={{ textTransform: 'capitalize', background: 'black', borderRadius: '30px', fontSize: '14px', fontWeight: '800', height: '40px' }}>
-                            <img src={circle} alt="" srcset="" className='me-3' />Invite Team Member
+                            <img src={circle} alt="" className='me-3' />Invite Team Member
                         </Button>
                     </Box>
 
