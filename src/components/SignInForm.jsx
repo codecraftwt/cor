@@ -177,7 +177,8 @@ const SignInForm = () => {
                             <Form.Group controlId="password" className="mb-3">
                                 <Form.Label style={{ fontWeight: '600', fontSize: '16px' }}>Password</Form.Label>
                                 <Form.Control
-                                    style={{ ...commonStyles }}
+                                    style={{ ...commonStyles ,fontSize: '23px',
+                                        fontWeight: '900'}}
                                     type="password"
                                     name="password"
                                     placeholder="Enter your password"

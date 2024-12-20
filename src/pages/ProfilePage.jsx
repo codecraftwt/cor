@@ -16,8 +16,10 @@ import {
 } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { useToast } from "../utils/ToastContext";
 
 const ProfilePage = () => {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -160,6 +162,7 @@ const ProfilePage = () => {
             },
           }
         );
+        showToast('Profile updated successfully', 'success');
         console.log("Profile updated successfully:", response.data);
       } catch (error) {
         console.error("Error updating profile:", error);

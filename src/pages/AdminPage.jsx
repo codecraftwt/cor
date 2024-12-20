@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chips } from 'primereact/chips';
 import { Card, Form, Button, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
@@ -72,6 +72,30 @@ const AdminPage = () => {
         navigate('/sign-in')
     }
 
+    useEffect(()=>{
+        getWebSite()
+    },[])
+
+    const getWebSite = async() => {
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/website-links/me`,
+                {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+            )
+            console.log(response.data.website_links,'response website');
+            setWebsites(response.data.website_links)
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
     const labelStyle = {
         fontWeight: '600', fontSize: '16px', lineHeight: '19.2px', color: '#000'
     };
@@ -131,7 +155,7 @@ const AdminPage = () => {
                             <Row>
                                 <Col md={5}>
                                     <Form.Group className="mb-3 d-flex flex-column" >
-                                        <Form.Label style={{ ...labelStyle }}>Website</Form.Label>
+                                        <Form.Label style={{ ...labelStyle }}>Websites</Form.Label>
                                         <Chips
                                             style={{ ...commonStyles, height: 'unset' }}
                                             placeholder="Add website"
@@ -149,7 +173,8 @@ const AdminPage = () => {
                                     <Form.Group className="mb-3">
                                         <Form.Label style={{ ...labelStyle }}>Enter Current Password</Form.Label>
                                         <Form.Control
-                                            style={{ ...commonStyles }}
+                                            style={{ ...commonStyles ,fontSize: '23px',
+                                                fontWeight: '900'}}
                                             type="password"
                                             placeholder="Enter current password"
                                             value={currentPassword}
@@ -165,7 +190,8 @@ const AdminPage = () => {
                                     <Form.Group className="mb-3">
                                         <Form.Label style={{ ...labelStyle }}>New Password</Form.Label>
                                         <Form.Control
-                                            style={{ ...commonStyles }}
+                                            style={{ ...commonStyles ,fontSize: '23px',
+                                                fontWeight: '900'}}
                                             type="password"
                                             placeholder="Enter new password"
                                             value={newPassword}
@@ -178,7 +204,8 @@ const AdminPage = () => {
                                     <Form.Group className="mb-3">
                                         <Form.Label style={{ ...labelStyle }}>Confirm Password</Form.Label>
                                         <Form.Control
-                                            style={{ ...commonStyles }}
+                                            style={{ ...commonStyles ,fontSize: '23px',
+                                                fontWeight: '900'}}
                                             type="password"
                                             placeholder="Confirm new password"
                                             value={confirmPassword}

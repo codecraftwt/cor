@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
@@ -13,6 +14,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 body {
   font-family: "Urbanist", serif !important;
   margin: 0;
@@ -25,6 +27,17 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+input {
+  font-family: "Urbanist" !important;
+}
+
+input[type="password"]::placeholder {
+  color: gray;
+  font-size: 15px;
+  font-weight: 400;
+  /* font-style: italic; */
 }
 
 .onboard-left-side {
@@ -69,11 +82,10 @@ body {
 }
 
 .onbording {
-  background-image: url('/public/Mask_group.svg');
+  background: url('/public/Mask_group.svg') no-repeat center/cover, linear-gradient(to top, #8eccdd, #c8f6e9) !important;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  padding: 20px;
 }
 
 [data-pc-name="editor"] {
@@ -127,36 +139,51 @@ body {
 }
 
 .generativeform {
-  scrollbar-width: none; /* Hide scrollbar by default */
-  -ms-overflow-style: none; /* For IE and Edge */
-  overflow: hidden; /* Hide overflow */
-  box-sizing: border-box; /* Include padding and border in width/height */
-  padding-bottom: 8px; /* Add padding to compensate for scrollbar */
+  scrollbar-width: none;
+  /* Hide scrollbar by default */
+  -ms-overflow-style: none;
+  /* For IE and Edge */
+  overflow: hidden;
+  /* Hide overflow */
+  box-sizing: border-box;
+  /* Include padding and border in width/height */
+  padding-bottom: 8px;
+  /* Add padding to compensate for scrollbar */
 }
 
 .generativeform::-webkit-scrollbar {
-  display: none; /* Hide scrollbar by default */
+  display: none;
+  /* Hide scrollbar by default */
 }
 
 .generativeform:hover {
-  scrollbar-width: thin; /* Show a thin scrollbar on hover */
-  -ms-overflow-style: auto; /* For IE and Edge */
-  overflow-x: auto; /* Enable horizontal scrolling */
+  scrollbar-width: thin;
+  /* Show a thin scrollbar on hover */
+  -ms-overflow-style: auto;
+  /* For IE and Edge */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
 }
 
 .generativeform:hover::-webkit-scrollbar {
-  display: block; /* Display scrollbar on hover */
-  width: 8px; /* Set scrollbar width */
+  display: block;
+  /* Display scrollbar on hover */
+  width: 8px;
+  /* Set scrollbar width */
 }
 
 .generativeform:hover::-webkit-scrollbar-thumb {
-  background: #888; /* Scrollbar thumb color */
-  border-radius: 4px; /* Rounded corners */
+  background: #888;
+  /* Scrollbar thumb color */
+  border-radius: 4px;
+  /* Rounded corners */
 }
 
 .generativeform:hover::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Scrollbar track color */
-  border-radius: 4px; /* Rounded corners */
+  background: #f1f1f1;
+  /* Scrollbar track color */
+  border-radius: 4px;
+  /* Rounded corners */
 }
 
 
@@ -231,7 +258,8 @@ body {
   border: none !important;
 
 }
-.react-tel-input .form-control:focus{
+
+.react-tel-input .form-control:focus {
   box-shadow: unset !important;
 }
 
@@ -239,7 +267,7 @@ body {
   :root {
     color: #213547;
     background-color: transparent;
-  font-family: "Urbanist", serif !important;
+    font-family: "Urbanist", serif !important;
 
   }
 
@@ -251,28 +279,45 @@ body {
     background-color: #f9f9f9;
   }
 }
-.toggle{
+
+.toggle {
   display: none !important;
 }
+
 @media (max-width: 768px) {
   .sidebar {
     display: none;
   }
-  .toggle{
+
+  .toggle {
     display: block !important;
   }
+
   /* .main-body */
 
   .body-content {
     width: 100% !important;
     margin-left: 2px !important;
   }
-  .dashboard{
+
+  .dashboard {
     margin-left: 16px !important;
   }
 }
+
 @media (min-width: 768px) {
   .left-side-content {
     display: none !important;
   }
+}
+
+.ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.6);
+  content: attr(data-placeholder);
+  font-style: normal !important;
+  left: 15px;
+  pointer-events: none;
+  position: absolute;
+  right: 0px;
+  padding: 0px 58px !important;
 }

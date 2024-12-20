@@ -99,38 +99,45 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor,rou
 };
 
 // Onboarding Section Component
-const OnboardingSection = ({ percentage, setPercentage }) => (
-  <Card
-    style={{
-      backgroundImage: 'linear-gradient(to top, #8eccdd, #c8f6e9)',
-      height: '295px',
-      borderRadius: '30px',
-      overflow: 'hidden',
-      border: 'none',
-    }}
-  >
-    <Card.Body>
-      <div className="d-flex align-items-center justify-content-start position-relative">
-        <div style={{ width: '114px', height: '114px' ,zIndex:'2'}}>
-          <CircularProgressbar value={percentage} text={`${percentage}%`} />
+const OnboardingSection = ({ percentage, setPercentage }) => {
+  const navigate = useNavigate();
+
+  return (
+    
+    <Card
+      style={{
+        // backgroundImage: 'linear-gradient(to top, #8eccdd, #c8f6e9)',
+        height: '295px',
+        borderRadius: '30px',
+        overflow: 'hidden',
+        border: 'none',
+      }}
+      className='onbording'
+    >
+      <Card.Body>
+        <div className="d-flex align-items-center justify-content-start position-relative">
+          <div style={{ width: '114px', height: '114px' ,zIndex:'2'}}>
+            <CircularProgressbar value={percentage} text={`${percentage}%`} />
+          </div>
+            <p className='whiteCircle'></p>
         </div>
-          <p className='whiteCircle'></p>
-      </div>
-      <Card.Text style={{ fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>
-        Complete your
-      </Card.Text>
-      <Card.Title style={{ fontWeight: '700', fontSize: '36px' }}>Onboarding</Card.Title>
-      <Button
-        className="mt-3"
-        onClick={() => setPercentage((prev) => (prev < 100 ? prev + 10 : 100))}
-        style={{ borderRadius: '30px', padding: '15px', width: '174px', backgroundColor: 'white', border: 'none', color: 'black' }}
-      >
-        Complete Now
-        <img src={arrowRight} alt="arrow" className="ms-3" />
-      </Button>
-    </Card.Body>
-  </Card>
-);
+        <Card.Text style={{ fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>
+          Complete your
+        </Card.Text>
+        <Card.Title style={{ fontWeight: '700', fontSize: '36px' }}>Onboarding</Card.Title>
+        <Button
+          className="mt-3"
+          // onClick={() => setPercentage((prev) => (prev < 100 ? prev + 10 : 100))}
+          onClick={() => navigate('/creator-onboard')}
+          style={{ borderRadius: '30px', padding: '15px', width: '174px', backgroundColor: 'white', border: 'none', color: 'black' }}
+        >
+          Complete Now
+          <img src={arrowRight} alt="arrow" className="ms-3" />
+        </Button>
+      </Card.Body>
+    </Card>
+)
+};
 
 // Dashboard Page
 const Dashboard = () => {
@@ -146,7 +153,7 @@ const Dashboard = () => {
             style={{ padding: '35px', borderRadius: '30px', height: '735px', border: 'none' }}
           >
             <Card.Body>
-              <Card.Title>AI-Powered Content Press, Blogs & Docs</Card.Title>
+              <Card.Title><b>AI-Powered Content</b> Press, Blogs & Docs</Card.Title>
               <Card.Text>
                 Popularised in the recently with the release of Letraset sheets containing
               </Card.Text>
@@ -184,12 +191,12 @@ const Dashboard = () => {
               </Card.Title>
               <div className="mt-3">
                 <textarea
-                  placeholder="Type your message here..."
+                  placeholder="Ask or search for anything"
                   rows="4"
                   style={{
                     width: '100%',
                     padding: '10px',
-                    borderRadius: '10px',
+                    borderRadius: '20px',
                     border: '1px solid #ccc',
                     fontSize: '16px',
                     height: '230px',

@@ -29,61 +29,61 @@ const Header = ({ toggleSidebar }) => {
       <Col xs={5} md={5} className="d-flex align-items-center">
         {/* Conditionally disable sidebar toggle for specific routes */}
         {!isGenerativePress && (
-            <>
-          
-            </>
+          <>
+
+          </>
         )}
         {isGenerativePress ? (
-            <>
+          <>
             <img
-            src={Menu}
-            alt="Menu"
-            width="24px"
-            height="24px"
-            onClick={toggleSidebar}
-            style={{ cursor: 'pointer', marginRight: '10px' }}
-          />
-          <img src={Logo} alt="Logo" width="80px" height="33px" onClick={toggleSidebar} />
-            </>
+              src={Menu}
+              alt="Menu"
+              width="24px"
+              height="24px"
+              onClick={toggleSidebar}
+              style={{ cursor: 'pointer', marginRight: '10px' }}
+            />
+            <img src={Logo} alt="Logo" width="80px" height="33px" onClick={toggleSidebar} />
+          </>
         ) : (
-            <>
-          <nav className="d-none d-lg-flex gap-4">
-  {navLinks.map((link, index) => (
-    <NavLink
-      key={index}
-      to={link.path}
-      className="text-dark text-decoration-none"
-      style={({ isActive }) => ({
-        fontWeight: isActive ? 'bold' : 'normal',
-        color: isActive ? 'black' : 'inherit',
-      })}
-    >
-      {({ isActive }) => (
-        <CustomDiv
-          bgColor={isActive ? 'black' : 'white'}
-          color={isActive ? 'white' : 'black'}
-        >
-          {link.label}
-        </CustomDiv>
-      )}
-    </NavLink>
-  ))}
-</nav>
+          <>
+            <nav className="d-none d-lg-flex gap-4">
+              {navLinks.map((link, index) => (
+                <NavLink
+                  key={index}
+                  to={link.path}
+                  className="text-dark text-decoration-none"
+                  style={({ isActive }) => ({
+                    fontWeight: isActive ? 'bold' : 'normal',
+                    color: isActive ? 'black' : 'inherit',
+                  })}
+                >
+                  {({ isActive }) => (
+                    <CustomDiv
+                      bgColor={isActive ? 'black' : 'white'}
+                      color={isActive ? 'white' : 'black'}
+                    >
+                      {link.label}
+                    </CustomDiv>
+                  )}
+                </NavLink>
+              ))}
+            </nav>
 
-<DropdownButton
-  id="nav-dropdown"
-  title="Menu"
-  className="d-lg-none ms-3"
-  style={{ background: 'white', border: '1px solid #E9E8E8', borderRadius: '26px' }}
->
-  {navLinks.map((link, index) => (
-    <Dropdown.Item key={index} as={NavLink} to={link.path}>
-      {link.label}
-    </Dropdown.Item>
-  ))}
-</DropdownButton>
+            <DropdownButton
+              id="nav-dropdown"
+              title="Menu"
+              className="d-lg-none ms-3"
+              style={{ background: 'white', border: '1px solid #E9E8E8', borderRadius: '26px' }}
+            >
+              {navLinks.map((link, index) => (
+                <Dropdown.Item key={index} as={NavLink} to={link.path}>
+                  {link.label}
+                </Dropdown.Item>
+              ))}
+            </DropdownButton>
 
-            </>
+          </>
         )}
       </Col>
 
@@ -114,7 +114,7 @@ const Header = ({ toggleSidebar }) => {
           }}
         >
           <FormControl
-            placeholder="Search"
+            placeholder="Search COR"
             aria-label="Search"
             style={{
               border: 'unset',

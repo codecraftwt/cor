@@ -166,7 +166,7 @@ const TeamsTable = () => {
                             </Typography>
                             <TextField
                                 variant="outlined"
-                                placeholder="Search Team Members"
+                                placeholder="Search by name"
                                 size="small"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}

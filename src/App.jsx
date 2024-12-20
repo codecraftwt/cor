@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, ToastContainer } from 'react-bootstrap';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import { isAuthenticated } from './utils/auth';
+import { isAuthenticated,startTokenWatcher} from './utils/auth';
 
 // Pages
 import Dashboard from './pages/Dashboard';
@@ -31,7 +31,7 @@ const initialRouteConfig = [
   { path: '/create-pass', element: <NewPasswordPage />, hideSidebar: true, hideHeader: true },
   { path: '/generativepress', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
   { path: '/blog', element: <BlogPage />, hideSidebar: true, hideHeader: false },
-  { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: false },
+  { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },
   { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false }, // Ensure explore route is included
 ];
 
@@ -64,10 +64,10 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
         )}
         <Col
           xs={12}
-          md={hideSidebar  ? 12 : 10}
+          md={hideSidebar ? 12 : 10}
           className="body-content"
           style={{
-            marginLeft: hideSidebar  ? '1%' : '17.67%',
+            marginLeft: hideSidebar ? '1%' : '17.67%',
             transition: 'margin-left 0.3s ease',
           }}
         >
@@ -85,7 +85,7 @@ const AppRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !=='/create-pass') {
+    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass') {
       navigate('/sign-in');
     }
   }, [location.pathname, navigate]);
@@ -134,12 +134,17 @@ const AppRoutes = () => {
   );
 };
 
-const App = () => (
-  <Router>
-            <ToastContainer />
+const App = () => {
+  useEffect(() => {
+    startTokenWatcher(); // Start watching token expiration
+  }, []);
 
-    <AppRoutes />
-  </Router>
-);
+  return (
+    <Router>
+      <ToastContainer />
+      <AppRoutes />
+    </Router>
+  );
+};
 
 export default App;
