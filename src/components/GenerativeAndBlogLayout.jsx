@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Button, Col, Row, Form } from 'react-bootstrap';
 import { Chips } from 'primereact/chips';
 import styled from 'styled-components';
 import arrowleft from '../assets/arrow-left.svg';
+import arrowRight from '../assets/right-arrow-Icon.svg';
+import shared from '../assets/share-rectangle.svg';
+import huge from '../assets/Huge-icon2.svg';
 import magicpen from '../assets/magicpen.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import CustomModal from './CustomModal';
+import ModalPopup from './ModalPopup';
 
 // Custom styled label
 const CustomLabel = styled(Form.Label)`
@@ -23,6 +30,16 @@ const GenerativeAndBlogLayout = ({
   onGenerate, // New prop for handling generate button click
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showModal, setShowModal] = useState(false);
+  const [showModals, setShowModals] = useState(false);
+
+  const handleShowModal = () => setShowModal(true);
+
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleShowDraftModal = () => setShowModals(true)
+  const handleCloseDraftModal = () => setShowModals(false)
 
   // Render form field dynamically based on type
   const renderFormField = ({ controlId, label, type, placeholder }) => {
@@ -45,7 +62,7 @@ const GenerativeAndBlogLayout = ({
                 value={formData[controlId] || []}
                 onChange={(e) => handleInputChange(controlId, e.value)}
                 placeholder={placeholder}
-                style={{...commonStyles, width: '100%'}}
+                style={{ ...commonStyles, width: '100%' }}
               />
             ) : (
               <Form.Control
@@ -74,7 +91,7 @@ const GenerativeAndBlogLayout = ({
         </div>
       </div>
 
-      <Card className="border-0 header-shadow" style={{ borderRadius: '35px' }}>
+      <Card className="border-0 header-shadow mb-3" style={{ borderRadius: '35px' }}>
         <Row>
           <Col xs={12} lg={5}>
             <Card
@@ -114,7 +131,35 @@ const GenerativeAndBlogLayout = ({
 
           <Col xs={12} lg={7} className="d-flex flex-column justify-content-between">
             {editor}
-            <div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
+            {location.pathname.includes('blog') ? (<div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
+              <Button
+                className="bg-transparent me-2"
+                style={{
+                  color: '#000000',
+                  borderColor: '#000000',
+                  borderRadius: '30px',
+                  // width: '100px',
+                  fontSize: '14px',
+                  fontWeight: '800'
+                }}
+              >
+                Save to Draft
+              </Button>
+              <Dropdown data-bs-theme="black">
+                <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary"
+                  style={{ backgroundColor: '#000', borderColor: '#000', color: '#fff', borderRadius: '30px',fontSize:'14px',fontWeight:'800' }}
+                >
+                  <img src={arrowRight} alt="right arrow" srcset="" className='me-2' />
+                  Publish
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className='mb-2'>
+                  <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowModal}><img src={shared} alt="right arrow" srcset="" className='me-2' /> Share</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowDraftModal}> <img src={huge} alt="" srcset="" className='me-2' /> Preview Press Release</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>) : (<div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
               <Button
                 className="bg-transparent me-2"
                 style={{
@@ -138,10 +183,14 @@ const GenerativeAndBlogLayout = ({
               >
                 Save the Document
               </Button>
-            </div>
+            </div>)}
+
+
           </Col>
         </Row>
       </Card>
+      <CustomModal show={showModal} onHide={handleCloseModal} />
+      <ModalPopup show={showModals} onHide={handleCloseDraftModal} />
     </>
   );
 };
