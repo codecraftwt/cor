@@ -1,16 +1,16 @@
 // App.js
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate, useLocation, matchPath } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, ToastContainer } from 'react-bootstrap';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import { isAuthenticated,startTokenWatcher} from './utils/auth';
+import { isAuthenticated, startTokenWatcher } from './utils/auth';
 
 // Pages
 import Dashboard from './pages/Dashboard';
 import GenerativePress from './pages/GenerativePress';
-import BlogPage from './pages/BlogPage';
+import BlogPost from './pages/BlogPost';
 import CreatorOnboard from './pages/CreatorOnboard';
 import SignInPage from './pages/SignInPage';
 import NewPasswordPage from './pages/NewPasswordPage';
@@ -19,6 +19,7 @@ import AdminPage from './pages/AdminPage';
 import TeamsPage from './pages/TeamsPage';
 import ProfilePage from './pages/ProfilePage';
 import DraftPage from './pages/DraftPage';
+import BlogPage from './pages/BlogPage';
 
 const initialRouteConfig = [
   { path: '/', element: <Dashboard />, hideSidebar: false, hideHeader: false },
@@ -26,18 +27,19 @@ const initialRouteConfig = [
   { path: '/teams', element: <TeamsPage />, hideSidebar: false, hideHeader: true },
   { path: '/profile', element: <ProfilePage />, hideSidebar: false, hideHeader: true },
   { path: '/drafts', element: <DraftPage />, hideSidebar: false, hideHeader: true },
+  { path: '/blog', element: <BlogPage />, hideSidebar: false, hideHeader: true },
   { path: '/sign-up', element: <SignUpPage />, hideSidebar: true, hideHeader: true },
   { path: '/sign-in', element: <SignInPage />, hideSidebar: true, hideHeader: true },
   { path: '/create-pass', element: <NewPasswordPage />, hideSidebar: true, hideHeader: true },
   { path: '/generativepress', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
-  { path: '/blog', element: <BlogPage />, hideSidebar: true, hideHeader: false },
+  { path: '/blog-post', element: <BlogPost />, hideSidebar: true, hideHeader: false },
+  { path: '/blog-posts/:id', element: <BlogPost />, hideSidebar: true, hideHeader: false },
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },
   { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false }, // Ensure explore route is included
 ];
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
   const [isSidebarVisible, setSidebarVisible] = useState(!hideSidebar);
-
   const toggleSidebar = () => {
     setSidebarVisible((prev) => !prev);
     if (onToggle) onToggle(!isSidebarVisible);
@@ -91,11 +93,12 @@ const AppRoutes = () => {
   }, [location.pathname, navigate]);
 
   const currentRoute = routeConfig.find((route) => route.path === location.pathname) || {};
-  const { hideSidebar = false, hideHeader = false } = currentRoute;
+  
+  const { hideSidebar = true, hideHeader = false } = currentRoute;
 
   const handleToggle = (isSidebarVisible) => {
     const updatedRouteConfig = routeConfig.map((route) => {
-      if (location.pathname === '/blog' || location.pathname === '/generativepress') {
+      if (location.pathname === '/blog-post' || location.pathname === '/generativepress') {
         if (route.path === location.pathname) {
           return { ...route, hideSidebar: !isSidebarVisible };
         }
@@ -108,7 +111,7 @@ const AppRoutes = () => {
   const handleBackNavigation = () => {
     setRouteConfig(
       routeConfig.map((route) =>
-        route.path === '/blog' || route.path === '/generativepress'
+        route.path === '/blog-post' || route.path === '/generativepress'
           ? { ...route, hideSidebar: true }
           : route
       )

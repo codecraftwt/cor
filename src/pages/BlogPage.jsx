@@ -1,105 +1,353 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import GenerativeAndBlogLayout from '../components/GenerativeAndBlogLayout';
-import TextEditor from '../components/TextEditor';
-import axios from 'axios';
 
-const formFields = [
-  {
-    controlId: "pressType",
-    label: "What is the blog about?",
-    type: "textarea",
-    placeholder: "e.g., How AI is Transforming Small Businesses or just 'AI in Business'",
-  },
-  {
-    controlId: "spokesperson",
-    label: "What are the main ideas or points you want included?",
-    type: "textarea",
-    placeholder: "e.g., “AI benefits, challenges, and case studies”",
-  },
-  {
-    controlId: "releaseReason",
-    label: "Who is this blog for?",
-    type: "textarea",
-    placeholder: "e.g., “Small business owners, entrepreneurs, general readers”",
-  },
-  {
-    controlId: "factsNotes",
-    label: "What’s the goal of the blog?",
-    type: "textarea",
-    placeholder: "e.g., “Educate readers, promote a service, boost website traffic”",
-  },
-  {
-    controlId: "companyDescription",
-    label: "How long should the blog be, and what tone should it have?",
-    type: "textarea",
-    placeholder: "e.g., “800 words, professional and engaging”",
-  },
-  {
-    controlId: "companyDescription2",
-    label: "What keywords or phrases should the blog focus on?",
-    type: "textarea",
-    placeholder: "e.g., “renewable energy,” “green technologies,” “sustainable power”",
-  },
-];
+
+import React, { useEffect, useState } from "react";
+import {
+    Typography,
+    Container,
+    Card,
+    CardContent,
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    TableSortLabel,
+    Chip,
+} from "@mui/material";
+import { styled } from "@mui/system";
+import './../css/DraftPage.css';
+// import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+// import { ReactComponent as EditIcon }from '../assets/edit.svg';
+import editIcon from '../assets/edit.svg';
+import deleteIcon from '../assets/delete.svg';
+import Press from '../assets/press.svg';
+import doc from '../assets/document-text.svg';
+import doc2 from '../assets/document-text2.svg';
+import { Image } from "react-bootstrap";
+import { styled as style } from 'styled-components';
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
+
+const StyledTableCell = styled(TableCell)({
+    maxWidth: "300px",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    // display:'flex',
+    // alignItems:'center',
+    // gap:'5px'
+});
+
+const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) => {
+    if (data.length === 0) return null;
+        
+
+    const navigate = useNavigate();
+    
+    const handleEdit = (data) => {
+        navigate(`/blog-posts/${data.id}`);
+    }
+    const handleDelete = async (data) => {
+        try {
+            console.log("Deleting data:", data);
+    
+            // Show confirmation dialog
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    // Perform delete action
+                    try {
+                        // Uncomment the below line to make the actual API call
+                        // await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/blogs/${data.id}`);
+    
+                        console.log("Data deleted successfully");
+    
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                        });
+                    } catch (error) {
+                        console.error("Error deleting data:", error);
+    
+                        // Show error message
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete the file.",
+                            icon: "error",
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error in handleDelete:", error);
+        }
+    };
+
+    return (
+        <>
+            <Typography variant="h6" gutterBottom style={{ marginTop: "40px", fontSize: '20pzx', fontWeight: '600' }}>
+                {title}
+            </Typography>
+            <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+                <Table>
+                    {showHeader && (
+                        <TableHead className="d-flex">
+                            <TableRow className="d-flex justify-content-between w-100" style={{ boxShadow: 'unset' }}>
+                                <StyledTableCell style={{ width: '300px', marginRight: '82px', borderBottom: 'none' }}>Title</StyledTableCell>
+                                <TableCell style={{ width: '132px', marginRight: '20px' }}>
+                                    <TableSortLabel
+                                        active={sortBy === "app"}
+                                        direction={sortBy === "app" ? sortOrder : "asc"}
+                                        onClick={() => onSort("app")}
+                                    // style={{width:'90px'}}
+                                    >
+                                        App
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell style={{ width: '90px' }}>
+                                    <TableSortLabel
+                                        active={sortBy === "by"}
+                                        direction={sortBy === "by" ? sortOrder : "asc"}
+                                        onClick={() => onSort("by")}
+
+                                    >
+                                        By
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell style={{ width: '259px', borderBottom: 'none' }}>
+                                    <TableSortLabel
+                                        active={sortBy === "date"}
+                                        direction={sortBy === "date" ? sortOrder : "asc"}
+                                        onClick={() => onSort("date")}
+
+
+                                    >
+                                        Date
+                                    </TableSortLabel>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                    )}
+                    <TableBody className="d-flex flex-column justify-content-center mb-2" style={{ gap: '5px' }}>
+                        {data.map((row, index) => (
+                            <TableRow key={index} className="d-flex justify-content-between align-items-center" style={{ border: '1px solid #7CADB9', borderRadius: '10px', overflow: 'hidden', height: '93px' }}>
+
+                                <TableCell className="d-flex align-items-center">
+                                    <CustomDiv
+                                        bgColor={row.app === "Press Release"
+                                            ? "#C4EFED"
+                                            : row.app === "Blog Post"
+                                                ? "#FAEECD"
+                                                : "#E0E0E0"}
+                                    // borderRadius={isActive ? item.borderRadius : "20px"}
+                                    >
+                                        {
+                                            row.app === "Press Release" && (
+                                                <Image src={doc} width="20" height="20" className="mr-2" />
+
+                                            )
+
+                                        }
+                                        {
+                                            row.app === "Blog Post" && (
+                                                <Image src={doc2} width="20" height="20" className="mr-2" />
+
+                                            )
+                                        }
+                                    </CustomDiv>
+                                    <StyledTableCell>
+                                        {/* <Image src={Press} width="20" height="20" className="mr-2" /> */}
+                                        {row.title}</StyledTableCell>
+                                </TableCell>
+                                <TableCell style={{ width: '132px' }}>
+                                    <Chip
+                                        label={row.app}
+                                        size="small"
+                                        style={{
+                                            backgroundColor:
+                                                row.app === "Press Release"
+                                                    ? "#C4EFED"
+                                                    : row.app === "Blog Post"
+                                                        ? "#FAEECD"
+                                                        : "#E0E0E0",
+                                            color: "#000",
+                                            fontSize: "12px",
+                                        }}
+                                    />
+                                </TableCell>
+                                <TableCell style={{ width: '90px' }}>{row.by}</TableCell>
+                                <TableCell style={{ width: '259px' }}>
+                                    {row.date}
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        size="small"
+                                        onClick={() => handleEdit(row)}
+                                        style={{ marginLeft: "30px", border: 'none', minWidth: '20px' }}
+                                    >
+                                        {/* <EditIcon /> */}
+                                        <img src={editIcon} alt="Edit Icon" />
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        size="small"
+                                        onClick={() => handleDelete(row)}
+                                        style={{ marginLeft: "10px", border: 'none', minWidth: '20px' }}
+                                    >
+                                        <img src={deleteIcon} alt="Edit Icon" />
+
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
+    );
+};
 
 const BlogPage = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    spokesperson: [],
-  });
-  const [editorData, setEditorData] = useState('');
+    const [dummyData, setDummyData] = useState([])
+    // const dummyData1 = [
+    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Press Release", by: "mo@02com", date: "2024-12-19" },
+    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Blog Post", by: "mo@02com", date: "2024-12-19" },
+    //     { title: "Sed do eiusmod tempor incididunt ut labore1234567...", app: "Blog Post", by: "john@domain.com", date: "2024-12-19" },
+    //     { title: "Ut enim ad minim veniam, quis nostrud12345345...", app: "Blog Post", by: "jane@domain.com", date: "2024-12-19" },
+    //     { title: "Duis aute irure dolor in reprehenderit1234567...", app: "Blog Post", by: "alex@domain.com", date: "2024-12-12" },
 
-  const handleInputChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
-  };
+    //     { title: 'd Announces New Advertising Initiative', app: 'Press Release', by: 'ahmad@test.com', date: '2024-12-11' }
+    // ];
 
-  const handleSubmit = async() => {
-    const payload = {
-      press_release_type: formData.pressType,
-      press_release_company: formData.companyDescription,
-      spokes_mens: formData.spokesperson,
-      press_release_facts: formData.factsNotes,
-      press_release_content: formData.releaseReason,
-  };
-  try {
-    const authData = JSON.parse(localStorage.getItem("authData"));
-    const token = authData?.token;
-    if (token) {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/generate-and-save-draft-press-release`, payload, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                const authData = JSON.parse(localStorage.getItem("authData"));
+                const token = authData?.token;
+                // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const pressReleases = response.data.blogs.map(pr => {
+                    const date = new Date(pr.updated_at);
+                    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                    return {
+                        ...pr,
+                        title: pr.title,
+                        app: "Blog Post",
+                        by: pr.user_email,
+                        date: formattedDate,
+                    };
+                });
+                setDummyData(pressReleases)
+                setData(pressReleases);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchBlog();
+    }, []);
+
+    const categorizeData = (data) => {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+
+        const recent = [];
+        const yesterdayData = [];
+        const pastWeekData = [];
+
+        data.forEach((item) => {
+            const itemDate = new Date(item.date);
+
+            if (itemDate.toDateString() === today.toDateString()) {
+                recent.push(item);
+            } else if (itemDate.toDateString() === yesterday.toDateString()) {
+                yesterdayData.push(item);
+            } else if (itemDate < yesterday) {
+                pastWeekData.push(item);
+            }
         });
 
-        if (response.status === 200) {
-            console.log('Press release generated successfully:', response.data);
-            // Update the editor data with the response content_as_html
-            setEditorData(response.data.content_as_html);
-        } else {
-            console.error('Failed to generate press release:', response.statusText);
-            // Optionally, display an error message
-        }
-    }
-} catch (error) {
-    console.error('An error occurred:', error);
-    // Optionally, display an error message
-}
-  };
+        return { recent, yesterday: yesterdayData, pastWeek: pastWeekData };
+    };
 
-  return (
-    <GenerativeAndBlogLayout
-      title="Generative Blog Posts"
-      description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
-      formFields={formFields}
-      formData={formData}
-      handleInputChange={handleInputChange}
-      generateButtonText="Generate Blog Post"
-      editor={<TextEditor value={editorData} onChange={setEditorData} />} 
-      onGenerate={handleSubmit} // Pass the submit handler to the layout
-    />
-  );
+
+    const [sortConfig, setSortConfig] = useState({ key: "date", order: "asc" });
+    const { recent, yesterday, pastWeek } = categorizeData(dummyData);
+
+    const handleSort = (key) => {
+        setSortConfig((prevState) => ({
+            key,
+            order: prevState.key === key && prevState.order === "asc" ? "desc" : "asc",
+        }));
+    };
+
+    const sortedData = (data) => {
+        const { key, order } = sortConfig;
+        return [...data].sort((a, b) => {
+            if (a[key] < b[key]) return order === "asc" ? -1 : 1;
+            if (a[key] > b[key]) return order === "asc" ? 1 : -1;
+            return 0;
+        });
+    };
+
+    const sections = [
+        { title: "Recent", data: sortedData(recent), showHeader: true },
+        { title: "Yesterday", data: sortedData(yesterday), showHeader: recent.length === 0 },
+        { title: "Past Week", data: sortedData(pastWeek), showHeader: recent.length === 0 && yesterday.length === 0 },
+    ];
+
+    return (
+        <Container style={{ marginTop: "40px" }}>
+            <Card sx={{ borderRadius: "30px", boxShadow: 3, width: "100%" }}>
+                <CardContent>
+                    <Typography variant="h4" gutterBottom>
+                        Blog
+                    </Typography>
+                    {sections.map((section, index) => (
+                        <TableSection
+                            key={index}
+                            title={section.title}
+                            data={section.data}
+                            showHeader={section.showHeader}
+                            onSort={handleSort}
+                            sortBy={sortConfig.key}
+                            sortOrder={sortConfig.order}
+                        />
+                    ))}
+                </CardContent>
+            </Card>
+        </Container>
+    );
 };
 
 export default BlogPage;
+const CustomDiv = style.div`
+    background: ${(props) => props.bgColor || '#4C6DEE'};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    height:35px;
+    border-radius: ${(props) => (props.borderRadius ? props.borderRadius : '20px')};
+`;

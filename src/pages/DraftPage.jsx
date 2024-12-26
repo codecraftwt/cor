@@ -184,11 +184,16 @@ const DraftPage = () => {
             try {
                 const authData = JSON.parse(localStorage.getItem("authData"));
                 const token = authData?.token;
-                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?offset=2&is_draft=true`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+                // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`,
+                //     },
+                // });
                 const pressReleases = response.data.press_releases.map(pr => {
                     const date = new Date(pr.updated_at);
                     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;

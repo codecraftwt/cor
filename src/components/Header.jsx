@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import { Row, Col, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap';
 import styled from 'styled-components';
 import msg from '../assets/message-question.svg';
@@ -10,7 +10,9 @@ import Menu from '../assets/menu.svg';
 
 const Header = ({ toggleSidebar }) => {
   const location = useLocation();
-  const isGenerativePress = location.pathname === '/generativepress' || location.pathname === '/blog';
+  const match = matchPath('/blog-posts/:id', location.pathname);
+
+  const isGenerativePress = location.pathname === '/generativepress' || location.pathname === '/blog-post' || match?.pattern.path==='/blog-posts/:id'
 
   const navLinks = [
     { path: '/', label: 'Dashboard' },

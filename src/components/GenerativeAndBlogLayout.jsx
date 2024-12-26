@@ -9,7 +9,6 @@ import huge from '../assets/Huge-icon2.svg';
 import magicpen from '../assets/magicpen.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import CustomModal from './CustomModal';
 import ModalPopup from './ModalPopup';
 
@@ -25,6 +24,8 @@ const GenerativeAndBlogLayout = ({
   formFields,
   formData,
   handleInputChange,
+  handlePublish,
+  handleSaveToDraft,
   generateButtonText,
   editor,
   onGenerate, // New prop for handling generate button click
@@ -131,9 +132,10 @@ const GenerativeAndBlogLayout = ({
 
           <Col xs={12} lg={7} className="d-flex flex-column justify-content-between">
             {editor}
-            {location.pathname.includes('blog') ? (<div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
+            {location.pathname.includes('blog-post') ? (<div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
               <Button
                 className="bg-transparent me-2"
+                onClick={handleSaveToDraft}
                 style={{
                   color: '#000000',
                   borderColor: '#000000',
@@ -145,12 +147,15 @@ const GenerativeAndBlogLayout = ({
               >
                 Save to Draft
               </Button>
-              <Dropdown data-bs-theme="black">
+              <Dropdown data-bs-theme="black" style={{ background: 'black', borderRadius: '30px' }}>
+                <Button onClick={handlePublish} style={{ color: 'white', background: 'transparent', border: 'unset', borderRight: '1px solid white', borderRadius: '0px' }}>
+                  <img src={arrowRight} alt="right arrow" srcset="" className='me-2' />
+                  Publish
+                </Button>
                 <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary"
                   style={{ backgroundColor: '#000', borderColor: '#000', color: '#fff', borderRadius: '30px', fontSize: '14px', fontWeight: '800' }}
                 >
-                  <img src={arrowRight} alt="right arrow" srcset="" className='me-2' />
-                  Publish
+
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className='mb-2'>

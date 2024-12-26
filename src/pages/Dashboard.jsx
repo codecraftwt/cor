@@ -32,7 +32,7 @@ const cardData = [
     button1: { text: "Preview", icon: eye },
     button2: { text: "Create", icon: chart },
     bgColor: "#FFD281",
-    route: "blog", 
+    route: "blog-post", 
   },
 ];
 

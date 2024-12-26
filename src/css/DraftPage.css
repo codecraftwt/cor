@@ -20,6 +20,7 @@
 .css-1wslxbi-MuiTableCell-root,
 .css-1n2oumu-MuiTableCell-root{
     border-bottom: unset !important;
+    min-width: 270px !important;
 }
 .MuiTableRow-head{
     box-shadow: unset !important;
