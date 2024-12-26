@@ -147,7 +147,7 @@ const GenerativeAndBlogLayout = ({
               </Button>
               <Dropdown data-bs-theme="black">
                 <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary"
-                  style={{ backgroundColor: '#000', borderColor: '#000', color: '#fff', borderRadius: '30px',fontSize:'14px',fontWeight:'800' }}
+                  style={{ backgroundColor: '#000', borderColor: '#000', color: '#fff', borderRadius: '30px', fontSize: '14px', fontWeight: '800' }}
                 >
                   <img src={arrowRight} alt="right arrow" srcset="" className='me-2' />
                   Publish
