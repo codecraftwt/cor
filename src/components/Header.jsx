@@ -11,8 +11,9 @@ import Menu from '../assets/menu.svg';
 const Header = ({ toggleSidebar }) => {
   const location = useLocation();
   const match = matchPath('/blog-posts/:id', location.pathname);
+  const matchGP = matchPath('/generativepress/:id', location.pathname);
 
-  const isGenerativePress = location.pathname === '/generativepress' || location.pathname === '/blog-post' || match?.pattern.path==='/blog-posts/:id'
+  const isGenerativePress = location.pathname === '/generativepress' || location.pathname === '/blog-post' || match?.pattern.path==='/blog-posts/:id' || matchGP?.pattern.path==='/generativepress/:id';
 
   const navLinks = [
     { path: '/', label: 'Dashboard' },

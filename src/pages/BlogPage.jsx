@@ -43,7 +43,7 @@ const StyledTableCell = styled(TableCell)({
     // gap:'5px'
 });
 
-const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) => {
+const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,deleteData }) => {
     if (data.length === 0) return null;
         
 
@@ -52,50 +52,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
     const handleEdit = (data) => {
         navigate(`/blog-posts/${data.id}`);
     }
-    const handleDelete = async (data) => {
-        try {
-            console.log("Deleting data:", data);
     
-            // Show confirmation dialog
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    // Perform delete action
-                    try {
-                        // Uncomment the below line to make the actual API call
-                        // await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/blogs/${data.id}`);
-    
-                        console.log("Data deleted successfully");
-    
-                        // Show success message
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success",
-                        });
-                    } catch (error) {
-                        console.error("Error deleting data:", error);
-    
-                        // Show error message
-                        Swal.fire({
-                            title: "Error!",
-                            text: "Failed to delete the file.",
-                            icon: "error",
-                        });
-                    }
-                }
-            });
-        } catch (error) {
-            console.error("Error in handleDelete:", error);
-        }
-    };
 
     return (
         <>
@@ -206,7 +163,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                         variant="outlined"
                                         color="secondary"
                                         size="small"
-                                        onClick={() => handleDelete(row)}
+                                        onClick={() => deleteData(row)}
                                         style={{ marginLeft: "10px", border: 'none', minWidth: '20px' }}
                                     >
                                         <img src={deleteIcon} alt="Edit Icon" />
@@ -236,36 +193,35 @@ const BlogPage = () => {
 
     const [data, setData] = useState([]);
     useEffect(() => {
-        const fetchBlog = async () => {
-            try {
-                const authData = JSON.parse(localStorage.getItem("authData"));
-                const token = authData?.token;
-                // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
-                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const pressReleases = response.data.blogs.map(pr => {
-                    const date = new Date(pr.updated_at);
-                    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                    return {
-                        ...pr,
-                        title: pr.title,
-                        app: "Blog Post",
-                        by: pr.user_email,
-                        date: formattedDate,
-                    };
-                });
-                setDummyData(pressReleases)
-                setData(pressReleases);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
         fetchBlog();
     }, []);
+    const fetchBlog = async () => {
+        try {
+            const authData = JSON.parse(localStorage.getItem("authData"));
+            const token = authData?.token;
+            // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const pressReleases = response.data.blogs.map(pr => {
+                const date = new Date(pr.updated_at);
+                const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                return {
+                    ...pr,
+                    title: pr.title,
+                    app: "Blog Post",
+                    by: pr.user_email,
+                    date: formattedDate,
+                };
+            });
+            setDummyData(pressReleases)
+            setData(pressReleases);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const categorizeData = (data) => {
         const today = new Date();
@@ -289,6 +245,57 @@ const BlogPage = () => {
         });
 
         return { recent, yesterday: yesterdayData, pastWeek: pastWeekData };
+    };
+
+    const handleDelete = async (data) => {
+        try {
+            console.log("Deleting data:", data);
+    
+            // Show confirmation dialog
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    // Perform delete action
+                    const authData = JSON.parse(localStorage.getItem("authData"));
+                    const token = authData?.token;
+                    try {
+                        // Uncomment the below line to make the actual API call
+                        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/blogs/${data.id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+    
+                        console.log("Data deleted successfully");
+                        fetchBlog();
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                        });
+                    } catch (error) {
+                        console.error("Error deleting data:", error);
+    
+                        // Show error message
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete the file.",
+                            icon: "error",
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error in handleDelete:", error);
+        }
     };
 
 
@@ -333,6 +340,7 @@ const BlogPage = () => {
                             onSort={handleSort}
                             sortBy={sortConfig.key}
                             sortOrder={sortConfig.order}
+                            deleteData={handleDelete}
                         />
                     ))}
                 </CardContent>

@@ -32,6 +32,7 @@ const initialRouteConfig = [
   { path: '/sign-in', element: <SignInPage />, hideSidebar: true, hideHeader: true },
   { path: '/create-pass', element: <NewPasswordPage />, hideSidebar: true, hideHeader: true },
   { path: '/generativepress', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
+  { path: '/generativepress/:id', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
   { path: '/blog-post', element: <BlogPost />, hideSidebar: true, hideHeader: false },
   { path: '/blog-posts/:id', element: <BlogPost />, hideSidebar: true, hideHeader: false },
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },

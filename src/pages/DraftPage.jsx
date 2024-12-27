@@ -14,12 +14,10 @@ import {
     Paper,
     TableSortLabel,
     Chip,
+    CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import './../css/DraftPage.css';
-// import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-// import { ReactComponent as EditIcon }from '../assets/edit.svg';
 import editIcon from '../assets/edit.svg';
 import deleteIcon from '../assets/delete.svg';
 import Press from '../assets/press.svg';
@@ -28,6 +26,8 @@ import doc2 from '../assets/document-text2.svg';
 import { Image } from "react-bootstrap";
 import { styled as style } from 'styled-components';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 const StyledTableCell = styled(TableCell)({
@@ -40,8 +40,15 @@ const StyledTableCell = styled(TableCell)({
     // gap:'5px'
 });
 
-const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) => {
+const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,deleteDraft }) => {
     if (data.length === 0) return null;
+
+    const navigate = useNavigate();
+    const handleEdit = (data) => {
+        console.log("Edit data:", data);
+        
+        navigate(`/generativepress/${data.id}`);
+    }
 
     return (
         <>
@@ -142,6 +149,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                         variant="outlined"
                                         color="primary"
                                         size="small"
+                                        onClick={() => handleEdit(row)}
                                         style={{ marginLeft: "30px", border: 'none', minWidth: '20px' }}
                                     >
                                         {/* <EditIcon /> */}
@@ -151,6 +159,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
                                         variant="outlined"
                                         color="secondary"
                                         size="small"
+                                        onClick={() => deleteDraft(row)}
                                         style={{ marginLeft: "10px", border: 'none', minWidth: '20px' }}
                                     >
                                         <img src={deleteIcon} alt="Edit Icon" />
@@ -167,52 +176,46 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder }) =>
 };
 
 const DraftPage = () => {
+    const [loading, setLoading] = useState(true); 
     const [dummyData, setDummyData] = useState([])
-    // const dummyData1 = [
-    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Press Release", by: "mo@02com", date: "2024-12-19" },
-    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Blog Post", by: "mo@02com", date: "2024-12-19" },
-    //     { title: "Sed do eiusmod tempor incididunt ut labore1234567...", app: "Blog Post", by: "john@domain.com", date: "2024-12-19" },
-    //     { title: "Ut enim ad minim veniam, quis nostrud12345345...", app: "Blog Post", by: "jane@domain.com", date: "2024-12-19" },
-    //     { title: "Duis aute irure dolor in reprehenderit1234567...", app: "Blog Post", by: "alex@domain.com", date: "2024-12-12" },
-
-    //     { title: 'd Announces New Advertising Initiative', app: 'Press Release', by: 'ahmad@test.com', date: '2024-12-11' }
-    // ];
-
     const [data, setData] = useState([]);
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const authData = JSON.parse(localStorage.getItem("authData"));
-                const token = authData?.token;
-                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?offset=2&is_draft=true`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
-                //     headers: {
-                //         Authorization: `Bearer ${token}`,
-                //     },
-                // });
-                const pressReleases = response.data.press_releases.map(pr => {
-                    const date = new Date(pr.updated_at);
-                    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                    return {
-                        title: pr.title,
-                        app: "Press Release",
-                        by: pr.user_email,
-                        date: formattedDate,
-                    };
-                });
-                setDummyData(pressReleases)
-                setData(pressReleases);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const authData = JSON.parse(localStorage.getItem("authData"));
+            const token = authData?.token;
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?offset=2&is_draft=true`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
+            //     headers: {
+            //         Authorization: `Bearer ${token}`,
+            //     },
+            // });
+            const pressReleases = response.data.press_releases.map(pr => {
+                const date = new Date(pr.updated_at);
+                const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                return {
+                    ...pr,
+                    title: pr.title,
+                    app: "Press Release",
+                    by: pr.user_email,
+                    date: formattedDate,
+                };
+            });
+            setDummyData(pressReleases)
+            setData(pressReleases);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }finally {
+            setLoading(false); // Stop loader
+        }
+    };
 
     const categorizeData = (data) => {
         const today = new Date();
@@ -236,6 +239,58 @@ const DraftPage = () => {
         });
 
         return { recent, yesterday: yesterdayData, pastWeek: pastWeekData };
+    };
+
+
+    const handleDelete = async (data) => {
+        try {
+            console.log("Deleting data:", data);
+    
+            // Show confirmation dialog
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    // Perform delete action
+                    const authData = JSON.parse(localStorage.getItem("authData"));
+                    const token = authData?.token;
+                    try {
+                        // Uncomment the below line to make the actual API call
+                        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/press-releases/${data.id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+    
+                        console.log("Data deleted successfully");
+                        fetchData();
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                        });
+                    } catch (error) {
+                        console.error("Error deleting data:", error);
+    
+                        // Show error message
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete the file.",
+                            icon: "error",
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error in handleDelete:", error);
+        }
     };
 
 
@@ -271,17 +326,23 @@ const DraftPage = () => {
                     <Typography variant="h4" gutterBottom>
                         Drafts
                     </Typography>
-                    {sections.map((section, index) => (
-                        <TableSection
-                            key={index}
-                            title={section.title}
-                            data={section.data}
-                            showHeader={section.showHeader}
-                            onSort={handleSort}
-                            sortBy={sortConfig.key}
-                            sortOrder={sortConfig.order}
-                        />
-                    ))}
+                    {loading?( <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                            <CircularProgress />
+                        </div>):(
+                            sections.map((section, index) => (
+                                <TableSection
+                                    key={index}
+                                    title={section.title}
+                                    data={section.data}
+                                    showHeader={section.showHeader}
+                                    onSort={handleSort}
+                                    sortBy={sortConfig.key}
+                                    sortOrder={sortConfig.order}
+                                    deleteDraft={handleDelete}
+                                />
+                            ))
+                        )}
+                    
                 </CardContent>
             </Card>
         </Container>

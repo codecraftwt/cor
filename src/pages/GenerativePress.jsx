@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
 import GenerativeAndBlogLayout from '../components/GenerativeAndBlogLayout';
+import { useToast } from '../utils/ToastContext';
+import { CircularProgress } from '@mui/material';
 
 const formFields = [
     {
@@ -38,7 +40,40 @@ const formFields = [
 ];
 
 const GenerativePress = () => {
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { id } = useParams();
+    const { showToast } = useToast();
+
+    useEffect(() => {
+        if (id) {
+            featchPressData()
+            // Fetch data based on the id
+            // const response = await axios.get(`http://161.35.79.99/api/blogs/${id}`);
+            // console.log(response, 'response');
+
+        }
+    }, []);
+
+    const featchPressData = async () => {
+        try {
+            const authData = JSON.parse(localStorage.getItem("authData"));
+            const token = authData?.token;
+            //   http://161.35.79.99/api/press-releases/019406ba-b64b-ed18-e7e8-30537c5a4526
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log(response, 'response');
+
+            setEditorData(response.data.press_release.content_as_html);
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     const [formData, setFormData] = useState({
         spokesperson: [],
     });
@@ -58,6 +93,7 @@ const GenerativePress = () => {
         };
 
         try {
+            setLoading(true);
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
             if (token) {
@@ -80,20 +116,57 @@ const GenerativePress = () => {
         } catch (error) {
             console.error('An error occurred:', error);
             // Optionally, display an error message
+        } finally {
+            setLoading(false);
         }
     };
 
+    const handleSaveAndDocumenet = async () => {
+        console.log(editorData, 'editorData');
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            setLoading(true);
+            const payload = {
+                content: editorData,
+                status: 0
+            };
+            const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            console.log(response, 'response');
+            showToast('Press release updated successfully!', 'success');
+            navigate('/drafts');
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+
+    }
+
+
     return (
-        <GenerativeAndBlogLayout
-            title="Generative Press Release"
-            description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
-            formFields={formFields}
-            formData={formData}
-            handleInputChange={handleInputChange}
-            generateButtonText="Generate Press Release"
-            editor={<TextEditor value={editorData} onChange={setEditorData} />}
-            onGenerate={handleSubmit} // Pass the submit handler to the layout
-        />
+        <>
+            <GenerativeAndBlogLayout
+                title="Generative Press Release"
+                description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
+                formFields={formFields}
+                formData={formData}
+                handleInputChange={handleInputChange}
+                generateButtonText="Generate Press Release"
+                editor={<TextEditor value={editorData} onChange={setEditorData} />}
+                onGenerate={handleSubmit} // Pass the submit handler to the layout
+                handleSaveToDraft={handleSaveAndDocumenet}
+            />
+            {loading && (
+            <div style={{ display: "flex", position: 'absolute', justifyContent: "center", height: "100vh", alignItems: "center", width: "99%", top: "0" }}>
+                <CircularProgress />
+            </div>
+            )}
+        </>
     );
 };
 

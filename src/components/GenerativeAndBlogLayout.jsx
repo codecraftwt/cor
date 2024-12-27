@@ -179,6 +179,7 @@ const GenerativeAndBlogLayout = ({
               </Button>
               <Button
                 className="border-0"
+                onClick={handleSaveToDraft}
                 style={{
                   backgroundColor: '#000000',
                   width: '160px',
