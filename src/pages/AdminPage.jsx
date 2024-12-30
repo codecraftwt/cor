@@ -11,6 +11,7 @@ const AdminPage = () => {
     const [companyName, setCompanyName] = useState('');
     const [companyLocations, setCompanyLocations] = useState([]);
     const [websites, setWebsites] = useState([]);
+    const [company, setCompany] = useState([]);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -73,6 +74,7 @@ const AdminPage = () => {
     }
 
     useEffect(()=>{
+        getCompany()
         getWebSite()
     },[])
 
@@ -90,6 +92,26 @@ const AdminPage = () => {
             )
             console.log(response.data.website_links,'response website');
             setWebsites(response.data.website_links)
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+    const getCompany = async() => {
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`,
+                {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+            )
+            console.log(response.data.company,'response website');
+            setCompany(response.data.company)
+            setCompanyName(response.data.company.name)
         } catch (error) {
             console.log(error);
             

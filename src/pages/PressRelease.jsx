@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import {
     Typography,
@@ -40,10 +42,10 @@ const StyledTableCell = styled(TableCell)({
     // gap:'5px'
 });
 
-const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, deleteDraft, editDraft }) => {
+const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,deleteDraft,editDraft }) => {
     if (data.length === 0) return null;
 
-
+    
 
     return (
         <>
@@ -170,9 +172,9 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
     );
 };
 
-const DraftPage = () => {
+const PressRelease = () => {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); 
     const [dummyData, setDummyData] = useState([])
     const [data, setData] = useState([]);
     useEffect(() => {
@@ -204,28 +206,11 @@ const DraftPage = () => {
                     date: formattedDate,
                 };
             });
-            const responseBlog = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const blog = responseBlog.data.blogs.map(pr => {
-                const date = new Date(pr.updated_at);
-                const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                return {
-                    ...pr,
-                    title: pr.title,
-                    app: "Blog Post",
-                    by: pr.user_email,
-                    date: formattedDate,
-                };
-            });
-
-            setDummyData([...pressReleases, ...blog]);
-            setData([...pressReleases, ...blog]);
+            setDummyData(pressReleases)
+            setData(pressReleases);
         } catch (error) {
             console.error("Error fetching data:", error);
-        } finally {
+        }finally {
             setLoading(false); // Stop loader
         }
     };
@@ -258,7 +243,7 @@ const DraftPage = () => {
     const handleDelete = async (data) => {
         try {
             console.log("Deleting data:", data);
-
+    
             // Show confirmation dialog
             Swal.fire({
                 title: "Are you sure?",
@@ -273,61 +258,31 @@ const DraftPage = () => {
                     // Perform delete action
                     const authData = JSON.parse(localStorage.getItem("authData"));
                     const token = authData?.token;
-
-                    if (data.app === "Press Release") {
-                        try {
-                            // Uncomment the below line to make the actual API call
-                            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/press-releases/${data.id}`, {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                },
-                            });
-
-                            console.log("Data deleted successfully");
-                            fetchData();
-                            // Show success message
-                            Swal.fire({
-                                title: "Deleted!",
-                                text: "Your file has been deleted.",
-                                icon: "success",
-                            });
-                        } catch (error) {
-                            console.error("Error deleting data:", error);
-
-                            // Show error message
-                            Swal.fire({
-                                title: "Error!",
-                                text: "Failed to delete the file.",
-                                icon: "error",
-                            });
-                        }
-                    } else {
-                        try {
-                            // Uncomment the below line to make the actual API call
-                            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/blogs/${data.id}`, {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                },
-                            });
-
-                            console.log("Data deleted successfully");
-                            fetchData();
-                            // Show success message
-                            Swal.fire({
-                                title: "Deleted!",
-                                text: "Your file has been deleted.",
-                                icon: "success",
-                            });
-                        } catch (error) {
-                            console.error("Error deleting data:", error);
-
-                            // Show error message
-                            Swal.fire({
-                                title: "Error!",
-                                text: "Failed to delete the file.",
-                                icon: "error",
-                            });
-                        }
+                    try {
+                        // Uncomment the below line to make the actual API call
+                        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/press-releases/${data.id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+    
+                        console.log("Data deleted successfully");
+                        fetchData();
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                        });
+                    } catch (error) {
+                        console.error("Error deleting data:", error);
+    
+                        // Show error message
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete the file.",
+                            icon: "error",
+                        });
                     }
                 }
             });
@@ -337,12 +292,8 @@ const DraftPage = () => {
     };
     const handleEdit = (data) => {
         console.log("Edit data:", data);
-        if (data.app === "Press Release") {
-            navigate(`/generativepress/${data.id}`);
-        } else {
-            navigate(`/blog-posts/${data.id}`);
-        }
-        // navigate(`/generativepress/${data.id}`);
+        
+        navigate(`/generativepress/${data.id}`);
     }
 
 
@@ -376,33 +327,33 @@ const DraftPage = () => {
             <Card sx={{ borderRadius: "30px", boxShadow: 3, width: "100%" }}>
                 <CardContent>
                     <Typography variant="h4" gutterBottom>
-                        Drafts
+                    Press Release
                     </Typography>
-                    {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                        <CircularProgress />
-                    </div>) : (
-                        sections.map((section, index) => (
-                            <TableSection
-                                key={index}
-                                title={section.title}
-                                data={section.data}
-                                showHeader={section.showHeader}
-                                onSort={handleSort}
-                                sortBy={sortConfig.key}
-                                sortOrder={sortConfig.order}
-                                deleteDraft={handleDelete}
-                                editDraft={handleEdit}
-                            />
-                        ))
-                    )}
-
+                    {loading?( <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                            <CircularProgress />
+                        </div>):(
+                            sections.map((section, index) => (
+                                <TableSection
+                                    key={index}
+                                    title={section.title}
+                                    data={section.data}
+                                    showHeader={section.showHeader}
+                                    onSort={handleSort}
+                                    sortBy={sortConfig.key}
+                                    sortOrder={sortConfig.order}
+                                    deleteDraft={handleDelete}
+                                    editDraft={handleEdit}
+                                />
+                            ))
+                        )}
+                    
                 </CardContent>
             </Card>
         </Container>
     );
 };
 
-export default DraftPage;
+export default PressRelease;
 const CustomDiv = style.div`
     background: ${(props) => props.bgColor || '#4C6DEE'};
     display: flex;

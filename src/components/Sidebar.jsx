@@ -18,8 +18,8 @@ const Sidebar = () => {
             section: "Brand Space",
             items: [
                 { title: "Drafts", icon: Draft, bgColor: "#4C6DEE", activeColor: "#C3CFFF", borderRadius: "5px", path: "/drafts" },
-                { title: "Press Releases", icon: Press, bgColor: "#4C6DEE", path: "/press" },
-                { title: "Blogs", icon: Blog, bgColor: "#4C6DEE", path: "/blog" },
+                { title: "Press Releases", icon: Press, bgColor: "#4C6DEE",activeColor: "#C3CFFF", borderRadius: "5px", path: "/press-release" },
+                { title: "Blogs", icon: Blog, bgColor: "#4C6DEE",activeColor: "#C3CFFF", borderRadius: "5px", path: "/blog" },
             ],
         },
         {

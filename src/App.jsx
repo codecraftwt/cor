@@ -20,6 +20,9 @@ import TeamsPage from './pages/TeamsPage';
 import ProfilePage from './pages/ProfilePage';
 import DraftPage from './pages/DraftPage';
 import BlogPage from './pages/BlogPage';
+// import TeamMemberInvitations from './pages/teamMemberInvitations';
+import TeamMemberInvitations from './pages/TeamMemberInvitations';
+import PressRelease from './pages/PressRelease';
 
 const initialRouteConfig = [
   { path: '/', element: <Dashboard />, hideSidebar: false, hideHeader: false },
@@ -27,6 +30,7 @@ const initialRouteConfig = [
   { path: '/teams', element: <TeamsPage />, hideSidebar: false, hideHeader: true },
   { path: '/profile', element: <ProfilePage />, hideSidebar: false, hideHeader: true },
   { path: '/drafts', element: <DraftPage />, hideSidebar: false, hideHeader: true },
+  { path: '/press-release', element: <PressRelease />, hideSidebar: false, hideHeader: true },
   { path: '/blog', element: <BlogPage />, hideSidebar: false, hideHeader: true },
   { path: '/sign-up', element: <SignUpPage />, hideSidebar: true, hideHeader: true },
   { path: '/sign-in', element: <SignInPage />, hideSidebar: true, hideHeader: true },
@@ -36,7 +40,8 @@ const initialRouteConfig = [
   { path: '/blog-post', element: <BlogPost />, hideSidebar: true, hideHeader: false },
   { path: '/blog-posts/:id', element: <BlogPost />, hideSidebar: true, hideHeader: false },
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },
-  { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false }, // Ensure explore route is included
+  { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false },
+  { path: '/team-member-invitations', element: <TeamMemberInvitations />, hideSidebar: true, hideHeader: true },
 ];
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
@@ -88,7 +93,7 @@ const AppRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass') {
+    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations') {
       navigate('/sign-in');
     }
   }, [location.pathname, navigate]);

@@ -16,6 +16,7 @@ import {
     Paper,
     TableSortLabel,
     Chip,
+    CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import './../css/DraftPage.css';
@@ -43,16 +44,16 @@ const StyledTableCell = styled(TableCell)({
     // gap:'5px'
 });
 
-const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,deleteData }) => {
+const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, deleteData }) => {
     if (data.length === 0) return null;
-        
+
 
     const navigate = useNavigate();
-    
+
     const handleEdit = (data) => {
         navigate(`/blog-posts/${data.id}`);
     }
-    
+
 
     return (
         <>
@@ -181,6 +182,8 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,delet
 
 const BlogPage = () => {
     const [dummyData, setDummyData] = useState([])
+    const [loading, setLoading] = useState(true);
+
     // const dummyData1 = [
     //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Press Release", by: "mo@02com", date: "2024-12-19" },
     //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Blog Post", by: "mo@02com", date: "2024-12-19" },
@@ -220,6 +223,8 @@ const BlogPage = () => {
             setData(pressReleases);
         } catch (error) {
             console.error("Error fetching data:", error);
+        }finally {
+            setLoading(false); // Stop loader
         }
     };
 
@@ -250,7 +255,7 @@ const BlogPage = () => {
     const handleDelete = async (data) => {
         try {
             console.log("Deleting data:", data);
-    
+
             // Show confirmation dialog
             Swal.fire({
                 title: "Are you sure?",
@@ -272,7 +277,7 @@ const BlogPage = () => {
                                 Authorization: `Bearer ${token}`,
                             },
                         });
-    
+
                         console.log("Data deleted successfully");
                         fetchBlog();
                         // Show success message
@@ -283,7 +288,7 @@ const BlogPage = () => {
                         });
                     } catch (error) {
                         console.error("Error deleting data:", error);
-    
+
                         // Show error message
                         Swal.fire({
                             title: "Error!",
@@ -331,7 +336,7 @@ const BlogPage = () => {
                     <Typography variant="h4" gutterBottom>
                         Blog
                     </Typography>
-                    {sections.map((section, index) => (
+                    {/* {sections.map((section, index) => (
                         <TableSection
                             key={index}
                             title={section.title}
@@ -342,7 +347,23 @@ const BlogPage = () => {
                             sortOrder={sortConfig.order}
                             deleteData={handleDelete}
                         />
-                    ))}
+                    ))} */}
+                    {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                        <CircularProgress />
+                    </div>) : (
+                        sections.map((section, index) => (
+                            <TableSection
+                                key={index}
+                                title={section.title}
+                                data={section.data}
+                                showHeader={section.showHeader}
+                                onSort={handleSort}
+                                sortBy={sortConfig.key}
+                                sortOrder={sortConfig.order}
+                                deleteData={handleDelete}
+                            />
+                        ))
+                    )}
                 </CardContent>
             </Card>
         </Container>

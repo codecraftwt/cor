@@ -219,8 +219,8 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                const users = response.data.users.map(user => ({
-                    id: user.id,
+                const users = response.data.users.map((user,index) => ({
+                    id:`${user.id}-${index}`,
                     status: 'completed',
                     name: `${user.first_name} ${user.last_name}`,
                     email: user.email,
@@ -232,8 +232,8 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                const usersInvite = responseInvitations.data.team_member_invitations.map(user => ({
-                    id: user.id,
+                const usersInvite = responseInvitations.data.team_member_invitations.map((user,index) => ({
+                    id: `${user.id}-${index}`,
                     status: 'pending',
                     name: `${user.first_name} ${user.last_name}`,
                     email: user.email,
@@ -258,8 +258,9 @@ const TeamsTable = () => {
                 const payload = {
                     role_id: roleOptions.indexOf(newRole) + 2
                 }
+                const realId = data.id.split('-')[0];
                 console.log(payload, 'payload');
-                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${data.id}/update-role`, payload, {
+                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}/update-role`, payload, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -272,7 +273,8 @@ const TeamsTable = () => {
                 const payload = {
                     role_id: roleOptions.indexOf(newRole) + 2
                 }
-                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-members/${data.id}/update-role`, payload, {
+                const realId = data.id.split('-')[0];
+                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}/update-role`, payload, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

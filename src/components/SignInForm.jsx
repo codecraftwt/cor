@@ -94,6 +94,17 @@ const SignInForm = () => {
         }
     },[])
 
+    const handleGoogleSignIn = async() => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/callback`);
+            console.log(response, 'response');
+            
+        } catch (error) {
+            console.error('An error occurred:', error);
+            
+        }
+    }
+
     return (
         <div className='w-100 d-flex' style={{ minHeight: '84vh' }}>
             <Card className=" m-auto" style={{ width: '453px', background: 'transparent', border: 'none' }}>
@@ -148,6 +159,7 @@ const SignInForm = () => {
                                 backgroundBlendMode: "overlay",
                                 height: '48px'
                             }}
+                            onClick={() => handleGoogleSignIn()}
                         >
                             <img src={googlelogo} alt="" /> Sign in with Google
                         </Button>
