@@ -147,7 +147,12 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                         }}
                                     />
                                 </TableCell>
-                                <TableCell style={{ width: '90px' }}>{row.by}</TableCell>
+                                <TableCell style={{
+                                    width: '100px', maxWidth: ' 300px',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }} title={row.by}>{row.by}</TableCell>
                                 <TableCell style={{ width: '259px' }}>
                                     {row.date}
                                     <Button
@@ -223,7 +228,7 @@ const BlogPage = () => {
             setData(pressReleases);
         } catch (error) {
             console.error("Error fetching data:", error);
-        }finally {
+        } finally {
             setLoading(false); // Stop loader
         }
     };

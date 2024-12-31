@@ -42,10 +42,10 @@ const StyledTableCell = styled(TableCell)({
     // gap:'5px'
 });
 
-const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,deleteDraft,editDraft }) => {
+const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, deleteDraft, editDraft }) => {
     if (data.length === 0) return null;
 
-    
+
 
     return (
         <>
@@ -139,7 +139,12 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,delet
                                         }}
                                     />
                                 </TableCell>
-                                <TableCell style={{ width: '90px' }}>{row.by}</TableCell>
+                                <TableCell style={{
+                                    width: '100px', maxWidth: ' 300px',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }} title={row.by}>{row.by}</TableCell>
                                 <TableCell style={{ width: '259px' }}>
                                     {row.date}
                                     <Button
@@ -174,7 +179,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder,delet
 
 const PressRelease = () => {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const [dummyData, setDummyData] = useState([])
     const [data, setData] = useState([]);
     useEffect(() => {
@@ -185,7 +190,7 @@ const PressRelease = () => {
         try {
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?offset=2&is_draft=true`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -210,7 +215,7 @@ const PressRelease = () => {
             setData(pressReleases);
         } catch (error) {
             console.error("Error fetching data:", error);
-        }finally {
+        } finally {
             setLoading(false); // Stop loader
         }
     };
@@ -243,7 +248,7 @@ const PressRelease = () => {
     const handleDelete = async (data) => {
         try {
             console.log("Deleting data:", data);
-    
+
             // Show confirmation dialog
             Swal.fire({
                 title: "Are you sure?",
@@ -265,7 +270,7 @@ const PressRelease = () => {
                                 Authorization: `Bearer ${token}`,
                             },
                         });
-    
+
                         console.log("Data deleted successfully");
                         fetchData();
                         // Show success message
@@ -276,7 +281,7 @@ const PressRelease = () => {
                         });
                     } catch (error) {
                         console.error("Error deleting data:", error);
-    
+
                         // Show error message
                         Swal.fire({
                             title: "Error!",
@@ -292,7 +297,7 @@ const PressRelease = () => {
     };
     const handleEdit = (data) => {
         console.log("Edit data:", data);
-        
+
         navigate(`/generativepress/${data.id}`);
     }
 
@@ -327,26 +332,26 @@ const PressRelease = () => {
             <Card sx={{ borderRadius: "30px", boxShadow: 3, width: "100%" }}>
                 <CardContent>
                     <Typography variant="h4" gutterBottom>
-                    Press Release
+                        Press Release
                     </Typography>
-                    {loading?( <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                            <CircularProgress />
-                        </div>):(
-                            sections.map((section, index) => (
-                                <TableSection
-                                    key={index}
-                                    title={section.title}
-                                    data={section.data}
-                                    showHeader={section.showHeader}
-                                    onSort={handleSort}
-                                    sortBy={sortConfig.key}
-                                    sortOrder={sortConfig.order}
-                                    deleteDraft={handleDelete}
-                                    editDraft={handleEdit}
-                                />
-                            ))
-                        )}
-                    
+                    {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                        <CircularProgress />
+                    </div>) : (
+                        sections.map((section, index) => (
+                            <TableSection
+                                key={index}
+                                title={section.title}
+                                data={section.data}
+                                showHeader={section.showHeader}
+                                onSort={handleSort}
+                                sortBy={sortConfig.key}
+                                sortOrder={sortConfig.order}
+                                deleteDraft={handleDelete}
+                                editDraft={handleEdit}
+                            />
+                        ))
+                    )}
+
                 </CardContent>
             </Card>
         </Container>

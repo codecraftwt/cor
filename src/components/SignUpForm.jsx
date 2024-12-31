@@ -6,9 +6,12 @@ import googlelogo from "../assets/icons8-google.svg";
 import { useNavigate } from "react-router-dom";
 import 'react-phone-input-2/lib/style.css';
 import PhoneInput from "react-phone-input-2";
+import { useToast } from "../utils/ToastContext";
+
 
 const SignUpForm = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -53,6 +56,9 @@ const SignUpForm = () => {
 
   const handleCountryChange = (e) => {
     const selected = countries.find(country => country.id === parseInt(e.target.value));
+    console.log(selected,'selected');
+    
+    
     setSelectedCountry(selected);
     setFormData({
       ...formData,
@@ -75,7 +81,7 @@ const SignUpForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-          // navigate("/explore");
+    // navigate("/explore");
 
     if (validateForm()) {
       const payload = {
@@ -86,13 +92,15 @@ const SignUpForm = () => {
         country_of_residence: selectedCountry.country_code,
         password: formData.password,
         company_name: formData.company,
-        company_location_id:1,
+        company_location_id: 1,
         country_id: selectedCountry.id,
       };
 
       axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload)
         .then(response => {
           console.log('User registered successfully:', response.data);
+          localStorage.setItem('authData', JSON.stringify(response.data));
+          showToast('User logged in successfully', 'success');
           navigate("/");
         })
         .catch(error => {
@@ -212,7 +220,7 @@ const SignUpForm = () => {
                 <Form.Group controlId="phoneNumber" className="mb-3">
                   <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Phone Number</Form.Label>
                   <PhoneInput
-                    country={"us"}
+                    country={'in'}
                     value={phoneNumber}
                     onChange={setPhoneNumber}
                     style={{ ...commonStyles, padding: "0 12px" }}

@@ -137,7 +137,12 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                         }}
                                     />
                                 </TableCell>
-                                <TableCell style={{ width: '90px' }}>{row.by}</TableCell>
+                                <TableCell style={{
+                                    width: '100px', maxWidth: ' 300px',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }} title={row.by}>{row.by}</TableCell>
                                 <TableCell style={{ width: '259px' }}>
                                     {row.date}
                                     <Button
@@ -183,7 +188,7 @@ const DraftPage = () => {
         try {
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?offset=2&is_draft=true`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?is_draft=true`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -204,7 +209,7 @@ const DraftPage = () => {
                     date: formattedDate,
                 };
             });
-            const responseBlog = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`, {
+            const responseBlog = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs?is_draft=true`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

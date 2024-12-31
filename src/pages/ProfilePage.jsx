@@ -20,6 +20,7 @@ import { useToast } from "../utils/ToastContext";
 
 const ProfilePage = () => {
   const { showToast } = useToast();
+  const [companyName, setCompanyName] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -48,11 +49,18 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
         const { user } = response.data;
+        const companyResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`,{headers: {
+          Authorization: `Bearer ${token}`,
+        },})
+        console.log(companyResponse.data.company, 'companyResponse');
+        setCompanyName(companyResponse.data.company.name);
         setFormData({
           firstName: user.first_name,
           lastName: user.last_name,
           company: user.company_id,
+          companyName: companyResponse.data.company.name,
           country: user.country.id, // Store the country ID
           email: user.email,
           phoneNumber: user.phone_number,
@@ -237,7 +245,7 @@ const ProfilePage = () => {
                     style={{ ...commonStyles }}
                     fullWidth
                     variant="outlined"
-                    value={formData.company}
+                    value={companyName}
                     disabled
                   />
                 </FormControl>

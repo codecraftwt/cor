@@ -177,7 +177,7 @@ const GenerativeAndBlogLayout = ({
               >
                 Edit
               </Button>
-              <Button
+              {/* <Button
                 className="border-0"
                 onClick={handleSaveToDraft}
                 style={{
@@ -188,7 +188,24 @@ const GenerativeAndBlogLayout = ({
                 }}
               >
                 Save the Document
-              </Button>
+              </Button> */}
+              <Dropdown data-bs-theme="black" style={{ background: 'black', borderRadius: '30px' }}>
+                <Button onClick={handleSaveToDraft} style={{ color: 'white', background: 'transparent', border: 'unset', borderRight: '1px solid white', borderRadius: '0px' }}>
+                  <img src={arrowRight} alt="right arrow" srcset="" className='me-2' />
+                  Save the Document
+                </Button>
+                <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary"
+                  style={{ backgroundColor: '#000', borderColor: '#000', color: '#fff', borderRadius: '30px', fontSize: '14px', fontWeight: '800' }}
+                >
+
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu className='mb-2'>
+                  <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowModal}><img src={shared} alt="right arrow" srcset="" className='me-2' /> Share</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowDraftModal}> <img src={huge} alt="" srcset="" className='me-2' /> Preview Press Release</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>)}
 
 

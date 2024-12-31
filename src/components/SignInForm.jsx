@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '../utils/ToastContext';
 // import { useToast } from './ToastContext';
+import { GoogleLogin } from '@react-oauth/google';
+import {jwtDecode} from 'jwt-decode';
 
 const SignInForm = () => {
     const navigate = useNavigate();
@@ -94,17 +96,55 @@ const SignInForm = () => {
         }
     },[])
 
-    const handleGoogleSignIn = async() => {
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/callback`);
-            console.log(response, 'response');
-            
-        } catch (error) {
-            console.error('An error occurred:', error);
-            
-        }
-    }
+    // const handleGoogleSignIn = async() => {
+    //     window.open('https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app');
+    //     // try {
 
+    //     //     const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/callback`);
+    //     //     console.log(response, 'response');
+            
+    //     // } catch (error) {
+    //     //     console.error('An error occurred:', error);
+            
+    //     // }
+    // }
+
+    const handleGoogleSignIn = async() => {
+        // Open the Google Sign-In page
+        // const authWindow = window.open(
+        //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
+        //     '_blank',
+        //     'width=500,height=600'
+        // );
+
+        window.location.href = 'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app';
+
+        // const popup = window.open(
+        //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
+        //     'google-auth',
+        //     'width=500,height=600'
+        //   );
+          console.log('hi');
+          
+          // Listen for message from the popup
+        //   window.addEventListener('message', (event) => {
+        //     console.log(event,'event');
+            
+        //     if (event.origin === 'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app') {
+        //       console.log('Received data:', event.data);
+        //       // Process the received data
+        //       popup.close();
+        //     }
+        //   });
+
+          const interval = setInterval(() => {
+            const res = axios.get('https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app/auth/callback');
+          }, 1000);
+          
+    
+        };
+    
+    
     return (
         <div className='w-100 d-flex' style={{ minHeight: '84vh' }}>
             <Card className=" m-auto" style={{ width: '453px', background: 'transparent', border: 'none' }}>
@@ -164,6 +204,15 @@ const SignInForm = () => {
                             <img src={googlelogo} alt="" /> Sign in with Google
                         </Button>
 
+                        {/* <GoogleLogin onSuccess={(res)=>{
+                            console.log(res,'res');
+                            console.log(jwtDecode(res.credential),'jwt');
+                            localStorage.setItem('authData', JSON.stringify({'token':res.credential}));
+                            navigate("/");
+                        }} onError={(errors)=>{
+                            console.log(errors,'errors');
+                        }}/> */}
+
                         <div className="text-center mb-3 d-flex align-items-center">
                             <hr className='w-50' />
                             <span>Or</span>
@@ -218,13 +267,13 @@ const SignInForm = () => {
                             >
                                 Sign In
                             </Button>
-                            <div className="gradient-border mt-5" style={{ cursor: 'pointer' }}>
+                            <div className="gradient-border mt-5" style={{ cursor: 'pointer' }} onClick={()=>navigate('/sign-up')}>
                                 <div className="content">
                                     <span style={{ fontSize: '20px', fontWeight: '600' }}>Don’t have an account? </span>
                                     <Button
                                         className="border-0"
                                         style={{ background: 'transparent', fontWeight: '700', fontSize: '20px', color: '#4C6DEE' }}
-                                        href="/sign-up"
+                                        
                                     >
                                         Sign Up
                                     </Button>
