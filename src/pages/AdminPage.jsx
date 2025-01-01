@@ -15,6 +15,7 @@ const AdminPage = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [countries, setCountries] = useState([]);
 
     const handleSave = () => {
         const data = {
@@ -28,7 +29,7 @@ const AdminPage = () => {
         console.log('Saved Data:', data);
     };
 
-    const changePassword = async() => {
+    const changePassword = async () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/change-password`;
@@ -44,20 +45,51 @@ const AdminPage = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            
+
             showToast('password change successfully', 'success');
-            console.log(response,'response');
+            console.log(response, 'response');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
-            
+
         } catch (error) {
             console.error('Error:', error);
             showToast('current password is incorrect', 'error');
         }
-        
-        
+
+
     };
+    const addWebsite = async () => {
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/companies`;
+
+        const payload = {
+            name: companyName,
+            location_id: company.location_id,
+            website_links: websites,
+        };
+
+        try {
+            const response = await axios.put(apiUrl, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            showToast('Websites added successfully!', 'success');
+            console.log('Response:', response);
+
+            // Refresh data
+            getCompany();
+            getWebSite();
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('Failed to add websites. Please try again.', 'error');
+        }
+    };
+
 
     const handleCancel = () => {
         setCompanyName('');
@@ -66,55 +98,69 @@ const AdminPage = () => {
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
+        getCompany()
+        getWebSite()
     };
 
-    const handleResetPassword=()=>{
-        localStorage.setItem('resetPass',true)
+    const handleResetPassword = () => {
+        localStorage.setItem('resetPass', true)
         navigate('/sign-in')
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getCompany()
         getWebSite()
-    },[])
+        handleGetCountries()
+    }, [])
 
-    const getWebSite = async() => {
+    const handleGetCountries = () => {
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/countries`)
+            .then(response => {
+                setCountries(response.data.countries);
+            })
+            .catch(error => {
+                console.error('Error fetching countries:', error);
+            });
+    }
+
+    const getWebSite = async () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/website-links/me`,
                 {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
                 }
-            }
             )
-            console.log(response.data.website_links,'response website');
-            setWebsites(response.data.website_links)
+            console.log(response.data.website_links, 'response website');
+            setWebsites(response.data.website_links.map((item) => item.link))
         } catch (error) {
             console.log(error);
-            
+
         }
     }
-    const getCompany = async() => {
+    const getCompany = async () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`,
                 {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
                 }
-            }
             )
-            console.log(response.data.company,'response website');
+            console.log(response.data.company, 'response website');
+            countries.map((item) => {item.id==response.data.company.location_id?setCompanyLocations([item.name]):null})
             setCompany(response.data.company)
             setCompanyName(response.data.company.name)
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
@@ -185,6 +231,16 @@ const AdminPage = () => {
                                             onChange={(e) => setWebsites(e.value)}
                                         />
                                     </Form.Group>
+                                    <Button style={{
+                                        width: '100px',
+                                        height: '40px',
+                                        borderRadius: '30px',
+                                        background: 'black',
+                                        color: 'white',
+                                        borderColor: 'black',
+                                        fontSize: '14px',
+                                        fontWeight: '800',
+                                    }} onClick={addWebsite}>Save</Button>
                                 </Col>
                             </Row>
                             <hr style={{ margin: '30px 0px' }} />
@@ -195,8 +251,10 @@ const AdminPage = () => {
                                     <Form.Group className="mb-3">
                                         <Form.Label style={{ ...labelStyle }}>Enter Current Password</Form.Label>
                                         <Form.Control
-                                            style={{ ...commonStyles ,fontSize: '23px',
-                                                fontWeight: '900'}}
+                                            style={{
+                                                ...commonStyles, fontSize: '23px',
+                                                fontWeight: '900'
+                                            }}
                                             type="password"
                                             placeholder="Enter current password"
                                             value={currentPassword}
@@ -212,8 +270,10 @@ const AdminPage = () => {
                                     <Form.Group className="mb-3">
                                         <Form.Label style={{ ...labelStyle }}>New Password</Form.Label>
                                         <Form.Control
-                                            style={{ ...commonStyles ,fontSize: '23px',
-                                                fontWeight: '900'}}
+                                            style={{
+                                                ...commonStyles, fontSize: '23px',
+                                                fontWeight: '900'
+                                            }}
                                             type="password"
                                             placeholder="Enter new password"
                                             value={newPassword}
@@ -226,8 +286,10 @@ const AdminPage = () => {
                                     <Form.Group className="mb-3">
                                         <Form.Label style={{ ...labelStyle }}>Confirm Password</Form.Label>
                                         <Form.Control
-                                            style={{ ...commonStyles ,fontSize: '23px',
-                                                fontWeight: '900'}}
+                                            style={{
+                                                ...commonStyles, fontSize: '23px',
+                                                fontWeight: '900'
+                                            }}
                                             type="password"
                                             placeholder="Confirm new password"
                                             value={confirmPassword}

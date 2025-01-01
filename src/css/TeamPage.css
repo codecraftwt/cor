@@ -96,3 +96,6 @@
 .MuiInputAdornment-root .MuiButtonBase-root{
     background-color:#9BE3F9 !important;
 }
+.MuiDataGrid-footerContainer{
+    display: none !important;
+}

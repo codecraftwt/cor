@@ -5,9 +5,21 @@ import axios from "axios";
 import googlelogo from "../assets/icons8-google.svg";
 import { useNavigate } from "react-router-dom";
 import 'react-phone-input-2/lib/style.css';
-import PhoneInput from "react-phone-input-2";
+import PhoneInput, { countryData } from "react-phone-input-2";
 import { useToast } from "../utils/ToastContext";
+import rawTerritories from "./rawTerritories";
+import rawCountries from "./rawCountries";
 
+const allCountries = rawCountries.map(([name, regions, iso2, dialCode, format = "", priority = 0, areaCodes = []]) => ({
+  name, // Country or territory name
+  iso2, // ISO2 code
+  dialCode, // International dialing code
+  format, // Optional phone number format
+  priority, // Optional priority for countries with the same dial code
+  areaCodes // Optional area codes
+}));
+
+export { allCountries };
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -26,6 +38,7 @@ const SignUpForm = () => {
   const [errors, setErrors] = useState({});
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCountryCode, setSelectedCountryCode] = useState('us');
 
   const commonStyles = {
     height: "52px",
@@ -56,9 +69,9 @@ const SignUpForm = () => {
 
   const handleCountryChange = (e) => {
     const selected = countries.find(country => country.id === parseInt(e.target.value));
-    console.log(selected,'selected');
+    const getCode= allCountries.find(country => country.name === selected.name);
     
-    
+    setSelectedCountryCode(getCode.iso2)
     setSelectedCountry(selected);
     setFormData({
       ...formData,
@@ -92,10 +105,10 @@ const SignUpForm = () => {
         country_of_residence: selectedCountry.country_code,
         password: formData.password,
         company_name: formData.company,
-        company_location_id: 1,
+        company_location_id: selectedCountry.id,
         country_id: selectedCountry.id,
       };
-
+      
       axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload)
         .then(response => {
           console.log('User registered successfully:', response.data);
@@ -219,12 +232,25 @@ const SignUpForm = () => {
               <Col md={6}>
                 <Form.Group controlId="phoneNumber" className="mb-3">
                   <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Phone Number</Form.Label>
-                  <PhoneInput
-                    country={'in'}
+                  {/* <PhoneInput
+                    country={'ind'}
                     value={phoneNumber}
                     onChange={setPhoneNumber}
                     style={{ ...commonStyles, padding: "0 12px" }}
+                  /> */}
+                  <PhoneInput
+                    country={selectedCountryCode} // Default country code
+                    value={phoneNumber}
+                    onChange={(value) => setPhoneNumber(value)}
+                    style={{ ...commonStyles, padding: "0 12px" }}
+                    enableSearch={true}
+                    countries={allCountries.map(country => ({
+                      name: country.name,
+                      iso2: country.iso2,
+                      dialCode: country.dialCode
+                    }))}
                   />
+
                   {errors.phoneNumber && <span className="text-danger">{errors.phoneNumber}</span>}
                 </Form.Group>
               </Col>

@@ -17,6 +17,7 @@ import {
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useToast } from "../utils/ToastContext";
+import { allCountries } from "../components/SignUpForm";
 
 const ProfilePage = () => {
   const { showToast } = useToast();
@@ -31,7 +32,7 @@ const ProfilePage = () => {
   });
   const [countries, setCountries] = useState([]);
   const [errors, setErrors] = useState({});
-
+  const [selectedCountryCode, setSelectedCountryCode] = useState('');
   useEffect(() => {
     handleGetCountries();
     fetchData();
@@ -41,7 +42,6 @@ const ProfilePage = () => {
     try {
       const authData = JSON.parse(localStorage.getItem("authData"));
       const token = authData?.token;
-      console.log(token, 'token');
 
       if (token) {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/profile`, {
@@ -49,12 +49,14 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        console.log("Profile data:", response.data);
+        
         const { user } = response.data;
-        const companyResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`,{headers: {
-          Authorization: `Bearer ${token}`,
-        },})
-        console.log(companyResponse.data.company, 'companyResponse');
+        const companyResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         setCompanyName(companyResponse.data.company.name);
         setFormData({
           firstName: user.first_name,
@@ -84,6 +86,10 @@ const ProfilePage = () => {
   }
 
   const handleCountryChange = (event) => {
+    const selectedCountry = countries.find(country => country.id === event.target.value);
+    const getCode = allCountries.find(country => country.name === selectedCountry.name);
+
+    setSelectedCountryCode(getCode.iso2)
     setFormData({
       ...formData,
       country: event.target.value,
@@ -291,7 +297,7 @@ const ProfilePage = () => {
                     Phone Number
                   </FormLabel>
                   <PhoneInput
-                    country={"us"}
+                    country={selectedCountryCode}
                     value={formData.phoneNumber}
                     onChange={(value) => handleInputChange("phoneNumber", value)}
                     style={{ ...commonStyles, padding: "0 12px" }}
