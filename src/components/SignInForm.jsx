@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useToast } from '../utils/ToastContext';
 // import { useToast } from './ToastContext';
 import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const SignInForm = () => {
     const navigate = useNavigate();
@@ -47,15 +47,15 @@ const SignInForm = () => {
                 email: formData.email,
                 password: formData.password
             })
-            .then(response => {
-                localStorage.setItem('authData', JSON.stringify(response.data));
-                showToast('User logged in successfully', 'success');
-                navigate("/");
-            })
-            .catch(error => {
-                showToast('Error logging in. Please try again.', 'error');
-                console.error('Error logging in:', error);
-            });
+                .then(response => {
+                    localStorage.setItem('authData', JSON.stringify(response.data));
+                    showToast('User logged in successfully', 'success');
+                    navigate("/");
+                })
+                .catch(error => {
+                    showToast('Error logging in. Please try again.', 'error');
+                    console.error('Error logging in:', error);
+                });
         } else {
             showToast('Please fix the errors in the form.', 'error');
         }
@@ -63,13 +63,13 @@ const SignInForm = () => {
 
     const handleForgotPasswordSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (forgotPasswordEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             try {
                 const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/reset-password/request`, {
                     email: forgotPasswordEmail
                 });
-    
+
                 if (response.data && response.data.message) {
                     localStorage.setItem('emailverify', response.data.message);
                     showToast('Password reset email sent.', 'success');
@@ -88,13 +88,13 @@ const SignInForm = () => {
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         const resetPass = localStorage.getItem('resetPass')
-        console.log(resetPass,'resetPass');
-        if(resetPass){
+        console.log(resetPass, 'resetPass');
+        if (resetPass) {
             setShowForgotPassword(true)
         }
-    },[])
+    }, [])
 
     // const handleGoogleSignIn = async() => {
     //     window.open('https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app');
@@ -102,14 +102,14 @@ const SignInForm = () => {
 
     //     //     const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/callback`);
     //     //     console.log(response, 'response');
-            
+
     //     // } catch (error) {
     //     //     console.error('An error occurred:', error);
-            
+
     //     // }
     // }
 
-    const handleGoogleSignIn = async() => {
+    const handleGoogleSignIn = async () => {
         // Open the Google Sign-In page
         // const authWindow = window.open(
         //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
@@ -124,12 +124,12 @@ const SignInForm = () => {
         //     'google-auth',
         //     'width=500,height=600'
         //   );
-          console.log('hi');
-          
-          // Listen for message from the popup
+        console.log('hi');
+
+        // Listen for message from the popup
         //   window.addEventListener('message', (event) => {
         //     console.log(event,'event');
-            
+
         //     if (event.origin === 'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app') {
         //       console.log('Received data:', event.data);
         //       // Process the received data
@@ -137,14 +137,14 @@ const SignInForm = () => {
         //     }
         //   });
 
-          const interval = setInterval(() => {
+        const interval = setInterval(() => {
             const res = axios.get('https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app/auth/callback');
-          }, 1000);
-          
-    
-        };
-    
-    
+        }, 1000);
+
+
+    };
+
+
     return (
         <div className='w-100 d-flex' style={{ minHeight: '84vh' }}>
             <Card className=" m-auto" style={{ width: '453px', background: 'transparent', border: 'none' }}>
@@ -204,14 +204,45 @@ const SignInForm = () => {
                             <img src={googlelogo} alt="" /> Sign in with Google
                         </Button>
 
-                        {/* <GoogleLogin onSuccess={(res)=>{
-                            console.log(res,'res');
-                            console.log(jwtDecode(res.credential),'jwt');
-                            localStorage.setItem('authData', JSON.stringify({'token':res.credential}));
-                            navigate("/");
-                        }} onError={(errors)=>{
-                            console.log(errors,'errors');
-                        }}/> */}
+                        <GoogleLogin onSuccess={async(res) => {
+                            console.log(res, 'res');
+                            const token = res.credential; // This is your JWT
+                            console.log("Token:", token);
+
+                            // Send token to backend
+                            // fetch(` http://appstage.thecor.ai/auth/callback`, {
+                            //     method: "POST",
+                            //     headers: {
+                            //         "Content-Type": "application/json",
+                            //     },
+                            //     body: JSON.stringify({ token }),
+                            // })
+                            //     .then((res) => res.json())
+                            //     .then((data) => {
+                            //         console.log("Callback API Response:", data);
+                            //     })
+                            //     .catch((error) => {
+                            //         console.error("Error calling API:", error);
+                            //     });
+
+
+                            const response = await axios.get(`${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback`,
+                                {
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                }
+                            )
+                            console.log(response, 'response');
+                            
+
+                            // console.log(jwtDecode(res.credential),'jwt');
+                            // localStorage.setItem('authData', JSON.stringify({'token':res.credential}));
+                            // navigate("/");
+                        }} onError={(errors) => {
+                            console.log(errors, 'errors');
+                        }} />
 
                         <div className="text-center mb-3 d-flex align-items-center">
                             <hr className='w-50' />
@@ -238,8 +269,10 @@ const SignInForm = () => {
                             <Form.Group controlId="password" className="mb-3">
                                 <Form.Label style={{ fontWeight: '600', fontSize: '16px' }}>Password</Form.Label>
                                 <Form.Control
-                                    style={{ ...commonStyles ,fontSize: '23px',
-                                        fontWeight: '900'}}
+                                    style={{
+                                        ...commonStyles, fontSize: '23px',
+                                        fontWeight: '900'
+                                    }}
                                     type="password"
                                     name="password"
                                     placeholder="Enter your password"
@@ -267,13 +300,13 @@ const SignInForm = () => {
                             >
                                 Sign In
                             </Button>
-                            <div className="gradient-border mt-5" style={{ cursor: 'pointer' }} onClick={()=>navigate('/sign-up')}>
+                            <div className="gradient-border mt-5" style={{ cursor: 'pointer' }} onClick={() => navigate('/sign-up')}>
                                 <div className="content">
                                     <span style={{ fontSize: '20px', fontWeight: '600' }}>Don’t have an account? </span>
                                     <Button
                                         className="border-0"
                                         style={{ background: 'transparent', fontWeight: '700', fontSize: '20px', color: '#4C6DEE' }}
-                                        
+
                                     >
                                         Sign Up
                                     </Button>

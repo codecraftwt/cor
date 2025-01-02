@@ -154,8 +154,8 @@ const AdminPage = () => {
                     }
                 }
             )
-            console.log(response.data.company, 'response website');
-            countries.map((item) => {item.id==response.data.company.location_id?setCompanyLocations([item.name]):null})
+            const data = countries.filter((item) => item.id==response.data.company.location_id)
+            setCompanyLocations([data[0].name])
             setCompany(response.data.company)
             setCompanyName(response.data.company.name)
         } catch (error) {
