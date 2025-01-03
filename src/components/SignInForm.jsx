@@ -130,52 +130,8 @@ const SignInForm = () => {
         }
     }, [])
 
-    // const handleGoogleSignIn = async() => {
-    //     window.open('https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app');
-    //     // try {
-
-    //     //     const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/callback`);
-    //     //     console.log(response, 'response');
-
-    //     // } catch (error) {
-    //     //     console.error('An error occurred:', error);
-
-    //     // }
-    // }
-
     const handleGoogleSignIn = async () => {
-        // Open the Google Sign-In page
-        // const authWindow = window.open(
-        //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
-        //     '_blank',
-        //     'width=500,height=600'
-        // );
-
         window.location.href = `https://appstage.thecor.ai/google-base`;
-        // navigate('/auth/callback');
-        // const popup = window.open(
-        //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
-        //     'google-auth',
-        //     'width=500,height=600'
-        //   );
-        console.log('hi');
-
-        // Listen for message from the popup
-        //   window.addEventListener('message', (event) => {
-        //     console.log(event,'event');
-
-        //     if (event.origin === 'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app') {
-        //       console.log('Received data:', event.data);
-        //       // Process the received data
-        //       popup.close();
-        //     }
-        //   });
-
-        const interval = setInterval(() => {
-            const res = axios.get('http://appstage.thecor.ai/auth/callback');
-        }, 1000);
-
-
     };
 
 

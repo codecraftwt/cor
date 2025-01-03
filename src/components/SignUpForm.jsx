@@ -123,6 +123,13 @@ const SignUpForm = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+       
+    window.location.href = `https://appstage.thecor.ai/google-base`;
+    
+    
+};
+
   return (
     <div className="w-100 d-flex" style={{ minHeight: "84vh" }}>
       <Card className="m-auto" style={{ width: "690px", background: "transparent", border: "none" }}>
@@ -138,8 +145,9 @@ const SignUpForm = () => {
               backgroundBlendMode: "overlay",
               height: "48px",
             }}
+            // onClick={}
           >
-            <img src={googlelogo} alt="Google" /> Sign in with Google
+            <img src={googlelogo} alt="Google" /> Sign up with Google
           </Button>
 
           <div className="text-center mb-3 d-flex align-items-center">

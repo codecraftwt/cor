@@ -60,13 +60,16 @@ const AdminPage = () => {
 
     };
     const addWebsite = async () => {
+        console.log(companyLocations[0], 'companyLocations');
+        const data = countries.filter((item) => item.name==companyLocations[0])
+
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/companies`;
 
         const payload = {
             name: companyName,
-            location_id: company.location_id,
+            location_id: company.location_id?company.location_id:data[0]?.id,
             website_links: websites,
         };
 
