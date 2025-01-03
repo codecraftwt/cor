@@ -13,27 +13,35 @@ const SignInForm = () => {
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
+
         const state = queryParams.get('state');
         const code = queryParams.get('code');
-        console.log('State:', state);
-        console.log('Code:', code);
+        const scope = queryParams.get('scope');
+        const authuser = queryParams.get('authuser');
+        const hd = queryParams.get('hd');
+        const prompt = queryParams.get('prompt');
 
-        if(state && code) {
+        console.log({ state, code, scope, authuser, hd, prompt });
+
+        const rawQueryString = window.location.search.substring(1); // Remove the '?' at the beginning
+        console.log("Raw Query String:", rawQueryString);
+
+        if (state && code) {
             console.log('State and code found. Logging in...');
-            axios.get(`${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback?state=${state}&code=${code}`, {
+            axios.get(`${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback?${rawQueryString}`, {
                 state,
                 code
             })
-            .then(response => {
-                console.log('Response:', response);
-                localStorage.setItem('authData', JSON.stringify(response.data));
-                navigate('/');
-            })
-            .catch(error => {
-                console.error('Error logging in:', error);
-            });
+                .then(response => {
+                    console.log('Response:', response);
+                    localStorage.setItem('authData', JSON.stringify(response.data));
+                    navigate('/');
+                })
+                .catch(error => {
+                    console.error('Error logging in:', error);
+                });
         }
-      }, []);
+    }, []);
 
     // ?state=randomstate&code=4%2F0AanRRrvhtMAmf_FwXp0TfnqhtAJHqASfoiJ0i-7jYiVx1kUzpgBuVl3xs5CQwAXN0sRMZQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&hd=corlabs.co&prompt=none
     const navigate = useNavigate();

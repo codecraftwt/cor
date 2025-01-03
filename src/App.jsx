@@ -42,7 +42,7 @@ const initialRouteConfig = [
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },
   { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false },
   { path: '/team-member-invitations', element: <TeamMemberInvitations />, hideSidebar: true, hideHeader: true },
-  { path: '/auth/callback', element: <SignInPage />, hideSidebar: true, hideHeader: true },
+  { path: '/auth', element: <SignInPage />, hideSidebar: true, hideHeader: true },
 ];
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
@@ -94,7 +94,7 @@ const AppRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations' && location.pathname !== '/auth/callback') {
+    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations' && location.pathname !== '/auth') {
       navigate('/sign-in');
     }
   }, [location.pathname, navigate]);
