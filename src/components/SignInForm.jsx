@@ -117,8 +117,8 @@ const SignInForm = () => {
         //     'width=500,height=600'
         // );
 
-        window.location.href = 'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app';
-
+        // window.location.href = `${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback`;
+        navigate('/auth/callback');
         // const popup = window.open(
         //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
         //     'google-auth',
@@ -204,7 +204,7 @@ const SignInForm = () => {
                             <img src={googlelogo} alt="" /> Sign in with Google
                         </Button>
 
-                        <GoogleLogin onSuccess={async(res) => {
+                        {/* <GoogleLogin onSuccess={async(res) => {
                             console.log(res, 'res');
                             const token = res.credential; // This is your JWT
                             console.log("Token:", token);
@@ -242,7 +242,7 @@ const SignInForm = () => {
                             // navigate("/");
                         }} onError={(errors) => {
                             console.log(errors, 'errors');
-                        }} />
+                        }} /> */}
 
                         <div className="text-center mb-3 d-flex align-items-center">
                             <hr className='w-50' />
