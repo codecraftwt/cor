@@ -69,8 +69,8 @@ const SignUpForm = () => {
 
   const handleCountryChange = (e) => {
     const selected = countries.find(country => country.id === parseInt(e.target.value));
-    const getCode= allCountries.find(country => country.name === selected.name);
-    
+    const getCode = allCountries.find(country => country.name === selected.name);
+
     setSelectedCountryCode(getCode.iso2)
     setSelectedCountry(selected);
     setFormData({
@@ -108,7 +108,7 @@ const SignUpForm = () => {
         company_location_id: selectedCountry.id,
         country_id: selectedCountry.id,
       };
-      
+
       axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload)
         .then(response => {
           console.log('User registered successfully:', response.data);
@@ -124,11 +124,8 @@ const SignUpForm = () => {
   };
 
   const handleGoogleSignIn = async () => {
-       
     window.location.href = `https://appstage.thecor.ai/google-base`;
-    
-    
-};
+  };
 
   return (
     <div className="w-100 d-flex" style={{ minHeight: "84vh" }}>
@@ -145,7 +142,7 @@ const SignUpForm = () => {
               backgroundBlendMode: "overlay",
               height: "48px",
             }}
-            // onClick={}
+          onClick={handleGoogleSignIn}
           >
             <img src={googlelogo} alt="Google" /> Sign up with Google
           </Button>

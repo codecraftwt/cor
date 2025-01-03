@@ -105,10 +105,11 @@ const SignInForm = () => {
                 });
 
                 if (response.data && response.data.message) {
-                    localStorage.setItem('emailverify', response.data.message);
+                    // localStorage.setItem('emailverify', response.data.message);
                     showToast('Password reset email sent.', 'success');
                     localStorage.removeItem('resetPass')
-                    navigate('/create-pass');
+                    setShowForgotPassword(false);
+                    navigate('/sign-in');
                 } else {
                     showToast('Error in response data.', 'error');
                 }

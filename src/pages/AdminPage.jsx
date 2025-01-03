@@ -16,6 +16,7 @@ const AdminPage = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
     const handleSave = () => {
         const data = {
@@ -60,8 +61,8 @@ const AdminPage = () => {
 
     };
     const addWebsite = async () => {
-        console.log(companyLocations[0], 'companyLocations');
-        const data = countries.filter((item) => item.name==companyLocations[0])
+        // console.log(companyLocations[0], 'companyLocations');
+        // const data = countries.filter((item) => item.name == companyLocations[0])
 
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
@@ -69,7 +70,7 @@ const AdminPage = () => {
 
         const payload = {
             name: companyName,
-            location_id: company.location_id?company.location_id:data[0]?.id,
+            location_id: selectedCountry.id,
             website_links: websites,
         };
 
@@ -142,7 +143,6 @@ const AdminPage = () => {
             setWebsites(response.data.website_links.map((item) => item.link))
         } catch (error) {
             console.log(error);
-
         }
     }
     const getCompany = async () => {
@@ -157,10 +157,10 @@ const AdminPage = () => {
                     }
                 }
             )
-            const data = countries.filter((item) => item.id==response.data.company.location_id)
-            setCompanyLocations([data[0].name])
             setCompany(response.data.company)
             setCompanyName(response.data.company.name)
+            const data = countries.filter((item) => item.id == response.data.company.location_id)
+            setCompanyLocations([data[0].name])
         } catch (error) {
             console.log(error);
 
@@ -180,6 +180,27 @@ const AdminPage = () => {
         border: "1px solid #C4D7DB",
         backgroundColor: '#FFFFFF'
     };
+
+    const handleCountryChange = (e) => {
+        const selected = countries.find(country => country.id === parseInt(e.target.value));
+        setSelectedCountry(selected);
+      };
+
+      const handalDeleteMyAccount=async()=>{
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/1`,authData.user,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            })
+            console.log(responce,'responce');
+        } catch (error) {
+            
+        }
+      }
 
     return (
         <Container fluid className="p-0">
@@ -211,12 +232,25 @@ const AdminPage = () => {
                                 <Col md={5}>
                                     <Form.Group className="mb-3 d-flex flex-column">
                                         <Form.Label style={{ ...labelStyle }}>Company Location</Form.Label>
-                                        <Chips
+                                        {/* <Chips
                                             style={{ ...commonStyles, height: 'unset' }}
                                             placeholder="Add locations"
                                             value={companyLocations}
                                             onChange={(e) => setCompanyLocations(e.value)}
-                                        />
+                                        /> */}
+                                        <Form.Control
+                                            as="select"
+                                            style={commonStyles}
+                                            name="location"
+                                            value={selectedCountry ? selectedCountry.id : ""}
+                                            onChange={handleCountryChange}
+                                            // isInvalid={!!errors.location}
+                                        >
+                                            <option value="">Select Location</option>
+                                            {countries.map(country => (
+                                                <option key={country.id} value={country.id}>{country.name}</option>
+                                            ))}
+                                        </Form.Control>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -392,7 +426,7 @@ const AdminPage = () => {
                                     borderColor: 'black',
                                     fontSize: '14px',
                                     fontWeight: '800',
-                                }} onClick={handleSave}>Delete My Account</Button>
+                                }} onClick={handalDeleteMyAccount}>Delete My Account</Button>
                             </Col>
                         </Row>
                     </Card>

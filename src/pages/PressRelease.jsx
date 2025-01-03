@@ -336,7 +336,7 @@ const PressRelease = () => {
                     </Typography>
                     {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                         <CircularProgress />
-                    </div>) : (
+                    </div>) : sections.length > 0 ?(
                         sections.map((section, index) => (
                             <TableSection
                                 key={index}
@@ -350,6 +350,10 @@ const PressRelease = () => {
                                 editDraft={handleEdit}
                             />
                         ))
+                    ): (
+                        <Typography variant="h6" gutterBottom style={{ marginTop: "40px" }}>
+                            No Press Release found
+                        </Typography>
                     )}
 
                 </CardContent>

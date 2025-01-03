@@ -383,9 +383,11 @@ const DraftPage = () => {
                     <Typography variant="h4" gutterBottom>
                         Drafts
                     </Typography>
-                    {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                        <CircularProgress />
-                    </div>) : (
+                    {loading ? (
+                        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                            <CircularProgress />
+                        </div>
+                    ) : sections.length > 0 ? (
                         sections.map((section, index) => (
                             <TableSection
                                 key={index}
@@ -399,9 +401,13 @@ const DraftPage = () => {
                                 editDraft={handleEdit}
                             />
                         ))
+                    ) : (
+                        <Typography variant="h6" gutterBottom style={{ marginTop: "40px" }}>
+                            No drafts found
+                        </Typography>
                     )}
-
                 </CardContent>
+
             </Card>
         </Container>
     );

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Form, Card } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '../utils/ToastContext';
 
 const NewPasswordForm = () => {
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
+
     const { showToast } = useToast();
     const navigate = useNavigate();
     const [newPassword, setNewPassword] = useState('');
@@ -29,7 +32,7 @@ const NewPasswordForm = () => {
             return;
         }
 
-        const token = localStorage.getItem('emailverify');
+        // const token = localStorage.getItem('emailverify');
         if (!token) {
             setError('Verification token is missing.');
             return;

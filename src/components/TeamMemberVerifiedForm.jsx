@@ -5,11 +5,14 @@ import PhoneInput from "react-phone-input-2";
 import { useLocation, useNavigate } from "react-router-dom";
 import "react-phone-input-2/lib/style.css";
 import { useToast } from "../utils/ToastContext";
+import { allCountries } from "./SignUpForm";
 
 const TeamMemberVerifiedForm = () => {
     const { showToast } = useToast();
     const location = useLocation();
     const navigate = useNavigate();
+    const [selectedCountryCode, setSelectedCountryCode] = useState('us');
+
 
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");
@@ -56,9 +59,9 @@ const TeamMemberVerifiedForm = () => {
     };
 
     const handleCountryChange = (e) => {
-        const selected = countries.find(
-            (country) => country.id === parseInt(e.target.value)
-        );
+        const selected = countries.find(country => country.id === parseInt(e.target.value));
+        const getCode = allCountries.find(country => country.name === selected.name);
+        setSelectedCountryCode(getCode.iso2);
         setSelectedCountry(selected);
         setFormData({
             ...formData,
@@ -222,10 +225,16 @@ const TeamMemberVerifiedForm = () => {
                             <Form.Group controlId="phoneNumber" className="mb-3">
                                 <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Phone Number</Form.Label>
                                 <PhoneInput
-                                    country="us"
+                                    country={selectedCountryCode} // Default country code
                                     value={phoneNumber}
-                                    onChange={setPhoneNumber}
+                                    onChange={(value) => setPhoneNumber(value)}
                                     style={{ ...commonStyles, padding: "0 12px" }}
+                                    enableSearch={true}
+                                    countries={allCountries.map(country => ({
+                                        name: country.name,
+                                        iso2: country.iso2,
+                                        dialCode: country.dialCode
+                                    }))}
                                 />
                                 {errors.phoneNumber && (
                                     <span className="text-danger">{errors.phoneNumber}</span>

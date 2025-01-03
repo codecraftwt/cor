@@ -355,7 +355,7 @@ const BlogPage = () => {
                     ))} */}
                     {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                         <CircularProgress />
-                    </div>) : (
+                    </div>) :sections.length > 0 ?  (
                         sections.map((section, index) => (
                             <TableSection
                                 key={index}
@@ -368,6 +368,10 @@ const BlogPage = () => {
                                 deleteData={handleDelete}
                             />
                         ))
+                    ):(
+                        <Typography variant="h6" gutterBottom style={{ marginTop: "40px" }}>
+                            No Blog found
+                        </Typography>
                     )}
                 </CardContent>
             </Card>
