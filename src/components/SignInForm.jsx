@@ -10,6 +10,32 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
 const SignInForm = () => {
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const state = queryParams.get('state');
+        const code = queryParams.get('code');
+        console.log('State:', state);
+        console.log('Code:', code);
+
+        if(state && code) {
+            console.log('State and code found. Logging in...');
+            axios.get(`${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback?state=${state}&code=${code}`, {
+                state,
+                code
+            })
+            .then(response => {
+                console.log('Response:', response);
+                localStorage.setItem('authData', JSON.stringify(response.data));
+                navigate('/');
+            })
+            .catch(error => {
+                console.error('Error logging in:', error);
+            });
+        }
+      }, []);
+
+    // ?state=randomstate&code=4%2F0AanRRrvhtMAmf_FwXp0TfnqhtAJHqASfoiJ0i-7jYiVx1kUzpgBuVl3xs5CQwAXN0sRMZQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&hd=corlabs.co&prompt=none
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -117,8 +143,8 @@ const SignInForm = () => {
         //     'width=500,height=600'
         // );
 
-        // window.location.href = `${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback`;
-        navigate('/auth/callback');
+        window.location.href = `https://appstage.thecor.ai/google-base`;
+        // navigate('/auth/callback');
         // const popup = window.open(
         //     'https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app',
         //     'google-auth',
@@ -138,7 +164,7 @@ const SignInForm = () => {
         //   });
 
         const interval = setInterval(() => {
-            const res = axios.get('https://497d-2001-9e8-65dd-3b00-b515-69fb-c0ef-21a3.ngrok-free.app/auth/callback');
+            const res = axios.get('http://appstage.thecor.ai/auth/callback');
         }, 1000);
 
 

@@ -42,7 +42,7 @@ const initialRouteConfig = [
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },
   { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false },
   { path: '/team-member-invitations', element: <TeamMemberInvitations />, hideSidebar: true, hideHeader: true },
-  { path: '/auth/callback', element: null, hideSidebar: true, hideHeader: true },
+  { path: '/auth/callback', element: <SignInPage />, hideSidebar: true, hideHeader: true },
 ];
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
