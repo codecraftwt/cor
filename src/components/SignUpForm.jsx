@@ -92,7 +92,7 @@ const SignUpForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // navigate("/explore");
 
@@ -109,17 +109,26 @@ const SignUpForm = () => {
         country_id: selectedCountry.id,
       };
 
-      axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload)
-        .then(response => {
-          console.log('User registered successfully:', response.data);
-          localStorage.setItem('authData', JSON.stringify(response.data));
-          showToast('User logged in successfully', 'success');
-          navigate("/");
-        })
-        .catch(error => {
-          console.error('Error registering user:', error);
-          // Handle errors appropriately
-        });
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload);
+        console.log('User registered successfully:', response.data);
+    
+        // Save authentication data to localStorage
+        localStorage.setItem('authData', JSON.stringify(response.data));
+    
+        // Show success toast message
+        showToast('User logged in successfully', 'success');
+    
+        // Navigate to the home page
+        navigate("/");
+      } catch (error) {
+        console.error('Error registering user:', error.response.data.errors);
+    
+        if (error.response.data.message) {
+          showToast( error.response.data.message, 'error');
+        }
+    
+      }
     }
   };
 

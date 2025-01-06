@@ -5,6 +5,7 @@ import TextEditor from '../components/TextEditor';
 import GenerativeAndBlogLayout from '../components/GenerativeAndBlogLayout';
 import { useToast } from '../utils/ToastContext';
 import { CircularProgress } from '@mui/material';
+import { motion } from 'framer-motion';
 
 const formFields = [
     {
@@ -41,19 +42,20 @@ const formFields = [
 
 const GenerativePress = () => {
     const [loading, setLoading] = useState(false);
+    const [contentVisible, setContentVisible] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
     const { showToast } = useToast();
 
     useEffect(() => {
-        if (id) {
-            featchPressData()
-            // Fetch data based on the id
-            // const response = await axios.get(`http://161.35.79.99/api/blogs/${id}`);
-            // console.log(response, 'response');
+        setTimeout(() => {
+            setContentVisible(true); // Show content after delay
+        }, 500); // Delay in milliseconds
 
+        if (id) {
+            featchPressData();
         }
-    }, []);
+    }, [id]);
 
     const featchPressData = async () => {
         try {
@@ -150,21 +152,40 @@ const GenerativePress = () => {
 
     return (
         <>
-            <GenerativeAndBlogLayout
-                title="Generative Press Release"
-                description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
-                formFields={formFields}
-                formData={formData}
-                handleInputChange={handleInputChange}
-                generateButtonText="Generate Press Release"
-                editor={<TextEditor value={editorData} onChange={setEditorData} />}
-                onGenerate={handleSubmit} // Pass the submit handler to the layout
-                handleSaveToDraft={handleSaveAndDocumenet}
-            />
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={contentVisible ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+                <GenerativeAndBlogLayout
+                    title="Generative Press Release"
+                    description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
+                    formFields={formFields}
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    generateButtonText="Generate Press Release"
+                    editor={<TextEditor value={editorData} onChange={setEditorData} />}
+                    onGenerate={handleSubmit} // Pass the submit handler to the layout
+                    handleSaveToDraft={handleSaveAndDocumenet}
+                />
+            </motion.div>
             {loading && (
-            <div style={{ display: "flex", position: 'absolute', justifyContent: "center", height: "100vh", alignItems: "center", width: "99%", top: "0" }}>
-                <CircularProgress />
-            </div>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                        display: "flex",
+                        position: "absolute",
+                        justifyContent: "center",
+                        height: "100vh",
+                        alignItems: "center",
+                        width: "99%",
+                        top: "0",
+                    }}
+                >
+                    <CircularProgress />
+                </motion.div>
             )}
         </>
     );

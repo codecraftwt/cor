@@ -3,12 +3,24 @@ import { Modal, Button } from 'react-bootstrap';
 import '../css/CustomModal.css';
 import location from '../assets/location.svg';
 import arrowRight from '../assets/right-arrow-Icon.svg';
-
+import { motion } from 'framer-motion';
 // Custom modal component
 const ModalPopup = ({ show, onHide }) => {
+    const modalVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.8 },
+    };
     return (
-        <Modal  show={show} onHide={onHide} centered size='lg'>
-            <div  style={{ padding: "20px" }}>
+        <Modal show={show} onHide={onHide} centered size='lg'>
+            <motion.div
+                style={{ padding: "20px" }}
+                variants={modalVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title style={{ fontSize: "28px", fontWeight: "bold" }}>Lorem ipsum dolor sit amet, consectetur <br /> adipiscing elit, sed do eiusmod tempor <br /> incididunt</Modal.Title>
                 </Modal.Header>
@@ -59,17 +71,17 @@ const ModalPopup = ({ show, onHide }) => {
                         deleniti atque  <br />corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
                     </div>
                 </Modal.Body>
-                    <div
-                        style={{
-                            position: 'absolute',
-                            bottom: '90.1px',
-                            left: 0,
-                            right: 0,
-                            height: '128px',
-                            background: 'linear-gradient(to top, white, transparent)',
-                            pointerEvents: 'none', 
-                        }}
-                    ></div>
+                <div
+                    style={{
+                        position: 'absolute',
+                        bottom: '90.1px',
+                        left: 0,
+                        right: 0,
+                        height: '128px',
+                        background: 'linear-gradient(to top, white, transparent)',
+                        pointerEvents: 'none',
+                    }}
+                ></div>
                 <Modal.Footer className="d-flex justify-content-end">
                     <Button variant="black" className="ml-2" onClick={onHide}
                         style={{ color: 'black', background: 'white', borderRadius: '20px', border: '1px solid grey' }}
@@ -84,7 +96,7 @@ const ModalPopup = ({ show, onHide }) => {
                         Publish
                     </Button>
                 </Modal.Footer>
-            </div>
+            </motion.div>
 
         </Modal>
     );

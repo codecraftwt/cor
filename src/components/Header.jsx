@@ -28,7 +28,7 @@ const Header = ({ toggleSidebar }) => {
   ];
 
   return (
-    <Row className="mb-4 py-3 header-shadow" style={{ backgroundColor: '#f8f9fa', marginTop: '20px', marginLeft: '3px' }}>
+    <Row className="mb-4 py-3 " style={{ backgroundColor: '#fff', marginTop: '20px', marginLeft: '3px' ,boxShadow:'rgba(0, 0, 0, 0.02) 0px 3.5px 5.5px 0px',borderRadius:'10px'}}>
       <Col xs={5} md={5} className="d-flex align-items-center">
         {/* Conditionally disable sidebar toggle for specific routes */}
         {!isGenerativePress && (
@@ -96,7 +96,7 @@ const Header = ({ toggleSidebar }) => {
             <NavLink
               key={index}
               to={link.path}
-              style={{ whiteSpace: 'nowrap' }}
+              style={{ whiteSpace: 'nowrap',fontSize:'16px',fontWeight:'600' }}
               className="text-dark text-decoration-none d-flex align-items-center"
             >
               {link.icon && (
@@ -145,4 +145,6 @@ const CustomDiv = styled.div`
   padding: 5px 10px;
   border-radius: 18px;
   color: ${(props) => props.color || '#4C6DEE'};
+  font-weight: 600;
+  font-size: 16px;
 `;

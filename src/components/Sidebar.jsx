@@ -9,6 +9,7 @@ import Admin from '../assets/admin.svg';
 import Teams from '../assets/teams.svg';
 import Profile from '../assets/profile.svg';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 const Sidebar = () => {
     const location = useLocation();
@@ -35,10 +36,17 @@ const Sidebar = () => {
     return (
         <Container fluid className="p-0" style={{ height: '100vh', backgroundColor: '#FFFFFF' }}>
             <Row className="no-gutters">
-                <Col xs={12} className="bg-light py-4 w-100" style={{ minHeight: '100vh' }}>
+                <Col xs={12} className=" py-4 w-100" style={{ minHeight: '100vh' }}>
                     <div className="text-center mb-4">
                         <Link to="/"> {/* Add Link around the logo */}
-                            <img src={Logo} alt="COR Logo" width="100px" style={{ cursor: 'pointer' }} />
+                        <motion.img
+                                src={Logo}
+                                alt="COR Logo"
+                                width="100px"
+                                style={{ cursor: 'pointer' }}
+                                whileHover={{ scale: 1.1 }}
+                                transition={{ duration: 0.3 }}
+                            />
                         </Link>
                     </div>
 
@@ -67,7 +75,13 @@ const Sidebar = () => {
                                                 >
                                                     <Image src={item.icon} width="20" height="20" className="mr-2" />
                                                 </CustomDiv>
-                                                <span>{item.title}</span>
+                                                <motion.span
+                                                    style={{ fontSize: '16px', fontWeight: '600' }}
+                                                    animate={{ opacity: isActive ? 1 : 0.8 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    {item.title}
+                                                </motion.span>
                                             </StyledListItem>
                                         </Link>
                                     );

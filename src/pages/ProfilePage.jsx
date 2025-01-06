@@ -18,6 +18,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useToast } from "../utils/ToastContext";
 import { allCountries } from "../components/SignUpForm";
+import { motion } from "framer-motion";
 
 const ProfilePage = () => {
   const { showToast } = useToast();
@@ -195,8 +196,24 @@ const ProfilePage = () => {
     backgroundColor: "#FFFFFF",
   };
 
+   // Animation Variants
+   const fieldVariant = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.5 },
+    }),
+  };
+
   return (
     <Container style={{ marginTop: "40px" }}>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+
       <Card sx={{ borderRadius: "30px", boxShadow: 3, width: "100%" }}>
         <CardContent>
           <Typography variant="h4" gutterBottom>
@@ -205,6 +222,12 @@ const ProfilePage = () => {
           <Box component="form" sx={{ mt: 5 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={5}>
+              <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    custom={0}
+                    variants={fieldVariant}
+                  >
                 <FormControl fullWidth>
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     First Name
@@ -221,8 +244,15 @@ const ProfilePage = () => {
                     helperText={errors.firstName}
                   />
                 </FormControl>
+                </motion.div>
               </Grid>
               <Grid item xs={12} sm={5}>
+              <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    custom={1}
+                    variants={fieldVariant}
+                  >
                 <FormControl fullWidth>
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     Last Name
@@ -239,10 +269,18 @@ const ProfilePage = () => {
                     helperText={errors.lastName}
                   />
                 </FormControl>
+                </motion.div>
+
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={12} sm={5}>
+              <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    custom={1}
+                    variants={fieldVariant}
+                  >
                 <FormControl fullWidth>
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     Company
@@ -255,8 +293,16 @@ const ProfilePage = () => {
                     disabled
                   />
                 </FormControl>
+                </motion.div>
+
               </Grid>
               <Grid item xs={12} sm={5}>
+              <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    custom={1}
+                    variants={fieldVariant}
+                  >
                 <FormControl fullWidth>
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     Country of Residence
@@ -274,10 +320,18 @@ const ProfilePage = () => {
                     ))}
                   </Select>
                 </FormControl>
+                </motion.div>
+
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={12} sm={5}>
+              <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    custom={1}
+                    variants={fieldVariant}
+                  >
                 <FormControl fullWidth>
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     Email Address
@@ -290,8 +344,16 @@ const ProfilePage = () => {
                     disabled
                   />
                 </FormControl>
+                </motion.div>
+
               </Grid>
               <Grid item xs={12} sm={5}>
+              <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    custom={1}
+                    variants={fieldVariant}
+                  >
                 <FormControl fullWidth>
                   <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                     Phone Number
@@ -312,6 +374,8 @@ const ProfilePage = () => {
                     </Typography>
                   )}
                 </FormControl>
+                </motion.div>
+
               </Grid>
             </Grid>
             <Box
@@ -355,6 +419,7 @@ const ProfilePage = () => {
           </Box>
         </CardContent>
       </Card>
+      </motion.div>
     </Container>
   );
 };

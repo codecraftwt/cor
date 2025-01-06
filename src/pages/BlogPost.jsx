@@ -6,6 +6,7 @@ import axios from 'axios';
 import { use } from 'react';
 import { useToast } from '../utils/ToastContext';
 import { CircularProgress } from '@mui/material';
+import { motion } from 'framer-motion';
 
 const formFields = [
   {
@@ -51,14 +52,14 @@ const BlogPost = () => {
   const { id } = useParams();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [contentVisible, setContentVisible] = useState(false);
 
   useEffect(() => {
+    setTimeout(() => {
+      setContentVisible(true); // Show content after delay
+    }, 500);
     if (id) {
       featchBlogData()
-      // Fetch data based on the id
-      // const response = await axios.get(`http://161.35.79.99/api/blogs/${id}`);
-      // console.log(response, 'response');
-
     }
   }, []);
 
@@ -212,22 +213,41 @@ const BlogPost = () => {
 
   return (
     <>
-      <GenerativeAndBlogLayout
-        title="Generative Blog Posts"
-        description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
-        formFields={formFields}
-        formData={formData}
-        handleInputChange={handleInputChange}
-        handleSaveToDraft={handleSave}
-        handlePublish={handleSavePublish}
-        generateButtonText="Generate Blog Post"
-        editor={<TextEditor value={editorData} onChange={setEditorData} />}
-        onGenerate={handleSubmit} 
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={contentVisible ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <GenerativeAndBlogLayout
+          title="Generative Blog Posts"
+          description="Provide COR with your press release details, and we’ll deliver an exceptional, professionally crafted release."
+          formFields={formFields}
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleSaveToDraft={handleSave}
+          handlePublish={handleSavePublish}
+          generateButtonText="Generate Blog Post"
+          editor={<TextEditor value={editorData} onChange={setEditorData} />}
+          onGenerate={handleSubmit}
+        />
+      </motion.div>
       {loading && (
-        <div style={{ display: "flex", position: 'absolute', justifyContent: "center", height: "100vh", alignItems: "center", width: "99%", top: "0" }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            display: "flex",
+            position: "absolute",
+            justifyContent: "center",
+            height: "100vh",
+            alignItems: "center",
+            width: "99%",
+            top: "0",
+          }}
+        >
           <CircularProgress />
-        </div>
+        </motion.div>
       )}
     </>
   );

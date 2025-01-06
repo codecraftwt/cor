@@ -21,7 +21,7 @@ import circle from '../assets/circle-add.svg';
 import './../css/TeamPage.css';
 import { Col, Form, Modal, Row } from 'react-bootstrap';
 import { useToast } from '../utils/ToastContext';
-
+import { motion } from 'framer-motion';
 // Roles dropdown options
 const roleOptions = ['Admin', 'Collaborator', 'Guest'];
 
@@ -57,10 +57,10 @@ function MyVerticallyCenteredModal(props) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
+
         // Update form data
         setFormData({ ...formData, [name]: value });
-    
+
         // Perform real-time email validation
         if (name === "email") {
             if (!/\S+@\S+\.\S+/.test(value)) {
@@ -219,8 +219,8 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                const users = response.data.users.map((user,index) => ({
-                    id:`${user.id}-${index}`,
+                const users = response.data.users.map((user, index) => ({
+                    id: `${user.id}-${index}`,
                     status: 'completed',
                     name: `${user.first_name} ${user.last_name}`,
                     email: user.email,
@@ -232,7 +232,7 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                const usersInvite = responseInvitations.data.team_member_invitations.map((user,index) => ({
+                const usersInvite = responseInvitations.data.team_member_invitations.map((user, index) => ({
                     id: `${user.id}-${index}`,
                     status: 'pending',
                     name: `${user.first_name} ${user.last_name}`,
@@ -280,7 +280,7 @@ const TeamsTable = () => {
                     },
                 });
                 console.log(response, 'response2');
-                
+
             }
             const updatedRows = rows.map((row) =>
                 row.id === id ? { ...row, role: newRole } : row
@@ -395,64 +395,84 @@ const TeamsTable = () => {
 
     return (
         <Container style={{ marginTop: '40px' }}>
-            <Card sx={{ borderRadius: '30px', boxShadow: 3, width: '100%' }}>
-                <CardContent>
-                    <Typography variant="h4" gutterBottom>
-                        Teams
-                    </Typography>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <Card sx={{ borderRadius: '30px', boxShadow: 3, width: '100%' }}>
+                    <CardContent>
 
-                    {/* Toolbar Section */}
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: '20px',
-                            flexWrap: 'wrap',
-                        }}
-                    >
-                        {/* Search Box with Label and Button */}
-                        <Box sx={{ marginBottom: theme.breakpoints.down('sm') ? '10px' : 0 }}>
-                            <Typography variant="subtitle2" gutterBottom style={{ fontSize: '16px', fontWeight: '600' }}>
-                                Search Team Members
+                        <motion.div
+                            initial={{ opacity: 0, y: -50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <Typography variant="h4" gutterBottom>
+                                Teams
                             </Typography>
-                            <TextField
-                                variant="outlined"
-                                placeholder="Search by name"
-                                size="small"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                sx={{ width: '300px' }}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton onClick={handleSearch} edge="end">
-                                                <SearchIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                style={{ ...commonStyles }}
-                            />
+                        </motion.div>
+
+                        {/* Toolbar Section */}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '20px',
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            {/* Search Box with Label and Button */}
+                            <Box sx={{ marginBottom: theme.breakpoints.down('sm') ? '10px' : 0 }}>
+                                <Typography variant="subtitle2" gutterBottom style={{ fontSize: '16px', fontWeight: '600' }}>
+                                    Search Team Members
+                                </Typography>
+                                <TextField
+                                    variant="outlined"
+                                    placeholder="Search by name"
+                                    size="small"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    sx={{ width: '300px' }}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton onClick={handleSearch} edge="end">
+                                                    <SearchIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    style={{ ...commonStyles }}
+                                />
+                            </Box>
+
+                            {/* Invite Button */}
+                            <Button variant="contained" onClick={() => setModalShow(true)} color="primary" size="medium" style={{ textTransform: 'capitalize', background: 'black', borderRadius: '30px', fontSize: '14px', fontWeight: '800', height: '40px' }}>
+                                <img src={circle} alt="" className='me-3' />Invite Team Member
+                            </Button>
                         </Box>
 
-                        {/* Invite Button */}
-                        <Button variant="contained" onClick={() => setModalShow(true)} color="primary" size="medium" style={{ textTransform: 'capitalize', background: 'black', borderRadius: '30px', fontSize: '14px', fontWeight: '800', height: '40px' }}>
-                            <img src={circle} alt="" className='me-3' />Invite Team Member
-                        </Button>
-                    </Box>
+                        {/* DataGrid Table */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.5 }}
+                        >
 
-                    {/* DataGrid Table */}
-                    <Box sx={{ height: '400px', width: '100%' }}>
-                        <DataGrid
-                            rows={filteredRows} // Pass filtered rows here
-                            columns={columns}
-                            hideFooterPagination // Hides pagination
-                            disableSelectionOnClick
-                        />
-                    </Box>
-                </CardContent>
-            </Card>
+                            <Box sx={{ height: '400px', width: '100%' }}>
+                                <DataGrid
+                                    rows={filteredRows} // Pass filtered rows here
+                                    columns={columns}
+                                    hideFooterPagination // Hides pagination
+                                    disableSelectionOnClick
+                                />
+                            </Box>
+                        </motion.div>
+                    </CardContent>
+                </Card>
+            </motion.div>
             <MyVerticallyCenteredModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}

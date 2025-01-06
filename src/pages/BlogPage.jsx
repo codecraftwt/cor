@@ -33,6 +33,8 @@ import { styled as style } from 'styled-components';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
+import { useToast } from "../utils/ToastContext";
+import { motion } from "framer-motion";
 
 const StyledTableCell = styled(TableCell)({
     maxWidth: "300px",
@@ -43,6 +45,18 @@ const StyledTableCell = styled(TableCell)({
     // alignItems:'center',
     // gap:'5px'
 });
+
+// TableRow Animation Variants
+const rowVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+};
+
+// Card Animation Variants
+const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+};
 
 const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, deleteData }) => {
     if (data.length === 0) return null;
@@ -57,6 +71,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
 
     return (
         <>
+        <motion.div initial="hidden" animate="visible" variants={cardVariants}>
             <Typography variant="h6" gutterBottom style={{ marginTop: "40px", fontSize: '20pzx', fontWeight: '600' }}>
                 {title}
             </Typography>
@@ -102,6 +117,12 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                     )}
                     <TableBody className="d-flex flex-column justify-content-center mb-2" style={{ gap: '5px' }}>
                         {data.map((row, index) => (
+                            <motion.div
+                            key={index}
+                            variants={rowVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
                             <TableRow key={index} className="d-flex justify-content-between align-items-center" style={{ border: '1px solid #7CADB9', borderRadius: '10px', overflow: 'hidden', height: '93px' }}>
 
                                 <TableCell className="d-flex align-items-center">
@@ -177,15 +198,19 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                     </Button>
                                 </TableCell>
                             </TableRow>
+                            </motion.div>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+        </motion.div>
         </>
     );
 };
 
 const BlogPage = () => {
+    const { showToast } = useToast();
+
     const [dummyData, setDummyData] = useState([])
     const [loading, setLoading] = useState(true);
 
@@ -228,6 +253,9 @@ const BlogPage = () => {
             setData(pressReleases);
         } catch (error) {
             console.error("Error fetching data:", error);
+            showToast(error.message, "error");
+            setData([]);
+            setDummyData([]);
         } finally {
             setLoading(false); // Stop loader
         }
@@ -336,6 +364,7 @@ const BlogPage = () => {
 
     return (
         <Container style={{ marginTop: "40px" }}>
+            <motion.div initial="hidden" animate="visible" variants={cardVariants}>
             <Card sx={{ borderRadius: "30px", boxShadow: 3, width: "100%" }}>
                 <CardContent>
                     <Typography variant="h4" gutterBottom>
@@ -355,7 +384,7 @@ const BlogPage = () => {
                     ))} */}
                     {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                         <CircularProgress />
-                    </div>) :sections.length > 0 ?  (
+                    </div>) : dummyData.length > 0 ? (
                         sections.map((section, index) => (
                             <TableSection
                                 key={index}
@@ -368,13 +397,14 @@ const BlogPage = () => {
                                 deleteData={handleDelete}
                             />
                         ))
-                    ):(
+                    ) : (
                         <Typography variant="h6" gutterBottom style={{ marginTop: "40px" }}>
                             No Blog found
                         </Typography>
                     )}
                 </CardContent>
             </Card>
+            </motion.div>
         </Container>
     );
 };

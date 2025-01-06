@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Col, Row, Form } from 'react-bootstrap';
 import { Chips } from 'primereact/chips';
 import styled from 'styled-components';
@@ -31,9 +31,28 @@ const GenerativeAndBlogLayout = ({
   onGenerate, // New prop for handling generate button click
 }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [showModals, setShowModals] = useState(false);
+  const location = useLocation();
+  const isPreview = location.state?.isPreview;
+  console.log(isPreview, 'isPreview');
+  console.log(location, 'location');
+  useEffect(() => {
+    if(isPreview){
+      if (location.pathname == '/generativepress') {
+        console.log(location.pathname == '/generativepress', 'location pathname');
+        setShowModals(true)
+      }
+      if (location.pathname == '/blog-post') {
+        console.log(location.pathname == '/blog-post', 'location pathname');
+        setShowModals(true)
+      }
+    }
+
+  }, [location]);
+
+
 
   const handleShowModal = () => setShowModal(true);
 

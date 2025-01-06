@@ -4,6 +4,7 @@ import { Card, Form, Button, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useToast } from '../utils/ToastContext';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const AdminPage = () => {
     const navigate = useNavigate();
@@ -17,6 +18,19 @@ const AdminPage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+
+  useEffect(() => {
+    const authData = JSON.parse(localStorage.getItem("authData"));
+    const userData = authData?.user;
+    console.log(userData,'userData');
+    setSelectedCountry(userData?.country);
+  }, []);
+
+   // Animation Variants
+   const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+};
 
     const handleSave = () => {
         const data = {
@@ -183,6 +197,8 @@ const AdminPage = () => {
 
     const handleCountryChange = (e) => {
         const selected = countries.find(country => country.id === parseInt(e.target.value));
+        console.log(selected, 'selected');
+        
         setSelectedCountry(selected);
       };
 
@@ -204,13 +220,27 @@ const AdminPage = () => {
 
     return (
         <Container fluid className="p-0">
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={fadeIn}
+                transition={{ duration: 0.5 }}
+            >
             <Row>
                 <Col md={12} className="mb-4">
-                    <Card className='header-shadow p-4' style={{ margin: '40px auto', marginLeft: '20px', borderRadius: '30px', border: 'none' }}>
+                    <Card className='header-shadow p-4' style={{borderRadius: '30px', border: 'none' }}>
                         <Card.Body>
-                            <h2 className='mb-5'>Accounts</h2>
+                        <motion.h2
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.8 }}
+                                    className="mb-5"
+                                >
+                                    Accounts
+                                </motion.h2>
 
                             {/* Company Name */}
+                            <motion.div variants={fadeIn} transition={{ delay: 0.2 }}>
                             <Row>
                                 <Col md={5}>
                                     <Form.Group className="mb-3">
@@ -225,9 +255,11 @@ const AdminPage = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
+                            </motion.div>
                             <hr style={{ margin: '30px 0px' }} />
 
                             {/* Company Location */}
+                            <motion.div variants={fadeIn} transition={{ delay: 0.4 }}>
                             <Row>
                                 <Col md={5}>
                                     <Form.Group className="mb-3 d-flex flex-column">
@@ -254,9 +286,11 @@ const AdminPage = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
+                            </motion.div>
                             <hr style={{ margin: '30px 0px' }} />
 
                             {/* Website */}
+                            <motion.div variants={fadeIn} transition={{ delay: 0.6 }}>
                             <Row>
                                 <Col md={5}>
                                     <Form.Group className="mb-3 d-flex flex-column" >
@@ -280,9 +314,11 @@ const AdminPage = () => {
                                     }} onClick={addWebsite}>Save</Button>
                                 </Col>
                             </Row>
+                            </motion.div>
                             <hr style={{ margin: '30px 0px' }} />
 
                             {/* Current Password */}
+                            <motion.div variants={fadeIn} transition={{ delay: 0.8 }}>
                             <Row>
                                 <Col md={5}>
                                     <Form.Group className="mb-3">
@@ -300,7 +336,8 @@ const AdminPage = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-
+                            </motion.div>
+                            <motion.div variants={fadeIn} transition={{ delay: 1 }}>
                             <Row>
                                 {/* New Password */}
                                 <Col md={5}>
@@ -335,7 +372,6 @@ const AdminPage = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-
                             {/* Save and Cancel Buttons */}
                             <div className="d-flex justify-content-start gap-2">
                                 <Button style={{
@@ -359,6 +395,9 @@ const AdminPage = () => {
                                     fontWeight: '800',
                                 }} onClick={changePassword}>Save</Button>
                             </div>
+                            </motion.div>
+
+
                         </Card.Body>
 
                         <hr style={{ margin: '30px 0px' }} />
@@ -432,6 +471,7 @@ const AdminPage = () => {
                     </Card>
                 </Col>
             </Row>
+            </motion.div>
         </Container>
     );
 };
