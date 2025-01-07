@@ -126,9 +126,9 @@ const AdminPage = () => {
     }
 
     useEffect(() => {
+        handleGetCountries()
         getCompany()
         getWebSite()
-        handleGetCountries()
     }, [])
 
     const handleGetCountries = () => {
@@ -213,8 +213,9 @@ const AdminPage = () => {
     const handalDeleteMyAccount = async () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
+        const userData = authData?.user;
         try {
-            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/1`, authData.user, {
+            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${userData.id}`, authData.user, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
