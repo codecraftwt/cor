@@ -238,46 +238,81 @@ const TeamsTable = () => {
     };
 
     const fetchData = async () => {
+        let users = [];
+        let usersInvite = [];
+    
         try {
+            // Retrieve and validate auth token
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
-            if (token) {
-                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-members`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const users = response.data.users.map((user, index) => ({
-                    id: `${user.id}-${index}`,
-                    status: 'completed',
-                    name: `${user.first_name} ${user.last_name}`,
-                    email: user.email,
-                    last_active: user.last_active_at ? new Date(user.last_active_at).toLocaleDateString() : 'Pending Invite',
-                    role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1),
-                    role_id: user.role.id
-                }));
-                const responseInvitations = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const usersInvite = responseInvitations.data.team_member_invitations.map((user, index) => ({
-                    id: `${user.id}-${index}`,
-                    status: 'pending',
-                    name: `${user.first_name} ${user.last_name}`,
-                    email: user.email,
-                    last_active: user.last_active_at ? new Date(user.last_active_at).toLocaleDateString() : 'Pending Invite',
-                    role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1),
-                    role_id: user.role.id
-                }));
-                setRows([...users, ...usersInvite]);
-                setFilteredRows([...users, ...usersInvite]);
+    
+            if (!token) {
+                throw new Error("Authentication token not found.");
             }
-
+    
+            // Fetch team members
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-members`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            // Process team members data
+            users = response?.data?.users?.map((user, index) => ({
+                id: `${user.id}-${index}`,
+                status: 'completed',
+                name: `${user.first_name || ''} ${user.last_name || ''}`,
+                email: user.email || 'N/A',
+                last_active: user.last_active_at
+                    ? new Date(user.last_active_at).toLocaleDateString()
+                    : 'Pending Invite',
+                role: user.role?.name
+                    ? user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)
+                    : 'Unknown',
+                role_id: user.role?.id || 'N/A',
+            })) || [];
+    
+            console.log(users, 'users');
+    
+            // Fetch team member invitations
+            const responseInvitations = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            console.log(responseInvitations, 'responseInvitations');
+    
+            // Process invitations data
+            usersInvite = responseInvitations?.data?.team_member_invitations?.map((user, index) => ({
+                id: `${user.id}-${index}`,
+                status: 'pending',
+                name: `${user.first_name || ''} ${user.last_name || ''}`,
+                email: user.email || 'N/A',
+                last_active: user.last_active_at
+                    ? new Date(user.last_active_at).toLocaleDateString()
+                    : 'Pending Invite',
+                role: user.role?.name
+                    ? user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)
+                    : 'Unknown',
+                role_id: user.role?.id || 'N/A',
+            })) || [];
+    
+            console.log(usersInvite, 'usersInvite');
+    
+            // Combine and set rows
+            const combinedRows = [...users, ...usersInvite];
+            setRows(combinedRows);
+            setFilteredRows(combinedRows);
+    
         } catch (error) {
             console.error('Error fetching data:', error);
+    
+            // Fallback to empty data in case of an error
+            setRows([]);
+            setFilteredRows([]);
         }
-    };
+    };    
     // Function to handle role change
     const handleRoleChange = async (id, newRole, data) => {
         console.log(data);
@@ -372,6 +407,20 @@ const TeamsTable = () => {
         console.log(id, 'id');
         const realId = id.split('-')[0];
         console.log(realId, 'realId');
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log(response, 'response');
+            
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            
+        }
     }
 
     // DataGrid columns configuration
