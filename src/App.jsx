@@ -47,10 +47,18 @@ const initialRouteConfig = [
 ];
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
+  const location = useLocation();
+
   const [isSidebarVisible, setSidebarVisible] = useState(!hideSidebar);
+  useEffect(() => {
+    if (location.pathname == '/sign-in' || location.pathname == '/sign-up' || location.pathname == '/create-pass' || location.pathname == '/team-member-invitations' || location.pathname == '/auth') {
+      setSidebarVisible(true);
+    }
+  }, []);
   const toggleSidebar = () => {
-    setSidebarVisible((prev) => !prev);
-    if (onToggle) onToggle(!isSidebarVisible);
+    const newVisibility = !isSidebarVisible;
+    setSidebarVisible(newVisibility); 
+    if (onToggle) onToggle(newVisibility); 
   };
 
   return (
@@ -59,7 +67,7 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
         {!hideSidebar && (
           <Col
             xs={2}
-            className=" sidebar p-4"
+            className="sidebar p-4"
             style={{
               boxShadow: '0px 3.5px 5.5px 0px rgba(0, 0, 0, 0.02)',
               position: 'fixed',
@@ -73,6 +81,31 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
             <Sidebar />
           </Col>
         )}
+        <AnimatePresence>
+          {!isSidebarVisible && ( // Render only when visible
+            <motion.div
+              initial={{ x: '-100%' }} // Start off-screen (left)
+              animate={{ x: 0 }}      // Animate to visible position
+              exit={{ x: '-100%' }}   // Animate back to off-screen when hiding
+              transition={{ type: 'spring', stiffness: 100, damping: 20 }} // Smooth animation
+              style={{
+                boxShadow: '0px 3.5px 5.5px 0px rgba(0, 0, 0, 0.02)',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                height: '100vh',
+                backgroundColor: '#FFF',
+                zIndex: 99,
+                width: '40%',
+                borderRight: '1px solid rgba(0, 0, 0, 0.1)',
+              }}
+            >
+              <button className='position-absolute border-0 p-3 bg-transparent' style={{ right: '0' }} onClick={toggleSidebar}>X</button>
+              <Sidebar />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <Col
           xs={12}
           md={hideSidebar ? 12 : 10}
@@ -82,7 +115,9 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
             // transition: 'margin-left 0.3s ease',
           }}
         >
-          {!hideHeader && <Header toggleSidebar={toggleSidebar} />}
+          <AnimatePresence>
+            {!hideHeader && <Header toggleSidebar={toggleSidebar} />}
+          </AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -104,25 +139,25 @@ const AppRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations' && location.pathname !== '/auth' ) {
+    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations' && location.pathname !== '/auth') {
       navigate('/sign-in');
     }
   }, [location.pathname, navigate]);
 
   const currentRoute = routeConfig.find((route) => route.path === location.pathname) || {};
-  
+
   const { hideSidebar = true, hideHeader = false } = currentRoute;
 
   const handleToggle = (isSidebarVisible) => {
-    const updatedRouteConfig = routeConfig.map((route) => {
-      if (location.pathname === '/blog-post' || location.pathname === '/generativepress') {
-        if (route.path === location.pathname) {
-          return { ...route, hideSidebar: !isSidebarVisible };
-        }
-      }
-      return route;
-    });
-    setRouteConfig(updatedRouteConfig);
+    // const updatedRouteConfig = routeConfig.map((route) => {
+    //   if (location.pathname === '/blog-post' || location.pathname === '/generativepress') {
+    //     if (route.path === location.pathname) {
+    //       return { ...route, hideSidebar: !isSidebarVisible };
+    //     }
+    //   }
+    //   return route;
+    // });
+    // setRouteConfig(updatedRouteConfig);
   };
 
   const handleBackNavigation = () => {
@@ -144,14 +179,14 @@ const AppRoutes = () => {
 
   return (
     <Layout hideSidebar={hideSidebar} hideHeader={hideHeader} onToggle={handleToggle}>
-       <AnimatePresence mode="wait">
-      <Routes>
-        {routeConfig.map(({ path, element }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-       </AnimatePresence>
+      <AnimatePresence mode="wait">
+        <Routes>
+          {routeConfig.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </AnimatePresence>
     </Layout>
   );
 };

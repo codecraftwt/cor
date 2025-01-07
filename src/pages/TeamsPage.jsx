@@ -22,10 +22,12 @@ import './../css/TeamPage.css';
 import { Col, Form, Modal, Row } from 'react-bootstrap';
 import { useToast } from '../utils/ToastContext';
 import { motion } from 'framer-motion';
+import DeleteIcon from '@mui/icons-material/Delete';
 // Roles dropdown options
-const roleOptions = ['Admin', 'Collaborator', 'Guest'];
+// const roleOptions = ['Admin', 'Collaborator', 'Guest'];
 
 function MyVerticallyCenteredModal(props) {
+    const [roleOptions, setRoleOptions] = useState([]);
     const [formData, setFormData] = useState({
         first_name: "",
         last_name: "",
@@ -34,6 +36,19 @@ function MyVerticallyCenteredModal(props) {
     });
 
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        fetchRoles();
+    }, []);
+
+    const fetchRoles = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/roles`);
+            setRoleOptions(response.data.roles);
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+        }
+    };
 
     const commonStyles = {
         height: "52px",
@@ -57,7 +72,9 @@ function MyVerticallyCenteredModal(props) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+        console.log(name, 'name');
+        console.log(value, 'value');
+        
         // Update form data
         setFormData({ ...formData, [name]: value });
 
@@ -174,9 +191,11 @@ function MyVerticallyCenteredModal(props) {
                                     onChange={handleChange}
                                 >
                                     <option value="">Select Role</option>
-                                    {roleOptions.map((role, index) => (
-                                        <option key={index} value={role}>
-                                            {role}
+                                    {roleOptions?.map((role, index) => (
+                                        // console.log(role, 'role'),
+                                        
+                                        <option key={role} value={role.id}>
+                                            {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                                         </option>
                                     ))}
                                 </Form.Select>
@@ -204,10 +223,19 @@ const TeamsTable = () => {
     const [rows, setRows] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredRows, setFilteredRows] = useState([]);
-
+    const [roles, setRoles] = useState([]);
     useEffect(() => {
+        fetchRoles();
         fetchData();
     }, []);
+    const fetchRoles = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/roles`);
+            setRoles(response.data.roles);
+        } catch (error) {
+            console.error('Error fetching roles:', error);
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -225,7 +253,8 @@ const TeamsTable = () => {
                     name: `${user.first_name} ${user.last_name}`,
                     email: user.email,
                     last_active: user.last_active_at ? new Date(user.last_active_at).toLocaleDateString() : 'Pending Invite',
-                    role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)
+                    role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1),
+                    role_id: user.role.id
                 }));
                 const responseInvitations = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations`, {
                     headers: {
@@ -238,7 +267,8 @@ const TeamsTable = () => {
                     name: `${user.first_name} ${user.last_name}`,
                     email: user.email,
                     last_active: user.last_active_at ? new Date(user.last_active_at).toLocaleDateString() : 'Pending Invite',
-                    role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)
+                    role: user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1),
+                    role_id: user.role.id
                 }));
                 setRows([...users, ...usersInvite]);
                 setFilteredRows([...users, ...usersInvite]);
@@ -251,27 +281,32 @@ const TeamsTable = () => {
     // Function to handle role change
     const handleRoleChange = async (id, newRole, data) => {
         console.log(data);
+        console.log(newRole, 'newRole');
+        console.log(id, 'id');
+        
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
             if (data.last_active == 'Pending Invite') {
                 const payload = {
-                    role_id: roleOptions.indexOf(newRole) + 2
+                    role_id: newRole
                 }
                 const realId = data.id.split('-')[0];
-                console.log(payload, 'payload');
+                console.log(realId, 'realId');
+                
+                // console.log(payload, 'payload');
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}/update-role`, payload, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response, 'response');
+                // console.log(response, 'response');
                 if (response.status === 200) {
                     showToast('Role updated successfully!', 'success');
                 }
             } else {
                 const payload = {
-                    role_id: roleOptions.indexOf(newRole) + 2
+                    role_id: newRole
                 }
                 const realId = data.id.split('-')[0];
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}/update-role`, payload, {
@@ -279,21 +314,25 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response, 'response2');
+                if (response.status === 200) {
+                    showToast('Role updated successfully!', 'success');
+                }
+                // console.log(response, 'response2');
 
             }
-            const updatedRows = rows.map((row) =>
-                row.id === id ? { ...row, role: newRole } : row
-            );
-            setRows(updatedRows);
-            setFilteredRows(updatedRows);
+            // const updatedRows = rows.map((row) =>
+            //     row.id === id ? { ...row, role: newRole } : row
+            // );
+            // setRows(updatedRows);
+            // setFilteredRows(updatedRows);
         } catch (error) {
             console.error('Error updating role:', error);
 
+        } finally {
+            fetchData();
         }
 
     };
-
     // Handle Search
     const handleSearch = () => {
         const filtered = rows.filter(
@@ -303,7 +342,6 @@ const TeamsTable = () => {
         );
         setFilteredRows(filtered);
     };
-
     const handleFormSubmit = async (formData) => {
         console.log("Received Form Data:", formData);
         const authData = JSON.parse(localStorage.getItem("authData"));
@@ -311,7 +349,7 @@ const TeamsTable = () => {
         try {
             const payload = {
                 ...formData,
-                role_id: roleOptions.indexOf(formData.role_id) + 2
+                role_id: formData.role_id
             }
             console.log(payload, 'payload');
 
@@ -330,6 +368,11 @@ const TeamsTable = () => {
         }
         // You can perform additional actions with the form data here
     };
+    const handleDelete = async (id) => {
+        console.log(id, 'id');
+        const realId = id.split('-')[0];
+        console.log(realId, 'realId');
+    }
 
     // DataGrid columns configuration
     const columns = [
@@ -369,17 +412,29 @@ const TeamsTable = () => {
             width: 280,
             renderCell: (params) => (
                 <Select
-                    value={params.row.role}
+                    value={params.row.role_id}
                     onChange={(e) => handleRoleChange(params.row.id, e.target.value, params.row)}
                     variant="standard"
                     fullWidth
                 >
-                    {roleOptions.map((role) => (
-                        <MenuItem key={role} value={role}>
-                            {role}
+                    {roles.map((role) => (
+                        <MenuItem key={role.id} value={role.id}>
+                            {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                         </MenuItem>
                     ))}
                 </Select>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            renderCell: (params) => (
+                (params.row.role_id != 1 && params.row.role_id !== 2) && (
+                    <IconButton onClick={() => handleDelete(params.row.id)}>
+                        <DeleteIcon color="error" />
+                    </IconButton>
+                )
             ),
         },
     ];
@@ -475,6 +530,7 @@ const TeamsTable = () => {
             </motion.div>
             <MyVerticallyCenteredModal
                 show={modalShow}
+                roles={roles}
                 onHide={() => setModalShow(false)}
                 onSubmit={handleFormSubmit} // Pass the callback
             />

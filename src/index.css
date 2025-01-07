@@ -284,9 +284,9 @@ input[type="password"]::placeholder {
   display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 995px) {
   .sidebar {
-    display: none;
+    display: none !important;
   }
 
   .toggle {

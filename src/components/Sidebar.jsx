@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, ListGroup, Image } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/COR_logo.svg';
@@ -10,10 +10,19 @@ import Teams from '../assets/teams.svg';
 import Profile from '../assets/profile.svg';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { use } from 'react';
+
+// const authData = JSON.parse(localStorage.getItem('authData') || '{}');
+// const userRoleId = authData?.user?.role_id;
 
 const Sidebar = () => {
     const location = useLocation();
-
+    const [userRoleId, setUserRoleId] = useState(null);
+    useEffect(() => {
+        const authData = JSON.parse(localStorage.getItem('authData') || '{}');
+        const userRoleId = authData?.user?.role_id;
+        setUserRoleId(userRoleId);
+    }, []);
     const sidebarData = [
         {
             section: "Brand Space",
@@ -26,7 +35,9 @@ const Sidebar = () => {
         {
             section: "Brand Control",
             items: [
-                { title: "Admin", icon: Admin, bgColor: "#C3CFFF", activeColor: "#C3CFFF", borderRadius: "5px", path: "/admin" },
+                ...(userRoleId === 1 || userRoleId === 2
+                    ? [{ title: "Admin", icon: Admin, bgColor: "#C3CFFF", activeColor: "#C3CFFF", borderRadius: "5px", path: "/admin" }]
+                    : []),
                 { title: "Teams", icon: Teams, bgColor: "#D5F3CE", activeColor: "#D5F3CE", borderRadius: "5px", path: "/teams" },
                 { title: "Profile", icon: Profile, bgColor: "#DEBBF4", activeColor: "#DEBBF4", borderRadius: "5px", path: "/profile" },
             ],
