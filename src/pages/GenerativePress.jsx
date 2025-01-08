@@ -86,6 +86,7 @@ const GenerativePress = () => {
     };
 
     const handleSubmit = async () => {
+
         const payload = {
             press_release_type: formData.pressType,
             press_release_company: formData.companyDescription,
@@ -93,6 +94,9 @@ const GenerativePress = () => {
             press_release_facts: formData.factsNotes,
             press_release_content: formData.releaseReason,
         };
+
+        // console.log(payload, 'payload');
+        
 
         try {
             setLoading(true);
@@ -108,6 +112,7 @@ const GenerativePress = () => {
 
                 if (response.status === 200) {
                     console.log('Press release generated successfully:', response.data);
+                    showToast('Press release generated successfully!', 'success');
                     // Update the editor data with the response content_as_html
                     setEditorData(response.data.content_as_html);
                 } else {

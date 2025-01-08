@@ -25,6 +25,10 @@ const AdminPage = () => {
         console.log(userData, 'userData');
         setSelectedCountry(userData?.country);
     }, []);
+    useEffect(() => {
+        handleGetCountries()
+    },[])
+
 
     // Animation Variants
     const fadeIn = {
@@ -126,20 +130,20 @@ const AdminPage = () => {
     }
 
     useEffect(() => {
-        handleGetCountries()
+        // handleGetCountries()
         getCompany()
         getWebSite()
-    }, [])
+    }, [countries])
 
-    const handleGetCountries = () => {
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}/countries`)
-            .then(response => {
-                setCountries(response.data.countries);
-            })
-            .catch(error => {
-                console.error('Error fetching countries:', error);
-            });
-    }
+    const handleGetCountries = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/countries`);
+            setCountries(response.data.countries);
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    };
+    
 
     const getWebSite = async () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
@@ -172,17 +176,21 @@ const AdminPage = () => {
                 }
             )
             setCompany(response.data.company)
+            const companyData = response.data.company
             setCompanyName(response.data.company.name)
-            const data = countries.filter((item) => item.id == response.data.company.location_id)
+            const data = await countries.filter((item) => item.id == response.data.company.location_id)
             console.log(data, 'data');
             const authData = JSON.parse(localStorage.getItem("authData"));
             const userData = authData?.user;
-                console.log(data[0], 'data');
-            if (userData.country == null) {
+                // console.log(data[0], 'data'); 
+            if (userData.country == null && data.length==1) {
+                console.log('user country');
                 
                 setSelectedCountry(data[0])
+            } else if(response.data.company.location_id){
+                handleCountryChange({target:{value:response.data.company.location_id}})
             }
-            setCompanyLocations([data[0].name])
+            // setCompanyLocations([data[0].name])
         } catch (error) {
             console.log(error);
 
@@ -204,6 +212,9 @@ const AdminPage = () => {
     };
 
     const handleCountryChange = (e) => {
+        console.log(e.target.value, 'e.target.value');
+        console.log(countries, 'countries');
+        
         const selected = countries.find(country => country.id === parseInt(e.target.value));
         console.log(selected, 'selected');
 
@@ -215,7 +226,7 @@ const AdminPage = () => {
         const token = authData?.token;
         const userData = authData?.user;
         try {
-            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${userData.id}`, authData.user, {
+            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/delete-admin/${userData.id}`, authData.user, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -228,6 +239,7 @@ const AdminPage = () => {
     }
 
     return (
+        countries && (
         <Container fluid className="p-0">
             <motion.div
                 initial="hidden"
@@ -479,6 +491,7 @@ const AdminPage = () => {
                 </Row>
             </motion.div>
         </Container>
+        )
     );
 };
 

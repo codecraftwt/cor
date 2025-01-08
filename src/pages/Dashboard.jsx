@@ -51,7 +51,7 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
       transition={{ duration: 0.5 }}
     >
       <Card
-       onClick={() => handleRoute(false)}
+      //  onClick={() => handleRoute(false)}
       className="card-hover mt-3 " 
       style={{
         borderRadius: '20px', border: 'none', boxShadow: '2px 2px 5px 1px rgba(0, 0, 0, 0.03)', borderRadius: '20px',cursor: 'pointer'
@@ -75,14 +75,14 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
               <Card.Title style={{ color: '#0C3944' }}>{description}</Card.Title>
             </div>
           </div>
-          {/* <div className="card-buttons">
-            <Button
+          <div className="card-buttons">
+            {/* <Button
               onClick={() => handleRoute(true)}
               className="me-2 header-shadow"
               style={{ color: 'black', background: 'white', borderRadius: '20px', border: 'none' }}
             >
               <img src={button1.icon} alt="" /> {button1.text}
-            </Button>
+            </Button> */}
             <Button
               onClick={() => handleRoute(false)}
               className="header-shadow"
@@ -90,8 +90,8 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
             >
               <img src={button2.icon} alt="" /> {button2.text}
             </Button>
-          </div> */}
-          {/* <Button
+          </div>
+          <Button
             style={{
               background: 'transparent',
               border: 'none',
@@ -101,7 +101,7 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
             }}
           >
             <img src={option} alt="Options" />
-          </Button> */}
+          </Button>
         </Card.Body>
       </Card>
     </motion.div>

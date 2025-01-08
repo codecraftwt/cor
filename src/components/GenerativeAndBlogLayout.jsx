@@ -34,10 +34,14 @@ const GenerativeAndBlogLayout = ({
   // const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [showModals, setShowModals] = useState(false);
+  const [isGenerateDisabled, setIsGenerateDisabled] = useState(true);
+
   const location = useLocation();
   const isPreview = location.state?.isPreview;
   console.log(isPreview, 'isPreview');
   console.log(location, 'location');
+
+
   useEffect(() => {
     if(isPreview){
       if (location.pathname == '/generativepress') {
@@ -51,6 +55,14 @@ const GenerativeAndBlogLayout = ({
     }
 
   }, [location]);
+
+   // Check if at least one field is filled
+   useEffect(() => {
+    const isAnyFieldFilled = Object.values(formData).some(
+      (value) => Array.isArray(value) ? value.length > 0 : value.trim().length > 0
+    );
+    setIsGenerateDisabled(!isAnyFieldFilled); // Disable button if no field is filled
+  }, [formData]);
 
 
 
@@ -141,7 +153,7 @@ const GenerativeAndBlogLayout = ({
                   background: 'linear-gradient(135deg, #5A78F2, #000000)',
                 }}
               >
-                <Button className="bg-transparent border-0" onClick={onGenerate}>
+                <Button className="bg-transparent border-0" onClick={onGenerate}  disabled={isGenerateDisabled}>
                   <img src={magicpen} alt="Magic Pen" className="me-2" />
                   {generateButtonText}
                 </Button>
