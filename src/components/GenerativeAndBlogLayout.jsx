@@ -28,7 +28,9 @@ const GenerativeAndBlogLayout = ({
   handleSaveToDraft,
   generateButtonText,
   editor,
-  onGenerate, // New prop for handling generate button click
+  onGenerate,
+  allData, 
+  editorData// New prop for handling generate button click
 }) => {
   const navigate = useNavigate();
   // const location = useLocation();
@@ -192,11 +194,11 @@ const GenerativeAndBlogLayout = ({
                 <Dropdown.Menu className='mb-2'>
                   <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowModal}><img src={shared} alt="right arrow" srcset="" className='me-2' /> Share</Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowDraftModal}> <img src={huge} alt="" srcset="" className='me-2' /> Preview Press Release</Dropdown.Item>
+                  <Dropdown.Item style={{ fontSize: '14px', fontWeight: '600' }} onClick={handleShowDraftModal}> <img src={huge} alt="" srcset="" className='me-2' /> Preview Blog</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>) : (<div className="d-flex justify-content-center justify-content-lg-end mt-2 mb-3 me-2">
-              <Button
+              {/* <Button
                 className="bg-transparent me-2"
                 style={{
                   color: '#000000',
@@ -207,7 +209,7 @@ const GenerativeAndBlogLayout = ({
                 }}
               >
                 Edit
-              </Button>
+              </Button> */}
               {/* <Button
                 className="border-0"
                 onClick={handleSaveToDraft}
@@ -244,7 +246,7 @@ const GenerativeAndBlogLayout = ({
         </Row>
       </Card>
       <CustomModal show={showModal} onHide={handleCloseModal} />
-      <ModalPopup show={showModals} onHide={handleCloseDraftModal} />
+      <ModalPopup editorData={editorData} allData={allData} show={showModals} onHide={handleCloseDraftModal}  handlePublish={handlePublish}/>
     </>
   );
 };

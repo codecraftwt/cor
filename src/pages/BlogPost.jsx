@@ -53,7 +53,7 @@ const BlogPost = () => {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
-
+  const [allData, setAllData] = useState([]);
   useEffect(() => {
     setTimeout(() => {
       setContentVisible(true); // Show content after delay
@@ -72,6 +72,8 @@ const BlogPost = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response.data.blog,'response.data.blog');
+      setAllData(response.data.blog);
       setEditorData(response.data.blog.content_as_html);
     } catch (error) {
       console.log(error);
@@ -120,6 +122,8 @@ const BlogPost = () => {
           setEditorData(response.data.content_as_html);
           setConetent(response.data.content);
           setTitle(response.data.title);
+          setAllData(response.data);
+
         } else {
           console.error('Failed to generate press release:', response.statusText);
           // Optionally, display an error message
@@ -191,21 +195,72 @@ const BlogPost = () => {
     console.log(editorData, 'editorData');
     const authData = JSON.parse(localStorage.getItem("authData"));
     const token = authData?.token;
-    try {
-      const payload = {
-        content: editorData,
-        status: 1
-      };
-      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      });
-      console.log(response, 'response');
-      showToast('Blog updated successfully!', 'success');
-      navigate('/blog');
-    } catch (error) {
-      console.log(error);
+    // try {
+    //   const payload = {
+    //     content: editorData,
+    //     status: 1
+    //   };
+    //   const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     }
+    //   });
+    //   console.log(response, 'response');
+    //   showToast('Blog updated successfully!', 'success');
+    //   navigate('/blog');
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    // ====================
+    if (id) {
+      try {
+        const payload = {
+          content: editorData,
+          status: 1,
+          is_public: true
+        };
+        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log(response, 'response');
+        showToast('Blog published successfully!', 'success');
+        navigate('/blog');
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const payload = {
+          blog_topic: formData.pressType,
+          blog_length_and_tone: formData.companyDescription,
+          main_points: formData.spokesperson,
+          blog_goal: formData.factsNotes,
+          target_audience: formData.releaseReason,
+          keywords: formData.companyDescription2,
+          content_as_html: editorData,
+          content: content,
+          title: title,
+          status: 1,
+          is_public: true
+        };
+        // const payload = { 
+        //   content: editorData,
+        //   status:0
+        // };
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/blogs`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log(response, 'response');
+        showToast('Blog published successfully!', 'success');
+        navigate('/blog');
+      } catch (error) {
+        console.log(error);
+      }
     }
 
   };
@@ -229,6 +284,8 @@ const BlogPost = () => {
           generateButtonText="Generate Blog Post"
           editor={<TextEditor value={editorData} onChange={setEditorData} />}
           onGenerate={handleSubmit}
+          allData={allData}
+          editorData={editorData}
         />
       </motion.div>
       {loading && (

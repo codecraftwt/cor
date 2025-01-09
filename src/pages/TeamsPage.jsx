@@ -23,6 +23,7 @@ import { Col, Form, Modal, Row } from 'react-bootstrap';
 import { useToast } from '../utils/ToastContext';
 import { motion } from 'framer-motion';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from 'sweetalert2';
 // Roles dropdown options
 // const roleOptions = ['Admin', 'Collaborator', 'Guest'];
 
@@ -403,63 +404,123 @@ const TeamsTable = () => {
         }
         // You can perform additional actions with the form data here
     };
-    const handleDelete = async (data) => {
-        console.log(data, 'data');
+    // const handleDelete = async (data) => {
+    //     console.log(data, 'data');
 
-        // console.log(id, 'id');
-        const realId = data.id.split('-')[0];
-        console.log(realId, 'realId');
-        const authData = JSON.parse(localStorage.getItem("authData"));
-        const token = authData?.token;
-        // try {
-        //     const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
-        //         headers: {
-        //             Authorization: `Bearer ${token}`,
-        //         },
-        //     });
-        //     // const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
-        //     //     headers: {
-        //     //         Authorization: `Bearer ${token}`,
-        //     //     },
-        //     // });
-        //     console.log(response, 'response');
+    //     // console.log(id, 'id');
+    //     const realId = data.id.split('-')[0];
+    //     console.log(realId, 'realId');
+    //     const authData = JSON.parse(localStorage.getItem("authData"));
+    //     const token = authData?.token;
+    //     // try {
+    //     //     const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
+    //     //         headers: {
+    //     //             Authorization: `Bearer ${token}`,
+    //     //         },
+    //     //     });
+    //     //     // const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
+    //     //     //     headers: {
+    //     //     //         Authorization: `Bearer ${token}`,
+    //     //     //     },
+    //     //     // });
+    //     //     console.log(response, 'response');
 
-        // } catch (error) {
-        //     console.error('Error deleting user:', error);
+    //     // } catch (error) {
+    //     //     console.error('Error deleting user:', error);
 
-        // }
+    //     // }
 
-        try {
-            if (data.last_active == 'Pending Invite') {
-                const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                console.log(response, 'response');
-                if (response.status === 200) {
-                    showToast('User deleted successfully!', 'success');
-                }
-            } else {
-                const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                console.log(response, 'response');
-                if (response.status === 200) {
-                    showToast('User deleted successfully!', 'success');
-                }
-            }
-        } catch (error) {
-            console.error('Error deleting user:', error);
+    //     try {
+    //         if (data.last_active == 'Pending Invite') {
+    //             const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
+    //             console.log(response, 'response');
+    //             if (response.status === 200) {
+    //                 showToast('User deleted successfully!', 'success');
+    //             }
+    //         } else {
+    //             const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
+    //             console.log(response, 'response');
+    //             if (response.status === 200) {
+    //                 showToast('User deleted successfully!', 'success');
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error deleting user:', error);
 
-        } finally {
-            fetchData();
-        }
-    }
+    //     } finally {
+    //         fetchData();
+    //     }
+    // }
 
     // DataGrid columns configuration
+    
+    const handleDelete = async (data) => {
+        // Show confirmation dialog
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const realId = data.id.split('-')[0];
+                const authData = JSON.parse(localStorage.getItem("authData"));
+                const token = authData?.token;
+    
+                try {
+                    let response;
+    
+                    if (data.last_active === 'Pending Invite') {
+                        response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                    } else {
+                        response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                    }
+    
+                    if (response.status === 200) {
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The user has been deleted successfully.",
+                            icon: "success",
+                        });
+    
+                        // Call fetchData to refresh the list
+                        fetchData();
+                    }
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+    
+                    // Show error message
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to delete the user.",
+                        icon: "error",
+                    });
+                }
+            }
+        });
+    };
+    
+    
     const columns = [
         {
             field: 'name',

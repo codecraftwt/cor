@@ -235,7 +235,7 @@ const DraftPage = () => {
                     date: formattedDate,
                 };
             });
-            const responseBlog = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs?is_draft=true`, {
+            const responseBlog = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs?is_draft=true&status=0`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

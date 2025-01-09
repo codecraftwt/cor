@@ -46,6 +46,7 @@ const GenerativePress = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const { showToast } = useToast();
+    const [allData, setAllData] = useState([]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -70,6 +71,7 @@ const GenerativePress = () => {
             console.log(response, 'response');
 
             setEditorData(response.data.press_release.content_as_html);
+            setAllData(response.data.press_release);
         } catch (error) {
             console.log(error);
 
@@ -96,7 +98,7 @@ const GenerativePress = () => {
         };
 
         // console.log(payload, 'payload');
-        
+
 
         try {
             setLoading(true);
@@ -114,6 +116,7 @@ const GenerativePress = () => {
                     console.log('Press release generated successfully:', response.data);
                     showToast('Press release generated successfully!', 'success');
                     // Update the editor data with the response content_as_html
+                    setAllData(response.data);
                     setEditorData(response.data.content_as_html);
                 } else {
                     console.error('Failed to generate press release:', response.statusText);
@@ -153,6 +156,29 @@ const GenerativePress = () => {
         }
 
     }
+    const handleSavePublish = async () => {
+        console.log(editorData, 'editorData');
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+          const payload = {
+            content: editorData,
+            status: 1,
+            is_public: true
+          };
+          const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          });
+          console.log(response, 'response');
+          showToast('Press release updated successfully!', 'success');
+          navigate('/press-release');
+        } catch (error) {
+          console.log(error);
+        }
+    
+      };
 
 
     return (
@@ -168,10 +194,13 @@ const GenerativePress = () => {
                     formFields={formFields}
                     formData={formData}
                     handleInputChange={handleInputChange}
+                    handlePublish={handleSavePublish}
                     generateButtonText="Generate Press Release"
                     editor={<TextEditor value={editorData} onChange={setEditorData} />}
                     onGenerate={handleSubmit} // Pass the submit handler to the layout
                     handleSaveToDraft={handleSaveAndDocumenet}
+                    allData={allData}
+                    editorData={editorData}
                 />
             </motion.div>
             {loading && (
