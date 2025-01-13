@@ -106,9 +106,19 @@ const AdminPage = () => {
             // Refresh data
             getCompany();
             getWebSite();
-        } catch (error) {
-            console.error('Error:', error);
-            showToast('Failed to add websites. Please try again.', 'error');
+        } catch (err) {
+            // console.error('Error:', error.response.data.errors                            );
+            if (err.response && err.response.status === 400) {
+                const errorData = err.response.data;
+                const errors = errorData.errors || [];
+                const formattedErrors = errors.map(
+                  (error) => `${error.field}: ${error.message}`
+                );
+                console.log(formattedErrors,'formattedErrors');
+                
+                // setErrorMessages(formattedErrors);
+                showToast(...formattedErrors, 'error');
+              }
         }
     };
 

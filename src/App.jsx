@@ -69,6 +69,25 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
       setSidebarVisible(true);
     }
   }, [id]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const windowWidth = window.innerWidth;
+      // Check if the window size is laptop/desktop
+      if (windowWidth >= 1024) {
+        setSidebarVisible(true); // Hide sidebar for laptop/desktop
+      } else {
+        setSidebarVisible(!hideSidebar); // Show sidebar for smaller screens
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [hideSidebar]);
+
+
   const toggleSidebar = () => {
     const newVisibility = !isSidebarVisible;
     setSidebarVisible(newVisibility); 
