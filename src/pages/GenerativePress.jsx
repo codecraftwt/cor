@@ -68,7 +68,7 @@ const GenerativePress = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response, 'response');
+            // console.log(response, 'response');
 
             setEditorData(response.data.press_release.content_as_html);
             setAllData(response.data.press_release);
@@ -81,6 +81,8 @@ const GenerativePress = () => {
     const [formData, setFormData] = useState({
         spokesperson: [],
     });
+      const [content, setConetent] = useState('');
+      const [title, setTitle] = useState('');
     const [editorData, setEditorData] = useState('');
 
     const handleInputChange = (field, value) => {
@@ -105,7 +107,7 @@ const GenerativePress = () => {
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
             if (token) {
-                const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/generate-and-save-draft-press-release`, payload, {
+                const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/generate-press-release`, payload, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
@@ -118,6 +120,8 @@ const GenerativePress = () => {
                     // Update the editor data with the response content_as_html
                     setAllData(response.data);
                     setEditorData(response.data.content_as_html);
+                    setConetent(response.data.content);
+                    setTitle(response.data.title);
                 } else {
                     console.error('Failed to generate press release:', response.statusText);
                     // Optionally, display an error message
@@ -137,18 +141,42 @@ const GenerativePress = () => {
         const token = authData?.token;
         try {
             setLoading(true);
-            const payload = {
-                content: editorData,
-                status: 0
-            };
-            const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            console.log(response, 'response');
-            showToast('Press release updated successfully!', 'success');
-            navigate('/drafts');
+            if(id){
+                const payload = {
+                    content: editorData,
+                    status: 0,
+                    is_public:false
+                };
+                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                console.log(response, 'response');
+                showToast('Press release updated successfully!', 'success');
+                navigate('/drafts');
+            }else{
+                const payload = {
+                    press_release_type: formData.pressType,
+                    press_release_company: formData.companyDescription,
+                    spokes_mens: formData.spokesperson,
+                    press_release_facts: formData.factsNotes,
+                    press_release_content: formData.releaseReason,
+                    content_as_html: editorData,
+                    content: content,
+                    title: title,
+                    status: 0,
+                    is_public:false
+                };
+                const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                console.log(response, 'response');
+                showToast('Press release updated successfully!', 'success');
+                navigate('/drafts');
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -161,19 +189,42 @@ const GenerativePress = () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
-          const payload = {
-            content: editorData,
-            status: 1,
-            is_public: true
-          };
-          const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
-            headers: {
-              Authorization: `Bearer ${token}`,
+            if(id){
+                const payload = {
+                  content: editorData,
+                  status: 1,
+                  is_public: true
+                };
+                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  }
+                });
+                console.log(response, 'response');
+                showToast('Press release updated successfully!', 'success');
+                navigate('/press-release');
+            }else{
+                const payload = {
+                    press_release_type: formData.pressType,
+                    press_release_company: formData.companyDescription,
+                    spokes_mens: formData.spokesperson,
+                    press_release_facts: formData.factsNotes,
+                    press_release_content: formData.releaseReason,
+                    content_as_html: editorData,
+                    content: content,
+                    title: title,
+                    status: 1,
+                    is_public:true
+                };
+                const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                console.log(response, 'response');
+                showToast('Press release updated successfully!', 'success');
+                navigate('/drafts');
             }
-          });
-          console.log(response, 'response');
-          showToast('Press release updated successfully!', 'success');
-          navigate('/press-release');
         } catch (error) {
           console.log(error);
         }

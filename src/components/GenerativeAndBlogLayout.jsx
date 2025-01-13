@@ -40,8 +40,8 @@ const GenerativeAndBlogLayout = ({
 
   const location = useLocation();
   const isPreview = location.state?.isPreview;
-  console.log(isPreview, 'isPreview');
-  console.log(location, 'location');
+  // console.log(isPreview, 'isPreview');
+  // console.log(location, 'location');
 
 
   useEffect(() => {

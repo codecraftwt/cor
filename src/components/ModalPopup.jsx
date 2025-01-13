@@ -6,8 +6,8 @@ import arrowRight from '../assets/right-arrow-Icon.svg';
 import { motion } from 'framer-motion';
 // Custom modal component
 const ModalPopup = ({ show, onHide,allData ,editorData,handlePublish}) => {
-    console.log(allData,'allData');
-    console.log(editorData,'editorData');
+    // console.log(allData,'allData');
+    // console.log(editorData,'editorData');
     
     const modalVariants = {
         hidden: { opacity: 0, scale: 0.8 },
@@ -25,7 +25,7 @@ const ModalPopup = ({ show, onHide,allData ,editorData,handlePublish}) => {
                 transition={{ duration: 0.3 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ fontSize: "28px", fontWeight: "bold" }}>{allData.title}</Modal.Title>
+                    <Modal.Title style={{ fontSize: "28px", fontWeight: "bold" }}>{allData?.title}</Modal.Title>
                 </Modal.Header>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <p style={{ margin: 0, display: 'flex', alignItems: 'center', fontSize: "12px", fontWeight: "bold" }}>

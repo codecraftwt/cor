@@ -1,6 +1,6 @@
 // App.js
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate, useLocation, matchPath } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate, useLocation, matchPath, useParams, useSearchParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, ToastContainer } from 'react-bootstrap';
 import Sidebar from './components/Sidebar';
@@ -48,13 +48,27 @@ const initialRouteConfig = [
 
 const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
   const location = useLocation();
-
+  const { id: routeId } = useParams();
+  const id = routeId
   const [isSidebarVisible, setSidebarVisible] = useState(!hideSidebar);
   useEffect(() => {
-    if (location.pathname == '/sign-in' || location.pathname == '/sign-up' || location.pathname == '/create-pass' || location.pathname == '/team-member-invitations' || location.pathname == '/auth') {
+    console.log(id,'id');
+    console.log(location,'location');
+    const matchPressId = matchPath('/generativepress/:id', location.pathname);
+    const matchBlogId = matchPath('/blog-posts/:id', location.pathname);
+    // console.log(match,'match');
+    // Check if it matches
+  const isMatch = !!matchPressId || !!matchBlogId // `true` if it matches, `false` otherwise
+
+  console.log(isMatch, 'Does it match?');
+    
+    if (location.pathname == '/sign-in' || location.pathname == '/sign-up' || location.pathname == '/create-pass' || location.pathname == '/team-member-invitations' || location.pathname == '/auth' || location.pathname == '/generativepress' || location.pathname == '/generativepress/id' || location.pathname == '/blog-post' || location.pathname == '/blog-posts/:id') {
+      setSidebarVisible(true);
+    }else if(isMatch){
+      
       setSidebarVisible(true);
     }
-  }, []);
+  }, [id]);
   const toggleSidebar = () => {
     const newVisibility = !isSidebarVisible;
     setSidebarVisible(newVisibility); 
