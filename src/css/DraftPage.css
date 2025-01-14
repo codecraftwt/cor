@@ -48,7 +48,14 @@
 .css-1rz7w7v{
     box-shadow: var(--Paper-shadow);
 }
-.css-5c1adp-MuiContainer-root{
+/* .css-5c1adp-MuiContainer-root{
+    padding-left: unset !important;
+    padding-right: unset !important;
+    margin-right: unset !important;
+    margin-left: unset !important;
+    max-width: 1400px !important;
+} */
+.MuiContainer-root{
     padding-left: unset !important;
     padding-right: unset !important;
     margin-right: unset !important;

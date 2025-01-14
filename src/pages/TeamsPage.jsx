@@ -16,7 +16,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import SearchIcon from '@mui/icons-material/Search';
+// import SearchIcon from '@mui/icons-material/Search';
 import circle from '../assets/circle-add.svg';
 import './../css/TeamPage.css';
 import { Col, Form, Modal, Row } from 'react-bootstrap';
@@ -24,6 +24,8 @@ import { useToast } from '../utils/ToastContext';
 import { motion } from 'framer-motion';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
+import searchIcon from '../assets/search-normal.svg';
+
 // Roles dropdown options
 // const roleOptions = ['Admin', 'Collaborator', 'Guest'];
 
@@ -640,7 +642,8 @@ const TeamsTable = () => {
                                         endAdornment: (
                                             <InputAdornment position="end">
                                                 <IconButton onClick={handleSearch} edge="end">
-                                                    <SearchIcon />
+                                                    {/* <SearchIcon /> */}
+                                                    <img src={searchIcon} alt="Search Icon" width="20" height="20" />
                                                 </IconButton>
                                             </InputAdornment>
                                         ),

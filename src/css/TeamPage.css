@@ -45,6 +45,9 @@
 .css-1lt5qva-MuiCardContent-root{
     padding: 60px !important;
 }
+.MuiCardContent-root{
+    padding: 60px !important;
+}
 .css-1gqmilo-MuiDataGrid-columnHeaderTitle{
     color: #0C3944 !important;
     font-size: 14px !important;
@@ -98,4 +101,7 @@
 }
 .MuiDataGrid-footerContainer{
     display: none !important;
+}
+.MuiInputAdornment-root{
+    margin-right: 10px !important;
 }
