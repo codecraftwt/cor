@@ -122,10 +122,16 @@ const SignUpForm = () => {
         // Navigate to the home page
         navigate("/");
       } catch (error) {
-        console.error('Error registering user:', error.response.data.errors);
+        // console.error('Error registering user:', error.response.data.errors);
     
         if (error.response.data.message) {
           showToast( error.response.data.message, 'error');
+        }
+        if(error.response.data.errors){
+          const errorMessages = error.response.data.errors;
+          errorMessages.forEach((error) => {
+            showToast(error.message, 'error');
+          });
         }
     
       }

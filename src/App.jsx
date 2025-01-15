@@ -77,7 +77,7 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
       if (windowWidth >= 1024) {
         setSidebarVisible(true); // Hide sidebar for laptop/desktop
       } else {
-        setSidebarVisible(!hideSidebar); // Show sidebar for smaller screens
+        setSidebarVisible(true); // Show sidebar for smaller screens
       }
     };
     handleResize();
