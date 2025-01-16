@@ -87,8 +87,8 @@ const SignInForm = () => {
                     navigate("/");
                 })
                 .catch(error => {
-                    showToast('Error logging in. Please try again.', 'error');
-                    console.error('Error logging in:', error);
+                    console.error('Error logging in:', error.response.data.message);
+                    showToast( error.response.data.message, 'error');
                 });
         } else {
             showToast('Please fix the errors in the form.', 'error');
