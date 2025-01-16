@@ -115,7 +115,7 @@ const GenerativeAndBlogLayout = ({
 
   return (
     <>
-      <div className="d-flex flex-column flex-md-row mb-3 align-items-center">
+      <div className="d-flex  flex-md-row mb-3 align-items-center">
         <Button onClick={() => navigate(-1)} className="d-flex mb-2 mb-md-0 border-0 bg-transparent">
           <img src={arrowleft} alt="Back Arrow" />
         </Button>
