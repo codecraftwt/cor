@@ -236,13 +236,25 @@ const AdminPage = () => {
         const token = authData?.token;
         const userData = authData?.user;
         try {
-            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/delete-admin/${userData.id}`, authData.user, {
+            const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/delete-admin`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
             })
+            showToast('Your account has been deleted successfully!', 'error');
+
+            // const responce = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/delete-admin/${userData.id}`, authData.user, {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${token}`
+            //     },
+            // })
             console.log(responce, 'responce');
+            localStorage.removeItem('authData')
+            navigate('/sign-in')
+
+
         } catch (error) {
 
         }

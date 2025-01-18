@@ -145,7 +145,7 @@ const GenerativePress = () => {
                 const payload = {
                     content: editorData,
                     status: 0,
-                    is_public:false
+                    is_public:0
                 };
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
                     headers: {
@@ -166,7 +166,7 @@ const GenerativePress = () => {
                     content: content,
                     title: title,
                     status: 0,
-                    is_public:false
+                    is_public:0
                 };
                 const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
                     headers: {
@@ -193,7 +193,7 @@ const GenerativePress = () => {
                 const payload = {
                   content: editorData,
                   status: 1,
-                  is_public: true
+                  is_public: 1
                 };
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
                   headers: {
@@ -214,7 +214,7 @@ const GenerativePress = () => {
                     content: content,
                     title: title,
                     status: 1,
-                    is_public:true
+                    is_public:1
                 };
                 const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
                     headers: {

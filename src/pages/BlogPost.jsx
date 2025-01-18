@@ -146,7 +146,8 @@ const BlogPost = () => {
       try {
         const payload = {
           content: editorData,
-          status: 0
+          status: 0,
+          is_public: 0
         };
         const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
           headers: {
@@ -171,7 +172,8 @@ const BlogPost = () => {
           content_as_html: editorData,
           content: content,
           title: title,
-          status: 0
+          status: 0,
+          is_public: 0
         };
         // const payload = { 
         //   content: editorData,
@@ -218,7 +220,7 @@ const BlogPost = () => {
         const payload = {
           content: editorData,
           status: 1,
-          is_public: true
+          is_public: 1
         };
         const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
           headers: {
@@ -244,7 +246,7 @@ const BlogPost = () => {
           content: content,
           title: title,
           status: 1,
-          is_public: true
+          is_public: 1
         };
         // const payload = { 
         //   content: editorData,
