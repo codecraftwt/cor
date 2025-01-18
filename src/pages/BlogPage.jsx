@@ -233,7 +233,7 @@ const BlogPage = () => {
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
             // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs?is_draft=false`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

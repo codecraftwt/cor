@@ -304,10 +304,32 @@ input[type="password"]::placeholder {
     margin-left: 16px !important;
   }
 }
+.left-side-content{
+  display: flex;
+}
+.donthaveaccount{
+  font-size: 20px;
+  font-weight: 600;
 
-@media (min-width: 768px) {
+}
+.signupbtn{
+  font-size: 20px !important;
+  font-weight: 700 !important;
+
+}
+@media (max-width: 769px) {
   .left-side-content {
     display: none !important;
+  }
+}
+@media (max-width: 376px) {
+  .donthaveaccount {
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .signupbtn{
+    font-size: 12px !important;
+  font-weight: 700 !important;
   }
 }
 

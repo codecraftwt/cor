@@ -103,7 +103,7 @@ const TeamMemberVerifiedForm = () => {
                 last_name: formData.lastName,
                 email: formData.email,
                 country_of_residence: selectedCountry.country_code,
-                company_location_id: 1,
+                company_location_id: selectedCountry.id,
             };
 
             console.log("Payload:", payload);
@@ -125,7 +125,21 @@ const TeamMemberVerifiedForm = () => {
             //   });
         } catch (error) {
             console.error("Error registering user:", error);
+        
+        // Check if the error response has validation errors
+        if (error.response && error.response.data && error.response.data.errors) {
+            const { errors } = error.response.data;
 
+            // Loop through the errors and show them in a toast
+            errors.forEach((err) => {
+                const field = err.field.replace('team_member.', '').replace('_', ' '); // Clean up field name
+                const message = `${field.charAt(0).toUpperCase() + field.slice(1)}: ${err.message}`;
+                showToast(message, "error"); // Replace with your toast function
+            });
+        } else {
+            // Show a generic error message
+            showToast("An error occurred while submitting the form.", "error");
+        }
         }
 
     };

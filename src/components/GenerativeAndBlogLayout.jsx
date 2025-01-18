@@ -97,6 +97,7 @@ const GenerativeAndBlogLayout = ({
                 onChange={(e) => handleInputChange(controlId, e.value)}
                 placeholder={placeholder}
                 style={{ ...commonStyles, width: '100%' }}
+                addOnBlur 
               />
             ) : (
               <Form.Control

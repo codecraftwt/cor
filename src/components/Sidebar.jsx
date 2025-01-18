@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, ListGroup, Image } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../assets/COR_logo.svg';
 import Draft from '../assets/drafts.svg';
 import Press from '../assets/press.svg';
@@ -11,11 +11,13 @@ import Profile from '../assets/profile.svg';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { use } from 'react';
+import Swal from 'sweetalert2';
 
 // const authData = JSON.parse(localStorage.getItem('authData') || '{}');
 // const userRoleId = authData?.user?.role_id;
 
 const Sidebar = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const [userRoleId, setUserRoleId] = useState(null);
     useEffect(() => {
@@ -43,6 +45,33 @@ const Sidebar = () => {
             ],
         },
     ];
+
+    const handleLogout = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will be logged out!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Clear auth data
+                localStorage.removeItem('authData');
+
+                // Show success message
+                Swal.fire(
+                    'Logged Out!',
+                    'You have been successfully logged out.',
+                    'success'
+                ).then(() => {
+                    // Navigate to sign-in page
+                    navigate('/sign-in');
+                });
+            }
+        });
+    };
 
     return (
         <Container fluid className="p-0" style={{ height: '100vh', backgroundColor: '#FFFFFF' }}>
@@ -100,6 +129,18 @@ const Sidebar = () => {
                             </ListGroup>
                         </div>
                     ))}
+
+                    <button style={{
+                        width:'100%',
+                        padding:'10px',
+                        border:'none',
+                        fontSize:'16px',
+                        fontWeight:'600',
+                        borderRadius:'5px',
+                        background: '#c3cfff'
+                    }}
+                    onClick={handleLogout}
+                    >logout</button>
                 </Col>
             </Row>
         </Container>

@@ -37,7 +37,7 @@ const LayoutComman = ({ title, form }) => {
                             md={3}
                             lg={3}
                             sm={0}
-                            className="onboard-left-side p-0 d-flex justify-content-center d-none d-md-flex"
+                            className="onboard-left-side p-0  justify-content-center   left-side-content"
                         >
                             <motion.p
                                 style={{
@@ -57,7 +57,7 @@ const LayoutComman = ({ title, form }) => {
 
                         </Col>
                     ) : null}
-                    <Col md={title ? 9 : 12} lg={8} sm={12} className="p-5 mt-5">
+                    <Col md={title ? 12 : 12} lg={8} sm={12} className="p-5 mt-5">
                         <motion.div
                             initial="hidden"
                             animate="visible"

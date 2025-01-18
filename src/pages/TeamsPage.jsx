@@ -338,7 +338,7 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                // console.log(response, 'response');
+                console.log(response, 'response pending');
                 if (response.status === 200) {
                     showToast('Role updated successfully!', 'success');
                 }
@@ -352,6 +352,8 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+                console.log(response,'response');
+                
                 if (response.status === 200) {
                     showToast('Role updated successfully!', 'success');
                 }
@@ -364,7 +366,12 @@ const TeamsTable = () => {
             // setRows(updatedRows);
             // setFilteredRows(updatedRows);
         } catch (error) {
-            console.error('Error updating role:', error);
+            if (error.response.data.message) {
+                showToast( error.response.data.message, 'error');
+              }
+            
+            // console.error('Error updating role:', error);
+            // showToast('Role updated successfully!', 'success');
 
         } finally {
             fetchData();
@@ -558,21 +565,29 @@ const TeamsTable = () => {
             field: 'role',
             headerName: 'Role',
             width: 280,
-            renderCell: (params) => (
-                <Select
-                    value={params.row.role_id}
-                    onChange={(e) => handleRoleChange(params.row.id, e.target.value, params.row)}
-                    variant="standard"
-                    fullWidth
-                >
-                    {roles.map((role) => (
-                        <MenuItem key={role.id} value={role.id}>
-                            {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
-                        </MenuItem>
-                    ))}
-                </Select>
-            ),
+            renderCell: (params) => {
+                // console.log(JSON.parse(localStorage.getItem('authData')).user.role_id,'localStorage.getItem');
+                
+                const isAdmin = JSON.parse(localStorage.getItem('authData')).user.role_id == 2; // Check if the role is admin
+                return isAdmin ? (
+                    <Select
+                        value={params.row.role_id}
+                        onChange={(e) => handleRoleChange(params.row.id, e.target.value, params.row)}
+                        variant="standard"
+                        fullWidth
+                    >
+                        {roles.map((role) => (
+                            <MenuItem key={role.id} value={role.id}>
+                                {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                ) : (
+                    <span>{params.row.role}</span> // Show the role value as plain text
+                );
+            },
         },
+        
         {
             field: 'actions',
             headerName: 'Actions',

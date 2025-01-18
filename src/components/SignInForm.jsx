@@ -293,10 +293,10 @@ const SignInForm = () => {
                             </Button>
                             <div className="gradient-border mt-5" style={{ cursor: 'pointer' }} onClick={() => navigate('/sign-up')}>
                                 <div className="content">
-                                    <span style={{ fontSize: '20px', fontWeight: '600' }}>Don’t have an account? </span>
+                                    <span  className='donthaveaccount'>Don’t have an account? </span>
                                     <Button
-                                        className="border-0"
-                                        style={{ background: 'transparent', fontWeight: '700', fontSize: '20px', color: '#4C6DEE' }}
+                                        className="border-0 signupbtn"
+                                        style={{ background: 'transparent', color: '#4C6DEE' }}
 
                                     >
                                         Sign Up

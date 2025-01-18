@@ -213,7 +213,7 @@ const PressRelease = () => {
         try {
             const authData = JSON.parse(localStorage.getItem("authData"));
             const token = authData?.token;
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?is_draft=false`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
