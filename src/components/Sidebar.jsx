@@ -27,7 +27,7 @@ const Sidebar = () => {
     }, []);
     const sidebarData = [
         {
-            section: "Brand Space",
+            section: "Start creating please",
             items: [
                 { title: "Drafts", icon: Draft, bgColor: "#4C6DEE", activeColor: "#C3CFFF", borderRadius: "5px", path: "/drafts" },
                 { title: "Press Releases", icon: Press, bgColor: "#4C6DEE",activeColor: "#C3CFFF", borderRadius: "5px", path: "/press-release" },
