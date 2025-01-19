@@ -20,6 +20,7 @@ import { useToast } from "../utils/ToastContext";
 import { allCountries } from "../components/SignUpForm";
 import { motion } from "framer-motion";
 import { Col, Form, Row } from "react-bootstrap";
+import CustomDropdown from "../components/CountryDropdown";
 
 const ProfilePage = () => {
   const { showToast } = useToast();
@@ -38,6 +39,8 @@ const ProfilePage = () => {
   const [countries, setCountries] = useState([]);
   const [errors, setErrors] = useState({});
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
+      const [selectedCountry, setSelectedCountry] = useState(null);
+  
   useEffect(() => {
     handleGetCountries();
     fetchData();
@@ -58,6 +61,7 @@ const ProfilePage = () => {
 
         const { user } = response.data;
         console.log(user);
+        setSelectedCountry(user.country)
 
         const companyResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`, {
           headers: {
@@ -99,11 +103,22 @@ const ProfilePage = () => {
   const handleCountryChange = (event) => {
     const selectedCountry = countries.find(country => country.id === event.target.value);
     const getCode = allCountries.find(country => country.name === selectedCountry.name);
-
+    console.log(getCode,'getCode');
+    
     setSelectedCountryCode(getCode.iso2)
     setFormData({
       ...formData,
       country: event.target.value,
+    });
+  };
+  const handleCountryChange2 = (id) => {
+    const selectedCountry = countries.find(country => country.id == id);
+    const getCode = allCountries.find(country => country.name === selectedCountry.name);
+
+    setSelectedCountryCode(getCode.iso2)
+    setFormData({
+      ...formData,
+      country: id,
     });
   };
 
@@ -378,7 +393,7 @@ const ProfilePage = () => {
                       <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                         Country of Residence
                       </FormLabel>
-                      <Select
+                      {/* <Select
                         style={{ ...commonStyles }}
                         fullWidth
                         value={formData.country}
@@ -389,7 +404,9 @@ const ProfilePage = () => {
                             {country.name}
                           </MenuItem>
                         ))}
-                      </Select>
+                      </Select> */}
+                      <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
+
                     </FormControl>
                   </motion.div>
 

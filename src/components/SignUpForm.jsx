@@ -9,6 +9,7 @@ import PhoneInput, { countryData } from "react-phone-input-2";
 import { useToast } from "../utils/ToastContext";
 import rawTerritories from "./rawTerritories";
 import rawCountries from "./rawCountries";
+import CustomDropdown from "./CountryDropdown";
 
 const allCountries = rawCountries.map(([name, regions, iso2, dialCode, format = "", priority = 0, areaCodes = []]) => ({
   name, // Country or territory name
@@ -69,6 +70,17 @@ const SignUpForm = () => {
 
   const handleCountryChange = (e) => {
     const selected = countries.find(country => country.id === parseInt(e.target.value));
+    const getCode = allCountries.find(country => country.name === selected.name);
+
+    setSelectedCountryCode(getCode.iso2)
+    setSelectedCountry(selected);
+    setFormData({
+      ...formData,
+      location: selected ? selected.name : "",
+    });
+  };
+  const handleCountryChange2 = (id) => {
+    const selected = countries.find(country => country.id === parseInt(id));
     const getCode = allCountries.find(country => country.name === selected.name);
 
     setSelectedCountryCode(getCode.iso2)
@@ -216,7 +228,7 @@ const SignUpForm = () => {
               <Col md={6}>
                 <Form.Group controlId="location" className="mb-3">
                   <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Location</Form.Label>
-                  <Form.Control
+                  {/* <Form.Control
                     as="select"
                     style={commonStyles}
                     name="location"
@@ -228,7 +240,9 @@ const SignUpForm = () => {
                     {countries.map(country => (
                       <option key={country.id} value={country.id}>{country.name}</option>
                     ))}
-                  </Form.Control>
+                  </Form.Control> */}
+                  <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
+
                   <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
                 </Form.Group>
               </Col>

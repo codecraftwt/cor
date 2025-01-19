@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useToast } from '../utils/ToastContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import CustomDropdown from '../components/CountryDropdown';
 
 const AdminPage = () => {
     const navigate = useNavigate();
@@ -230,6 +231,15 @@ const AdminPage = () => {
 
         setSelectedCountry(selected);
     };
+    const handleCountryChange2 = (id) => {
+        // console.log(e.target.value, 'e.target.value');
+        console.log(countries, 'countries');
+        
+        const selected = countries.find(country => country.id === parseInt(id));
+        console.log(selected, 'selected');
+
+        setSelectedCountry(selected);
+    };
 
     const handalDeleteMyAccount = async () => {
         const authData = JSON.parse(localStorage.getItem("authData"));
@@ -307,13 +317,8 @@ const AdminPage = () => {
                                         <Col md={5}>
                                             <Form.Group className="mb-3 d-flex flex-column">
                                                 <Form.Label style={{ ...labelStyle }}>Company Location</Form.Label>
-                                                {/* <Chips
-                                            style={{ ...commonStyles, height: 'unset' }}
-                                            placeholder="Add locations"
-                                            value={companyLocations}
-                                            onChange={(e) => setCompanyLocations(e.value)}
-                                        /> */}
-                                                <Form.Control
+                                                
+                                                {/* <Form.Control
                                                     as="select"
                                                     style={commonStyles}
                                                     name="location"
@@ -325,8 +330,11 @@ const AdminPage = () => {
                                                     {countries.map(country => (
                                                         <option key={country.id} value={country.id}>{country.name}</option>
                                                     ))}
-                                                </Form.Control>
+                                                </Form.Control> */}
+                                            <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
                                             </Form.Group>
+                                            <div>
+                                            </div>
                                         </Col>
                                     </Row>
                                 </motion.div>

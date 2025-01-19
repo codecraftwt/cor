@@ -24,9 +24,11 @@ import BlogPage from './pages/BlogPage';
 import TeamMemberInvitations from './pages/TeamMemberInvitations';
 import PressRelease from './pages/PressRelease';
 import { motion, AnimatePresence } from 'framer-motion';
+// import CountryDropdown from './components/CountryDropdown';
 
 const initialRouteConfig = [
   { path: '/', element: <Dashboard />, hideSidebar: false, hideHeader: false },
+  // { path: '/CountryDropdown', element: <CountryDropdown />, hideSidebar: false, hideHeader: false },
   { path: '/admin', element: <AdminPage />, hideSidebar: false, hideHeader: false },
   { path: '/teams', element: <TeamsPage />, hideSidebar: false, hideHeader: false },
   { path: '/profile', element: <ProfilePage />, hideSidebar: false, hideHeader: false },
