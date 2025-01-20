@@ -24,12 +24,16 @@ import BlogPage from './pages/BlogPage';
 import TeamMemberInvitations from './pages/TeamMemberInvitations';
 import PressRelease from './pages/PressRelease';
 import { motion, AnimatePresence } from 'framer-motion';
+import BlogsharePage from './pages/BlogsharePage';
+import PresssharePage from './pages/PresssharePage';
 // import CountryDropdown from './components/CountryDropdown';
 
 const initialRouteConfig = [
   { path: '/', element: <Dashboard />, hideSidebar: false, hideHeader: false },
   // { path: '/CountryDropdown', element: <CountryDropdown />, hideSidebar: false, hideHeader: false },
   { path: '/admin', element: <AdminPage />, hideSidebar: false, hideHeader: false },
+  { path: '/blogShare', element: <BlogsharePage />, hideSidebar: true, hideHeader: true },
+  { path: '/pressShare', element: <PresssharePage />, hideSidebar: true, hideHeader: true },
   { path: '/teams', element: <TeamsPage />, hideSidebar: false, hideHeader: false },
   { path: '/profile', element: <ProfilePage />, hideSidebar: false, hideHeader: false },
   { path: '/drafts', element: <DraftPage />, hideSidebar: false, hideHeader: false },

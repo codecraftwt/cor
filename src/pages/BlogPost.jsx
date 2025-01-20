@@ -7,6 +7,7 @@ import { use } from 'react';
 import { useToast } from '../utils/ToastContext';
 import { CircularProgress } from '@mui/material';
 import { motion } from 'framer-motion';
+import Swal from 'sweetalert2';
 
 const formFields = [
   {
@@ -72,7 +73,7 @@ const BlogPost = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data.blog,'response.data.blog');
+      console.log(response.data.blog, 'response.data.blog');
       setAllData(response.data.blog);
       setEditorData(response.data.blog.content_as_html);
     } catch (error) {
@@ -266,7 +267,32 @@ const BlogPost = () => {
     }
 
   };
+  const generateCopyLink = () => {
+    console.log("hiiii", id);
 
+    // const link = `http://localhost:5173/blogShare?id=${id}`;
+    const link = `https://appstage.thecor.ai/blogShare?id=${id}`;
+    // Copy the link to the clipboard
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Link Copied!",
+          text: "The blog link has been copied to your clipboard.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Copy!",
+          text: "An error occurred while copying the link.",
+          footer: err.message,
+        });
+      });
+  }
 
   return (
     <>
@@ -288,6 +314,8 @@ const BlogPost = () => {
           onGenerate={handleSubmit}
           allData={allData}
           editorData={editorData}
+          id={id}
+          generateCopyLink={generateCopyLink}
         />
       </motion.div>
       {loading && (

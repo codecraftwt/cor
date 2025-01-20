@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Modal, Button, Dropdown } from 'react-bootstrap';
 import '../css/CustomModal.css';
 import { Chips } from 'primereact/chips';
+import Swal from 'sweetalert2';
 
-const CustomModal = ({ show, onHide }) => {
+const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
     const [contact, setContact] = useState([]);
     const [people, setPeople] = useState([
         { name: 'Mohammed Jomani', email: 'mm@o2.com', role: 'Admin' },
@@ -35,6 +36,35 @@ const CustomModal = ({ show, onHide }) => {
             return updatedPeople;
         });
     };
+
+    // const BlogsharePage = () => {
+        
+    // }
+    // const generateCopyLink = () => {
+    //     console.log("hiiii", id);
+    
+    //     const link = `http://localhost:5173/blogShare?id=${id}`;
+    //     // Copy the link to the clipboard
+    //     navigator.clipboard
+    //       .writeText(link)
+    //       .then(() => {
+    //         Swal.fire({
+    //           icon: "success",
+    //           title: "Link Copied!",
+    //           text: "The blog link has been copied to your clipboard.",
+    //           showConfirmButton: false,
+    //           timer: 2000, // Alert will automatically close after 2 seconds
+    //         });
+    //       })
+    //       .catch((err) => {
+    //         Swal.fire({
+    //           icon: "error",
+    //           title: "Failed to Copy!",
+    //           text: "An error occurred while copying the link.",
+    //           footer: err.message,
+    //         });
+    //       });
+    // }
 
     return (
         <Modal style={{borderRadius:'30px'}} show={show} onHide={onHide} centered size="md">
@@ -113,11 +143,11 @@ const CustomModal = ({ show, onHide }) => {
                                         id="option-dropdown"
                                         variant="link"
                                         style={{
-                                            fontSize: '12px',
+                                            // fontSize: '12px',
                                             padding: '0',
                                             textDecoration: "none",
                                             color: "black",
-                                            fontSize: "13px",
+                                            fontSize: "13px"
                                         }}
                                     >
                                         Editor
@@ -141,6 +171,7 @@ const CustomModal = ({ show, onHide }) => {
                             borderRadius: '20px',
                             border: '1px solid grey',
                         }}
+                        onClick={generateCopyLink}
                     >
                         Copy Link
                     </Button>
