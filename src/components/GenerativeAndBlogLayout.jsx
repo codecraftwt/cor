@@ -32,7 +32,9 @@ const GenerativeAndBlogLayout = ({
   allData, 
   editorData,// New prop for handling generate button click
   id,
-  generateCopyLink
+  generateCopyLink,
+  doneBtn,
+  isPublic
 }) => {
   const navigate = useNavigate();
   // const location = useLocation();
@@ -248,7 +250,7 @@ const GenerativeAndBlogLayout = ({
           </Col>
         </Row>
       </Card>
-      <CustomModal id={id} show={showModal} onHide={handleCloseModal} generateCopyLink={generateCopyLink}/>
+      <CustomModal id={id} show={showModal} onHide={handleCloseModal} generateCopyLink={generateCopyLink} doneBtn={doneBtn} isPublic={isPublic}/>
       <ModalPopup editorData={editorData} allData={allData} show={showModals} onHide={handleCloseDraftModal}  handlePublish={handlePublish}/>
     </>
   );

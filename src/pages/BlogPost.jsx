@@ -55,6 +55,7 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
   const [allData, setAllData] = useState([]);
+  const [blogData, setBlogData] = useState({});
   useEffect(() => {
     setTimeout(() => {
       setContentVisible(true); // Show content after delay
@@ -75,6 +76,7 @@ const BlogPost = () => {
       });
       console.log(response.data.blog, 'response.data.blog');
       setAllData(response.data.blog);
+      setBlogData(response.data.blog);
       setEditorData(response.data.blog.content_as_html);
     } catch (error) {
       console.log(error);
@@ -148,7 +150,7 @@ const BlogPost = () => {
         const payload = {
           content: editorData,
           status: 0,
-          is_public: 0
+          is_public: false
         };
         const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
           headers: {
@@ -174,7 +176,7 @@ const BlogPost = () => {
           content: content,
           title: title,
           status: 0,
-          is_public: 0
+          is_public: false
         };
         // const payload = { 
         //   content: editorData,
@@ -221,7 +223,7 @@ const BlogPost = () => {
         const payload = {
           content: editorData,
           status: 1,
-          is_public: 1
+          is_public: true
         };
         const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
           headers: {
@@ -247,7 +249,7 @@ const BlogPost = () => {
           content: content,
           title: title,
           status: 1,
-          is_public: 1
+          is_public: true
         };
         // const payload = { 
         //   content: editorData,
@@ -267,31 +269,115 @@ const BlogPost = () => {
     }
 
   };
+  const handleSavePublishwithDoneBtn = async () => {
+    console.log(editorData, 'editorData');
+    const authData = JSON.parse(localStorage.getItem("authData"));
+    const token = authData?.token;
+    
+    if (id) {
+      try {
+        const payload = {
+          content: editorData,
+          status: 1,
+          is_public: true
+        };
+        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log(response, 'response');
+        setBlogData(response.data.blog)
+        showToast('Blog published successfully!', 'success');
+        // navigate('/blog');
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const payload = {
+          blog_topic: formData.pressType,
+          blog_length_and_tone: formData.companyDescription,
+          main_points: formData.spokesperson,
+          blog_goal: formData.factsNotes,
+          target_audience: formData.releaseReason,
+          keywords: formData.companyDescription2,
+          content_as_html: editorData,
+          content: content,
+          title: title,
+          status: 1,
+          is_public: true
+        };
+        // const payload = { 
+        //   content: editorData,
+        //   status:0
+        // };
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/blogs`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log(response, 'response');
+        showToast('Blog published successfully!', 'success');
+        setBlogData(response.data.blog)
+
+        // navigate('/blog');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  };
   const generateCopyLink = () => {
     console.log("hiiii", id);
 
-    // const link = `http://localhost:5173/blogShare?id=${id}`;
-    const link = `https://appstage.thecor.ai/blogShare?id=${id}`;
-    // Copy the link to the clipboard
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Link Copied!",
-          text: "The blog link has been copied to your clipboard.",
-          showConfirmButton: false,
-          timer: 2000,
+    if(id){
+      // const link = `http://localhost:5173/blogShare?id=${id}`;
+      const link = `https://appstage.thecor.ai/blogShare?id=${id}`;
+      // Copy the link to the clipboard
+      navigator.clipboard
+        .writeText(link)
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Link Copied!",
+            text: "The blog link has been copied to your clipboard.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Copy!",
+            text: "An error occurred while copying the link.",
+            footer: err.message,
+          });
         });
-      })
-      .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          title: "Failed to Copy!",
-          text: "An error occurred while copying the link.",
-          footer: err.message,
+    }else{
+      // const link = `http://localhost:5173/blogShare?id=${id}`;
+      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.id}`;
+      // Copy the link to the clipboard
+      navigator.clipboard
+        .writeText(link)
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Link Copied!",
+            text: "The blog link has been copied to your clipboard.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Copy!",
+            text: "An error occurred while copying the link.",
+            footer: err.message,
+          });
         });
-      });
+    }
   }
 
   return (
@@ -316,6 +402,8 @@ const BlogPost = () => {
           editorData={editorData}
           id={id}
           generateCopyLink={generateCopyLink}
+          doneBtn={handleSavePublishwithDoneBtn}
+          isPublic={blogData?.is_public}
         />
       </motion.div>
       {loading && (

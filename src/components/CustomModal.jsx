@@ -4,7 +4,7 @@ import '../css/CustomModal.css';
 import { Chips } from 'primereact/chips';
 import Swal from 'sweetalert2';
 
-const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
+const CustomModal = ({ show, onHide ,id,generateCopyLink,doneBtn,isPublic}) => {
     const [contact, setContact] = useState([]);
     const [people, setPeople] = useState([
         { name: 'Mohammed Jomani', email: 'mm@o2.com', role: 'Admin' },
@@ -71,24 +71,24 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
             <div style={{ padding: '20px' }}>
                 <Modal.Header closeButton className="modal-header">
                     <Modal.Title style={{ fontWeight: 'bold', fontSize: '30px' }}>
-                        Dubai Real Estate V1
+                        Shared
                     </Modal.Title>
                 </Modal.Header>
-                <p style={{ marginLeft: '20px', lineHeight: '0.1', fontSize: '14px', fontWeight: '400', color: '#686868' }}>
+                {/* <p style={{ marginLeft: '20px', lineHeight: '0.1', fontSize: '14px', fontWeight: '400', color: '#686868' }}>
                     Invite your team to review and collaborate on this project
-                </p>
+                </p> */}
 
                 <Modal.Body className="modal-body">
-                    <Chips
+                    {/* <Chips
                         style={{ ...commonStyles, height: 'unset' }}
                         placeholder="Add locations"
                         value={contact}
                         onChange={(e) => setContact(e.value)}
-                    />
+                    /> */}
 
                     <div className="people-access">
-                        <h5>People with access</h5>
-                        <ul>
+                        {/* <h5>People with access</h5> */}
+                        {/* <ul>
                             {people.map((person, index) => (
                                 <li key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                                     <div className="initials-circle">{getInitials(person.name)}</div>
@@ -128,16 +128,16 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
                                     </div>
                                 </li>
                             ))}
-                        </ul>
+                        </ul> */}
                         <h5>General access</h5>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <p style={{ fontSize: '14px', fontWeight: 'bold', margin: 0 }}>Anyone with the link</p>
                                 <p style={{ fontSize: '13px', lineHeight: '1', margin: 0 }}>
-                                    Anyone on the internet with the link can edit
+                                    Anyone on the internet with the link can view
                                 </p>
                             </div>
-                            <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                            {/* <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
                                 <Dropdown>
                                     <Dropdown.Toggle
                                         id="option-dropdown"
@@ -158,7 +158,7 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
                                         <Dropdown.Item>Option 2</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </Modal.Body>
@@ -172,6 +172,7 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
                             border: '1px solid grey',
                         }}
                         onClick={generateCopyLink}
+                        disabled={!isPublic}
                     >
                         Copy Link
                     </Button>
@@ -183,6 +184,7 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink}) => {
                             border: 'none',
                             width: '100px',
                         }}
+                        onClick={doneBtn}
                     >
                         Done
                     </Button>

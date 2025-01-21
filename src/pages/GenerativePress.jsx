@@ -48,6 +48,7 @@ const GenerativePress = () => {
     const { id } = useParams();
     const { showToast } = useToast();
     const [allData, setAllData] = useState([]);
+  const [pressData, setPressData] = useState({});
 
     useEffect(() => {
         setTimeout(() => {
@@ -69,10 +70,12 @@ const GenerativePress = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            // console.log(response, 'response');
+            console.log(response, 'response');
+            console.log(response.data.press_release, 'response.data.press_release');
 
             setEditorData(response.data.press_release.content_as_html);
             setAllData(response.data.press_release);
+            setPressData(response.data.press_release)
         } catch (error) {
             console.log(error);
 
@@ -146,7 +149,7 @@ const GenerativePress = () => {
                 const payload = {
                     content: editorData,
                     status: 0,
-                    is_public: 0
+                    is_public: false
                 };
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
                     headers: {
@@ -167,7 +170,7 @@ const GenerativePress = () => {
                     content: content,
                     title: title,
                     status: 0,
-                    is_public: 0
+                    is_public: false
                 };
                 const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
                     headers: {
@@ -194,7 +197,7 @@ const GenerativePress = () => {
                 const payload = {
                     content: editorData,
                     status: 1,
-                    is_public: 1
+                    is_public: true
                 };
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
                     headers: {
@@ -215,7 +218,7 @@ const GenerativePress = () => {
                     content: content,
                     title: title,
                     status: 1,
-                    is_public: 1
+                    is_public: true
                 };
                 const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
                     headers: {
@@ -231,10 +234,82 @@ const GenerativePress = () => {
         }
 
     };
+    const handleSavePublishwithDonBtn = async () => {
+        console.log(editorData, 'editorData');
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            if (id) {
+                const payload = {
+                    content: editorData,
+                    status: 1,
+                    is_public: true
+                };
+                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                console.log(response, 'response');
+                setPressData(response.data.press_release)
+                showToast('Press release updated successfully!', 'success');
+                // navigate('/press-release');
+            } else {
+                const payload = {
+                    press_release_type: formData.pressType,
+                    press_release_company: formData.companyDescription,
+                    spokes_mens: formData.spokesperson,
+                    press_release_facts: formData.factsNotes,
+                    press_release_content: formData.releaseReason,
+                    content_as_html: editorData,
+                    content: content,
+                    title: title,
+                    status: 1,
+                    is_public: true
+                };
+                const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                console.log(response, 'response');
+                setPressData(response.data.press_release)
+                showToast('Press release updated successfully!', 'success');
+                // navigate('/drafts');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
     const generateCopyLink = () => {
         console.log("hiiii", id);
-
-        // const link = `http://localhost:5173/pressShare?id=${id}`;
+        if(id){
+            
+            // const link = `http://localhost:5173/pressShare?id=${id}`;
+            const link = `https://appstage.thecor.ai/pressShare?id=${id}`;
+            // Copy the link to the clipboard
+            navigator.clipboard
+                .writeText(link)
+                .then(() => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Link Copied!",
+                        text: "The Press link has been copied to your clipboard.",
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                })
+                .catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Failed to Copy!",
+                        text: "An error occurred while copying the link.",
+                        footer: err.message,
+                    });
+                });
+        }else{
+            // const link = `http://localhost:5173/pressShare?id=${id}`;
         const link = `https://appstage.thecor.ai/pressShare?id=${id}`;
         // Copy the link to the clipboard
         navigator.clipboard
@@ -256,6 +331,7 @@ const GenerativePress = () => {
                     footer: err.message,
                 });
             });
+        }
     }
 
     return (
@@ -279,6 +355,8 @@ const GenerativePress = () => {
                     allData={allData}
                     editorData={editorData}
                     generateCopyLink={generateCopyLink}
+                    doneBtn={handleSavePublishwithDonBtn}
+                    isPublic={pressData?.is_public}
                 />
             </motion.div>
             {loading && (
