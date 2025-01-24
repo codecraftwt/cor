@@ -227,7 +227,7 @@ const GenerativePress = () => {
                 });
                 console.log(response, 'response');
                 showToast('Press release updated successfully!', 'success');
-                navigate('/drafts');
+                navigate('/press-release');
             }
         } catch (error) {
             console.log(error);
@@ -287,7 +287,7 @@ const GenerativePress = () => {
         if(id){
             
             // const link = `http://localhost:5173/pressShare?id=${id}`;
-            const link = `https://appstage.thecor.ai/pressShare?id=${id}`;
+            const link = `https://appstage.thecor.ai/pressShare?id=${pressData.content_as_html}`;
             // Copy the link to the clipboard
             navigator.clipboard
                 .writeText(link)
@@ -310,7 +310,7 @@ const GenerativePress = () => {
                 });
         }else{
             // const link = `http://localhost:5173/pressShare?id=${id}`;
-        const link = `https://appstage.thecor.ai/pressShare?id=${id}`;
+        const link = `https://appstage.thecor.ai/pressShare?id=${pressData.content_as_html}`;
         // Copy the link to the clipboard
         navigator.clipboard
             .writeText(link)

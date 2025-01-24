@@ -29,7 +29,7 @@ import React, { useState, useEffect, useRef } from "react";
 // ];
 
 const CustomDropdown = ({countries,value,onchangeMethod}) => {
-    console.log(value,'value');
+    // console.log(value,'value');
     
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");

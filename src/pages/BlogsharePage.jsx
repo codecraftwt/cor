@@ -6,6 +6,8 @@ const BlogsharePage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id'); // Extract the id parameter
+  console.log(id,'id');
+  
   const [editorData, setEditorData] = useState('');
 
   const featchBlogData = async () => {
@@ -27,14 +29,14 @@ const BlogsharePage = () => {
   }
 
   useEffect(() => {
-      if (id) {
-        featchBlogData()
-      }
+      // if (id) {
+      //   featchBlogData()
+      // }
     }, []);
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
     <div style={{ maxWidth: '800px', margin: '20px', width: '100%' }}>
-      <div dangerouslySetInnerHTML={{ __html: editorData }} />
+      <div dangerouslySetInnerHTML={{ __html: id }} />
     </div>
   </div>
   );

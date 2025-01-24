@@ -333,7 +333,7 @@ const BlogPost = () => {
 
     if(id){
       // const link = `http://localhost:5173/blogShare?id=${id}`;
-      const link = `https://appstage.thecor.ai/blogShare?id=${id}`;
+      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.content_as_html}`;
       // Copy the link to the clipboard
       navigator.clipboard
         .writeText(link)
@@ -356,7 +356,7 @@ const BlogPost = () => {
         });
     }else{
       // const link = `http://localhost:5173/blogShare?id=${id}`;
-      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.id}`;
+      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.content_as_html}`;
       // Copy the link to the clipboard
       navigator.clipboard
         .writeText(link)

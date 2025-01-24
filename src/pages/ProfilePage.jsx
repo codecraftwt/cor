@@ -219,7 +219,15 @@ const ProfilePage = () => {
         showToast('Profile updated successfully', 'success');
         console.log("Profile updated successfully:", response.data);
       } catch (error) {
-        console.error("Error updating profile:", error);
+        if (error.response.data.message) {
+          showToast( error.response.data.message, 'error');
+        }
+        if(error.response.data.errors){
+          const errorMessages = error.response.data.errors;
+          errorMessages.forEach((error) => {
+            showToast(error.message, 'error');
+          });
+        }
       }
     } else {
       console.log("Form validation failed.");

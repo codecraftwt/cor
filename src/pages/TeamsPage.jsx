@@ -408,8 +408,15 @@ const TeamsTable = () => {
             fetchData();
 
         } catch (error) {
-            showToast(error.response.data.message, 'error');
-            console.error('Error submitting form:', error);
+            if (error.response.data.message) {
+                showToast( error.response.data.message, 'error');
+              }
+              if(error.response.data.errors){
+                const errorMessages = error.response.data.errors;
+                errorMessages.forEach((error) => {
+                  showToast(error.message, 'error');
+                });
+              }
         }
         // You can perform additional actions with the form data here
     };

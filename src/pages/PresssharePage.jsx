@@ -28,15 +28,15 @@ const PresssharePage = () => {
     }
   }
 
-  useEffect(() => {
-      if (id) {
-        featchBlogData()
-      }
-    }, []);
+  // useEffect(() => {
+  //     if (id) {
+  //       featchBlogData()
+  //     }
+  //   }, []);
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
     <div style={{ maxWidth: '800px', margin: '20px', width: '100%' }}>
-      <div dangerouslySetInnerHTML={{ __html: editorData }} />
+      <div dangerouslySetInnerHTML={{ __html: id }} />
     </div>
   </div>
   );

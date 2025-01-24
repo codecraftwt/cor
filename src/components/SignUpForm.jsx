@@ -120,7 +120,8 @@ const SignUpForm = () => {
         company_location_id: selectedCountry.id,
         country_id: selectedCountry.id,
       };
-
+      // console.log(payload,'payload');
+      
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload);
         console.log('User registered successfully:', response.data);

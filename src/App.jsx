@@ -178,7 +178,7 @@ const AppRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations' && location.pathname !== '/auth') {
+    if (!isAuthenticated() && location.pathname !== '/sign-in' && location.pathname !== '/sign-up' && location.pathname !== '/create-pass' && location.pathname !== '/team-member-invitations' && location.pathname !== '/auth' && location.pathname !=='/blogShare' && location.pathname !=='/pressShare') {
       navigate('/sign-in');
     }
   }, [location.pathname, navigate]);
