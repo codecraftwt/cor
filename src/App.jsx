@@ -42,10 +42,10 @@ const initialRouteConfig = [
   { path: '/sign-up', element: <SignUpPage />, hideSidebar: true, hideHeader: true },
   { path: '/sign-in', element: <SignInPage />, hideSidebar: true, hideHeader: true },
   { path: '/create-pass', element: <NewPasswordPage />, hideSidebar: true, hideHeader: true },
-  { path: '/generativepress', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
-  { path: '/generativepress/:id', element: <GenerativePress />, hideSidebar: true, hideHeader: false },
-  { path: '/blog-post', element: <BlogPost />, hideSidebar: true, hideHeader: false },
-  { path: '/blog-posts/:id', element: <BlogPost />, hideSidebar: true, hideHeader: false },
+  { path: '/generativepress', element: <GenerativePress />, hideSidebar: true, hideHeader: true },
+  { path: '/generativepress/:id', element: <GenerativePress />, hideSidebar: true, hideHeader: true },
+  { path: '/blog-post', element: <BlogPost />, hideSidebar: true, hideHeader: true },
+  { path: '/blog-posts/:id', element: <BlogPost />, hideSidebar: true, hideHeader: true },
   { path: '/creator-onboard', element: <CreatorOnboard />, hideSidebar: true, hideHeader: true },
   { path: '/explore', element: <Dashboard />, hideSidebar: false, hideHeader: false },
   { path: '/team-member-invitations', element: <TeamMemberInvitations />, hideSidebar: true, hideHeader: true },
@@ -57,11 +57,14 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
   const { id: routeId } = useParams();
   const id = routeId
   const [isSidebarVisible, setSidebarVisible] = useState(!hideSidebar);
+  const [isHeaderVisible, setHeaderVisible] = useState(!hideHeader);
   useEffect(() => {
     console.log(id,'id');
     console.log(location,'location');
     const matchPressId = matchPath('/generativepress/:id', location.pathname);
     const matchBlogId = matchPath('/blog-posts/:id', location.pathname);
+    console.log(matchBlogId,'matchBlogId');
+    
     // console.log(match,'match');
     // Check if it matches
   const isMatch = !!matchPressId || !!matchBlogId // `true` if it matches, `false` otherwise
@@ -70,11 +73,31 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
     
     if (location.pathname == '/sign-in' || location.pathname == '/sign-up' || location.pathname == '/create-pass' || location.pathname == '/team-member-invitations' || location.pathname == '/auth' || location.pathname == '/generativepress' || location.pathname == '/generativepress/id' || location.pathname == '/blog-post' || location.pathname == '/blog-posts/:id') {
       setSidebarVisible(true);
+
     }else if(isMatch){
       
       setSidebarVisible(true);
     }
   }, [id]);
+
+  useEffect(()=>{
+    console.log(id,'id');
+    console.log(location,'location');
+    const matchPressId = matchPath('/generativepress/:id', location.pathname);
+    const matchBlogId = matchPath('/blog-posts/:id', location.pathname);
+    console.log(matchBlogId,'matchBlogId');
+    
+    // console.log(match,'match');
+    // Check if it matches
+  const isMatch = !!matchPressId || !!matchBlogId 
+  if(isMatch){
+    setHeaderVisible(false);
+  }else{
+    setHeaderVisible(!hideSidebar);
+  }
+  },[
+    hideHeader
+  ])
 
   useEffect(() => {
     const handleResize = () => {
@@ -155,7 +178,7 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
           }}
         >
           <AnimatePresence>
-            {!hideHeader && <Header toggleSidebar={toggleSidebar} />}
+            {isHeaderVisible && <Header toggleSidebar={toggleSidebar} />}
           </AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

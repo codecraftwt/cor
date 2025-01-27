@@ -32,7 +32,7 @@ const cardData = [
     button1: { text: "Preview", icon: eye },
     button2: { text: "Create", icon: chart },
     bgColor: "#FFD281",
-    route: "blog-post",
+    route: "/blog-post",
   },
 ];
 
@@ -41,7 +41,7 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
   const navigate = useNavigate();
 
   const handleRoute = (isPreview) => {
-    navigate(route, { state: { isPreview } }); // Pass state indicating button click
+    navigate(route); // Pass state indicating button click
   };
 
   return (

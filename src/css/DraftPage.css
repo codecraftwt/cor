@@ -30,9 +30,12 @@
     box-shadow: var(--Paper-shadow) !important;
 
 }
-.css-1a7iywq-MuiTableHead-root .css-1xtozoh-MuiTableRow-root{
+/* .css-1a7iywq-MuiTableHead-root .css-1xtozoh-MuiTableRow-root{
     box-shadow: unset !important;
-}
+} */
+ .MuiTableRow-root .MuiTableRow-head{
+    box-shadow: unset !important;
+ }
 .css-1rz7w7v:hover{
     background-color: #F1F5F8 !important;
 }

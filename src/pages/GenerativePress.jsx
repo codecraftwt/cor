@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
 import GenerativeAndBlogLayout from '../components/GenerativeAndBlogLayout';
@@ -42,10 +42,17 @@ const formFields = [
 ];
 
 const GenerativePress = () => {
+
+    const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get('id'); // Extract the id parameter
+  console.log(id,'ids');
+
+
     const [loading, setLoading] = useState(false);
     const [contentVisible, setContentVisible] = useState(false);
     const navigate = useNavigate();
-    const { id } = useParams();
+    // const { id } = useParams();
     const { showToast } = useToast();
     const [allData, setAllData] = useState([]);
   const [pressData, setPressData] = useState({});

@@ -65,7 +65,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
     const navigate = useNavigate();
 
     const handleEdit = (data) => {
-        navigate(`/blog-posts/${data.id}`);
+        navigate(`/blog-post?id=${data.id}`);
     }
 
 
@@ -79,7 +79,7 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                 <Table>
                     {showHeader && (
                         <TableHead className="d-flex">
-                            <TableRow className="d-flex justify-content-between w-100" style={{ boxShadow: 'unset' }}>
+                            <TableRow className="d-flex justify-content-between w-100" style={{ boxShadow: 'unset !important' }}>
                                 <StyledTableCell style={{ width: '300px', marginRight: '82px', borderBottom: 'none' }}>Title</StyledTableCell>
                                 <TableCell style={{ width: '132px', marginRight: '20px' }}>
                                     <TableSortLabel

@@ -47,7 +47,9 @@ function MyVerticallyCenteredModal(props) {
     const fetchRoles = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/roles`);
-            setRoleOptions(response.data.roles);
+            const companyRoles = response.data.roles.filter((role) => role.type === 'COMPANY_ROLE'); // Check if the role is admin
+            setRoleOptions(companyRoles);
+
         } catch (error) {
             console.error('Error fetching roles:', error);
         }
@@ -575,7 +577,8 @@ const TeamsTable = () => {
             renderCell: (params) => {
                 // console.log(JSON.parse(localStorage.getItem('authData')).user.role_id,'localStorage.getItem');
                 
-                const isAdmin = JSON.parse(localStorage.getItem('authData')).user.role_id == 2; // Check if the role is admin
+                const isAdmin = JSON.parse(localStorage.getItem('authData')).user.role_id == 2;
+                const companyRoles = roles.filter((role) => role.type === 'COMPANY_ROLE'); // Check if the role is admin
                 return isAdmin ? (
                     <Select
                         value={params.row.role_id}
@@ -583,7 +586,7 @@ const TeamsTable = () => {
                         variant="standard"
                         fullWidth
                     >
-                        {roles.map((role) => (
+                        {companyRoles.map((role) => (
                             <MenuItem key={role.id} value={role.id}>
                                 {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                             </MenuItem>

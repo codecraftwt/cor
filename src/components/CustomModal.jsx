@@ -4,7 +4,7 @@ import '../css/CustomModal.css';
 import { Chips } from 'primereact/chips';
 import Swal from 'sweetalert2';
 
-const CustomModal = ({ show, onHide ,id,generateCopyLink,doneBtn,isPublic}) => {
+const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) => {
     const [contact, setContact] = useState([]);
     const [people, setPeople] = useState([
         { name: 'Mohammed Jomani', email: 'mm@o2.com', role: 'Admin' },
@@ -38,11 +38,11 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink,doneBtn,isPublic}) => {
     };
 
     // const BlogsharePage = () => {
-        
+
     // }
     // const generateCopyLink = () => {
     //     console.log("hiiii", id);
-    
+
     //     const link = `http://localhost:5173/blogShare?id=${id}`;
     //     // Copy the link to the clipboard
     //     navigator.clipboard
@@ -66,8 +66,14 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink,doneBtn,isPublic}) => {
     //       });
     // }
 
+    const [selectedValue, setSelectedValue] = useState("Editor"); // Default value
+
+    const handleSelect = (eventKey) => {
+        setSelectedValue(eventKey); // Update the state with the selected value
+    };
+
     return (
-        <Modal style={{borderRadius:'30px'}} show={show} onHide={onHide} centered size="md">
+        <Modal style={{ borderRadius: '30px' }} show={show} onHide={onHide} centered size="md">
             <div style={{ padding: '20px' }}>
                 <Modal.Header closeButton className="modal-header">
                     <Modal.Title style={{ fontWeight: 'bold', fontSize: '30px' }}>
@@ -137,28 +143,27 @@ const CustomModal = ({ show, onHide ,id,generateCopyLink,doneBtn,isPublic}) => {
                                     Anyone on the internet with the link can view
                                 </p>
                             </div>
-                            {/* <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-                                <Dropdown>
+                            <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                                <Dropdown onSelect={handleSelect}>
                                     <Dropdown.Toggle
                                         id="option-dropdown"
                                         variant="link"
                                         style={{
-                                            // fontSize: '12px',
-                                            padding: '0',
+                                            padding: "0",
                                             textDecoration: "none",
                                             color: "black",
-                                            fontSize: "13px"
+                                            fontSize: "13px",
                                         }}
                                     >
-                                        Editor
+                                        {selectedValue}
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
-                                        <Dropdown.Item>Option 1</Dropdown.Item>
-                                        <Dropdown.Item>Option 2</Dropdown.Item>
+                                        <Dropdown.Item eventKey="Visible">Visible</Dropdown.Item>
+                                        <Dropdown.Item eventKey="Not Visible">Not Visible</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </Modal.Body>

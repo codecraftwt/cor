@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import CustomModal from './CustomModal';
 import ModalPopup from './ModalPopup';
+import Logo from '../assets/COR_logo.svg';
 
 // Custom styled label
 const CustomLabel = styled(Form.Label)`
@@ -29,7 +30,7 @@ const GenerativeAndBlogLayout = ({
   generateButtonText,
   editor,
   onGenerate,
-  allData, 
+  allData,
   editorData,// New prop for handling generate button click
   id,
   generateCopyLink,
@@ -49,7 +50,7 @@ const GenerativeAndBlogLayout = ({
 
 
   useEffect(() => {
-    if(isPreview){
+    if (isPreview) {
       if (location.pathname == '/generativepress') {
         console.log(location.pathname == '/generativepress', 'location pathname');
         setShowModals(true)
@@ -62,8 +63,8 @@ const GenerativeAndBlogLayout = ({
 
   }, [location]);
 
-   // Check if at least one field is filled
-   useEffect(() => {
+  // Check if at least one field is filled
+  useEffect(() => {
     const isAnyFieldFilled = Object.values(formData).some(
       (value) => Array.isArray(value) ? value.length > 0 : value.trim().length > 0
     );
@@ -101,7 +102,7 @@ const GenerativeAndBlogLayout = ({
                 onChange={(e) => handleInputChange(controlId, e.value)}
                 placeholder={placeholder}
                 style={{ ...commonStyles, width: '100%' }}
-                addOnBlur 
+                addOnBlur
               />
             ) : (
               <Form.Control
@@ -120,7 +121,7 @@ const GenerativeAndBlogLayout = ({
 
   return (
     <>
-      <div className="d-flex  flex-md-row mb-3 align-items-center">
+      {/* <div className="d-flex  flex-md-row mb-3 align-items-center">
         <Button onClick={() => navigate(-1)} className="d-flex mb-2 mb-md-0 border-0 bg-transparent">
           <img src={arrowleft} alt="Back Arrow" />
         </Button>
@@ -128,9 +129,9 @@ const GenerativeAndBlogLayout = ({
           <h1 className="mb-0 text-start" style={{ fontSize: '32px', textAlign: 'center' }}>{title}</h1>
           <p className="text-muted" style={{ fontSize: '15px', textAlign: 'center' }}>{description}</p>
         </div>
-      </div>
+      </div> */}
 
-      <Card className="border-0 header-shadow mb-3" style={{ borderRadius: '35px' }}>
+      <Card className="border-0 header-shadow mb-3 mt-3" style={{ borderRadius: '35px' }}>
         <Row>
           <Col xs={12} lg={5}>
             <Card
@@ -141,11 +142,23 @@ const GenerativeAndBlogLayout = ({
                 boxShadow: '8px 0 15px #517EB814',
               }}
             >
-              <div className="px-3">
+              <div className="px-3 py-3">
+                <div className="d-flex  flex-column  mb-3 align-items-start">
+                  <div className='d-flex '>
+                    <Button onClick={() => navigate(-1)} className="d-flex mb-2 mb-md-0 border-0 bg-transparent">
+                      <img src={arrowleft} alt="Back Arrow" />
+                    </Button>
+                    <img src={Logo} alt="Logo" width="80px" height="33px" />
+                  </div>
+                  <div className="d-flex flex-column ms-5">
+                    <h1 className="mb-0 text-start" style={{ fontSize: '32px', textAlign: 'start' }}>{title}</h1>
+                    <p className="text-muted" style={{ fontSize: '15px', textAlign: 'start' }}>{description}</p>
+                  </div>
+                </div>
                 <Form
                   className="generativeform"
                   style={{
-                    padding: '25px 20px',
+                    padding: '25px 45px',
                     height: 'auto',
                     maxHeight: '70vh',
                     overflowY: 'auto',
@@ -160,7 +173,7 @@ const GenerativeAndBlogLayout = ({
                   background: 'linear-gradient(135deg, #5A78F2, #000000)',
                 }}
               >
-                <Button className="bg-transparent border-0" onClick={onGenerate}  disabled={isGenerateDisabled}>
+                <Button className="bg-transparent border-0" onClick={onGenerate} disabled={isGenerateDisabled}>
                   <img src={magicpen} alt="Magic Pen" className="me-2" />
                   {generateButtonText}
                 </Button>
@@ -250,8 +263,8 @@ const GenerativeAndBlogLayout = ({
           </Col>
         </Row>
       </Card>
-      <CustomModal id={id} show={showModal} onHide={handleCloseModal} generateCopyLink={generateCopyLink} doneBtn={doneBtn} isPublic={isPublic}/>
-      <ModalPopup editorData={editorData} allData={allData} show={showModals} onHide={handleCloseDraftModal}  handlePublish={handlePublish}/>
+      <CustomModal id={id} show={showModal} onHide={handleCloseModal} generateCopyLink={generateCopyLink} doneBtn={doneBtn} isPublic={isPublic} />
+      <ModalPopup editorData={editorData} allData={allData} show={showModals} onHide={handleCloseDraftModal} handlePublish={handlePublish} />
     </>
   );
 };
