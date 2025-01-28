@@ -56,7 +56,11 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
       style={{
         borderRadius: '20px', border: 'none', boxShadow: '2px 2px 5px 1px rgba(0, 0, 0, 0.03)', borderRadius: '20px',cursor: 'pointer'
       }}>
-        <Card.Body className="d-flex align-items-center justify-content-between" style={{ padding: '25px' }}>
+        <Card.Body className="d-flex align-items-center justify-content-between dashboard-card" 
+        style={{ 
+          padding: '25px',
+          // flexDirection: window.innerWidth <= 768 ? "column" : "row",
+          }}>
           <div className="d-flex align-items-center">
             <img
               src={icon}

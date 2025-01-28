@@ -57,7 +57,7 @@ const LayoutComman = ({ title, form }) => {
 
                         </Col>
                     ) : null}
-                    <Col md={title ? 12 : 12} lg={8} sm={12} className="p-5 mt-5">
+                    <Col md={title ? 12 : 12} lg={8} sm={12} className="p-5 mt-5 right-side-content">
                         <motion.div
                             initial="hidden"
                             animate="visible"

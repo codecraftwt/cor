@@ -95,6 +95,7 @@ const SignUpForm = () => {
     const newErrors = {};
     if (!formData.firstName.trim()) newErrors.firstName = "First Name is required";
     if (!formData.lastName.trim()) newErrors.lastName = "Last Name is required";
+    if (!formData.company.trim()) newErrors.company = "Company Name is required";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Enter a valid email";
     if (formData.password.length < 8) newErrors.password = "Password must be at least 8 characters";
     if (!phoneNumber || phoneNumber.length < 10) newErrors.phoneNumber = "Enter a valid phone number";
@@ -223,7 +224,9 @@ const SignUpForm = () => {
                     placeholder="Company name here"
                     value={formData.company}
                     onChange={handleChange}
+                    isInvalid={!!errors.company}
                   />
+                  <Form.Control.Feedback type="invalid">{errors.company}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -242,9 +245,14 @@ const SignUpForm = () => {
                       <option key={country.id} value={country.id}>{country.name}</option>
                     ))}
                   </Form.Control> */}
-                  <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
-
-                  <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback>
+                  <CustomDropdown 
+                  value={selectedCountry} 
+                  countries={countries} 
+                  onchangeMethod={handleCountryChange2}
+                  isInvalid={!!errors.location}
+                  />
+                  {errors.location && <span className="text-danger">{errors.location}</span>}
+                  {/* <Form.Control.Feedback type="invalid">{errors.location}</Form.Control.Feedback> */}
                 </Form.Group>
               </Col>
             </Row>

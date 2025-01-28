@@ -38,6 +38,10 @@ const GenerativeAndBlogLayout = ({
   isPublic
 }) => {
   const navigate = useNavigate();
+
+  console.log(typeof(editorData),'editorData');
+  console.log(editorData,'editorData2');
+  
   // const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [showModals, setShowModals] = useState(false);
@@ -240,8 +244,8 @@ const GenerativeAndBlogLayout = ({
               >
                 Save the Document
               </Button> */}
-              <Dropdown data-bs-theme="black" style={{ background: 'black', borderRadius: '30px' }}>
-                <Button onClick={handleSaveToDraft} style={{ color: 'white', background: 'transparent', border: 'unset', borderRight: '1px solid white', borderRadius: '0px' }}>
+              <Dropdown data-bs-theme="black" style={{ background: 'black', borderRadius: '30px' }} >
+                <Button disabled={editorData==''} onClick={handleSaveToDraft} style={{ color: 'white', background: 'transparent', border: 'unset', borderRight: '1px solid white', borderRadius: '0px' }}>
                   <img src={arrowRight} alt="right arrow" srcset="" className='me-2' />
                   Save the Document
                 </Button>

@@ -160,7 +160,8 @@ const StyledListItem = styled(ListGroup.Item)`
 
     /* Override Bootstrap hover effect */
     &:hover {
-        background-color: ${(props) => props.isActive ? props.activeColor : "#f8f9fa"};
+        background-color: ${(props) => (props.isActive ? `${props.activeColor} !important` : "transparent")};
+    border-radius: ${(props) => (props.isActive ? `${props.borderRadius} !important` : "0")};
     }
 `;
 
@@ -171,4 +172,9 @@ const CustomDiv = styled.div`
     justify-content: center;
     padding: 7px;
     border-radius: ${(props) => (props.borderRadius ? props.borderRadius : '20px')};
+
+    //  &:hover {
+    //     background-color: ${({ activeColor }) => activeColor || '#f0f0f0'};
+    //     transform: scale(1.05); /* Slight zoom effect */
+    // }
 `;

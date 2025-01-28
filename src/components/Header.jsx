@@ -129,6 +129,7 @@ const Header = ({ toggleSidebar }) => {
             style={{
               border: 'unset',
             }}
+            onFocus={(e) => (e.target.style.boxShadow = 'none')} 
           />
           <InputGroup.Text
             style={{
@@ -203,6 +204,7 @@ const Header = ({ toggleSidebar }) => {
                   placeholder="Search COR"
                   aria-label="Search"
                   style={{ border: 'unset' }}
+                  onFocus={(e) => (e.target.style.boxShadow = 'none')} 
                 />
                 <InputGroup.Text
                   style={{

@@ -163,7 +163,7 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
                 borderRight: '1px solid rgba(0, 0, 0, 0.1)',
               }}
             >
-              <button className='position-absolute border-0 p-3 bg-transparent' style={{ right: '0' }} onClick={toggleSidebar}>X</button>
+              <button className='position-absolute border-0 p-1 bg-transparent' style={{ right: '0' }} onClick={toggleSidebar}>X</button>
               <Sidebar />
             </motion.div>
           )}

@@ -268,8 +268,15 @@ const ProfilePage = () => {
       setNewPassword('');
       setConfirmPassword('');
     } catch (error) {
-      console.error('Error:', error);
-      showToast('Current password is incorrect', 'error');
+      if (error.response.data.message) {
+        showToast( error.response.data.message, 'error');
+      }
+      if(error.response.data.errors){
+        const errorMessages = error.response.data.errors;
+        errorMessages.forEach((error) => {
+          showToast(error.message, 'error');
+        });
+      }
     }
   };
 

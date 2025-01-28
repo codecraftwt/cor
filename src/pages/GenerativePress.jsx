@@ -258,7 +258,8 @@ const GenerativePress = () => {
                     }
                 });
                 console.log(response, 'response');
-                setPressData(response.data.press_release)
+                // setPressData(response.data.press_release)
+                setPressData(response.data)
                 showToast('Press release updated successfully!', 'success');
                 // navigate('/press-release');
             } else {

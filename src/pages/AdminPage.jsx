@@ -306,6 +306,7 @@ const AdminPage = () => {
                                                     onChange={(e) => setCompanyName(e.target.value)}
                                                 />
                                             </Form.Group>
+                                            {companyName=='' && <span className="text-danger">*Company name is required</span>}
                                         </Col>
                                     </Row>
                                 </motion.div>
@@ -332,6 +333,8 @@ const AdminPage = () => {
                                                     ))}
                                                 </Form.Control> */}
                                             <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
+                                            {selectedCountry==null && <span className="text-danger">*Company location is required</span>}
+                                            
                                             </Form.Group>
                                             <div>
                                             </div>
@@ -352,6 +355,8 @@ const AdminPage = () => {
                                                     value={websites}
                                                     onChange={(e) => setWebsites(e.value)}
                                                 />
+                                            {websites.length==0 && <span className="text-danger">*Websites is required</span>}
+
                                             </Form.Group>
                                             <Button style={{
                                                 width: '100px',
