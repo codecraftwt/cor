@@ -295,7 +295,7 @@ const GenerativePress = () => {
         if(id){
             
             // const link = `http://localhost:5173/pressShare?id=${id}`;
-            const link = `https://appstage.thecor.ai/pressShare?id=${pressData.content_as_html}`;
+            const link = `https://appstage.thecor.ai/pressShare?id=${pressData.id}`;
             // Copy the link to the clipboard
             navigator.clipboard
                 .writeText(link)

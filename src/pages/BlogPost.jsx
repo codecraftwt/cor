@@ -339,7 +339,7 @@ const BlogPost = () => {
 
     if(id){
       // const link = `http://localhost:5173/blogShare?id=${id}`;
-      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.content_as_html}`;
+      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.id}`;
       // Copy the link to the clipboard
       navigator.clipboard
         .writeText(link)

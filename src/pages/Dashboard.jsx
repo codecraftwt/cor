@@ -174,7 +174,7 @@ const Dashboard = () => {
           >
             <Card
               className="header-shadow"
-              style={{ padding: '35px', borderRadius: '30px', height: '735px', border: 'none' }}
+              style={{ padding: '35px', borderRadius: '30px', height: '100%', border: 'none' }}
             >
               <Card.Body>
                 <Card.Title><b>AI-Powered Content</b> Press, Blogs & Docs</Card.Title>
@@ -209,7 +209,7 @@ const Dashboard = () => {
           >
             <OnboardingSection percentage={percentage} setPercentage={setPercentage} />
           </motion.div>
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -256,7 +256,7 @@ const Dashboard = () => {
                 </Button>
               </Card.Body>
             </Card>
-          </motion.div>
+          </motion.div> */}
 
         </Col>
       </Row>
