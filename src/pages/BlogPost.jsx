@@ -53,7 +53,6 @@ const BlogPost = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id'); // Extract the id parameter
-  console.log(id,'ids');
 
   const navigate = useNavigate();
   // const { id } = useParams();
@@ -80,12 +79,11 @@ const BlogPost = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data.blog, 'response.data.blog');
       setAllData(response.data.blog);
       setBlogData(response.data.blog);
       setEditorData(response.data.blog.content_as_html);
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
     }
   }
@@ -110,7 +108,6 @@ const BlogPost = () => {
       target_audience: formData.releaseReason,
       keywords: formData.companyDescription2,
     };
-    console.log(payload, 'payload');
 
     try {
       setLoading(true);
@@ -126,7 +123,6 @@ const BlogPost = () => {
         });
 
         if (response.status === 200) {
-          console.log('blog generated successfully:', response.data);
           // Update the editor data with the response content_as_html
           setEditorData(response.data.content_as_html);
           setConetent(response.data.content);
@@ -148,7 +144,6 @@ const BlogPost = () => {
   };
 
   const handleSave = async () => {
-    console.log(editorData, 'editorData');
     const authData = JSON.parse(localStorage.getItem("authData"));
     const token = authData?.token;
     if (id) {
@@ -163,11 +158,10 @@ const BlogPost = () => {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log(response, 'response');
         showToast('Blog updated successfully!', 'success');
         navigate('/blog');
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {
       try {
@@ -193,36 +187,18 @@ const BlogPost = () => {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log(response, 'response');
         showToast('Blog saved successfully!', 'success');
         navigate('/blog');
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
   };
   const handleSavePublish = async () => {
-    console.log(editorData, 'editorData');
     const authData = JSON.parse(localStorage.getItem("authData"));
     const token = authData?.token;
-    // try {
-    //   const payload = {
-    //     content: editorData,
-    //     status: 1
-    //   };
-    //   const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     }
-    //   });
-    //   console.log(response, 'response');
-    //   showToast('Blog updated successfully!', 'success');
-    //   navigate('/blog');
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
+    
     // ====================
     if (id) {
       try {
@@ -236,11 +212,10 @@ const BlogPost = () => {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log(response, 'response');
         showToast('Blog published successfully!', 'success');
         navigate('/blog');
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {
       try {
@@ -266,17 +241,15 @@ const BlogPost = () => {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log(response, 'response');
         showToast('Blog published successfully!', 'success');
         navigate('/blog');
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
   };
   const handleSavePublishwithDoneBtn = async () => {
-    console.log(editorData, 'editorData');
     const authData = JSON.parse(localStorage.getItem("authData"));
     const token = authData?.token;
     
@@ -292,12 +265,11 @@ const BlogPost = () => {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log(response, 'response');
         setBlogData(response.data.blog)
         showToast('Blog published successfully!', 'success');
         // navigate('/blog');
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {
       try {
@@ -323,22 +295,19 @@ const BlogPost = () => {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log(response, 'response');
         showToast('Blog published successfully!', 'success');
         setBlogData(response.data.blog)
 
         // navigate('/blog');
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
   };
   const generateCopyLink = () => {
-    console.log("hiiii", id);
 
     if(id){
-      // const link = `http://localhost:5173/blogShare?id=${id}`;
       const link = `https://appstage.thecor.ai/blogShare?id=${blogData.id}`;
       // Copy the link to the clipboard
       navigator.clipboard
@@ -361,8 +330,7 @@ const BlogPost = () => {
           });
         });
     }else{
-      // const link = `http://localhost:5173/blogShare?id=${id}`;
-      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.content_as_html}`;
+      const link = `https://appstage.thecor.ai/blogShare?id=${blogData.id}`;
       // Copy the link to the clipboard
       navigator.clipboard
         .writeText(link)

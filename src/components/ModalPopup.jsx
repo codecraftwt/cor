@@ -8,8 +8,6 @@ import { use } from 'react';
 import axios from 'axios';
 // Custom modal component
 const ModalPopup = ({ show, onHide,allData ,editorData,handlePublish}) => {
-    console.log(allData,'allData');
-    // console.log(editorData,'editorData');
     const [users, setUsers] = useState([]);
     const modalVariants = {
         hidden: { opacity: 0, scale: 0.8 },
@@ -41,10 +39,9 @@ const ModalPopup = ({ show, onHide,allData ,editorData,handlePublish}) => {
                 },
             });
 
-            console.log(response.data.users);
             setUsers(response.data.users);
         } catch (error) {
-          console.log(error);
+          console.error(error);
             
         }
       }
@@ -83,7 +80,6 @@ const ModalPopup = ({ show, onHide,allData ,editorData,handlePublish}) => {
 
 
                 <p style={{ borderBottom: "1px solid grey", width: "94%" }}></p>
-                {/* <hr/> */}
                 <Modal.Body className="modal-body-custom " style={{ maxHeight: '60vh', overflow: 'auto' }}>
                 <div dangerouslySetInnerHTML={{ __html: editorData }} />
                 </Modal.Body>

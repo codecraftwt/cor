@@ -8,6 +8,11 @@ import { useToast } from "../utils/ToastContext";
 import { allCountries } from "./SignUpForm";
 
 const TeamMemberVerifiedForm = () => {
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [errors, setErrors] = useState({});
+    const [countries, setCountries] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState(null);
+
     const { showToast } = useToast();
     const location = useLocation();
     const navigate = useNavigate();
@@ -29,10 +34,7 @@ const TeamMemberVerifiedForm = () => {
         confirmPassword: "",
     });
 
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [errors, setErrors] = useState({});
-    const [countries, setCountries] = useState([]);
-    const [selectedCountry, setSelectedCountry] = useState(null);
+    
 
     useEffect(() => {
         axios
@@ -106,23 +108,11 @@ const TeamMemberVerifiedForm = () => {
                 company_location_id: selectedCountry.id,
             };
 
-            console.log("Payload:", payload);
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/verify`, payload);
-            console.log("User registered successfully:", response.data);
             if (response.status === 200) {
                 showToast("User invitation verified successfully!", "success");
-                console.log('User registered successfully:', response.data);
                 navigate("/");
             }
-            // Uncomment the below lines to enable API submission
-            // axios.post(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/verify`, payload)
-            //   .then((response) => {
-            //     console.log("User registered successfully:", response.data);
-            //     navigate("/");
-            //   })
-            //   .catch((error) => {
-            //     console.error("Error registering user:", error);
-            //   });
         } catch (error) {
             console.error("Error registering user:", error);
         

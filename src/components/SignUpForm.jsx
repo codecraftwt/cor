@@ -121,11 +121,9 @@ const SignUpForm = () => {
         company_location_id: selectedCountry.id,
         country_id: selectedCountry.id,
       };
-      // console.log(payload,'payload');
       
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register-user`, payload);
-        console.log('User registered successfully:', response.data);
     
         // Save authentication data to localStorage
         localStorage.setItem('authData', JSON.stringify(response.data));
@@ -136,7 +134,6 @@ const SignUpForm = () => {
         // Navigate to the home page
         navigate("/");
       } catch (error) {
-        // console.error('Error registering user:', error.response.data.errors);
     
         if (error.response.data.message) {
           showToast( error.response.data.message, 'error');
@@ -275,14 +272,8 @@ const SignUpForm = () => {
               <Col md={6}>
                 <Form.Group controlId="phoneNumber" className="mb-3">
                   <Form.Label style={{ fontWeight: "600", fontSize: "16px" }}>Phone Number</Form.Label>
-                  {/* <PhoneInput
-                    country={'ind'}
-                    value={phoneNumber}
-                    onChange={setPhoneNumber}
-                    style={{ ...commonStyles, padding: "0 12px" }}
-                  /> */}
                   <PhoneInput
-                    country={selectedCountryCode} // Default country code
+                    country={selectedCountryCode} 
                     value={phoneNumber}
                     onChange={(value) => setPhoneNumber(value)}
                     style={{ ...commonStyles, padding: "0 12px" }}

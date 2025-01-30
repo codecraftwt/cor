@@ -11,8 +11,6 @@ import {
   Grid,
   FormControl,
   FormLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -57,10 +55,7 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Profile data:", response.data);
-
         const { user } = response.data;
-        console.log(user);
         setSelectedCountry(user.country)
 
         const companyResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/companies/me`, {
@@ -68,20 +63,16 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         })
-        console.log(companyResponse);
-
         setCompanyName(companyResponse.data.company.name);
         setFormData({
           firstName: user.first_name,
           lastName: user.last_name,
           company: user.company_id,
           companyName: companyResponse.data.company.name,
-          country: user.country?.id, // Store the country ID
+          country: user.country?.id,
           email: user.email,
           phoneNumber: user.phone_number,
         });
-        console.log(user.first_name);
-
       } else {
         console.error("No auth token found");
       }
@@ -103,7 +94,6 @@ const ProfilePage = () => {
   const handleCountryChange = (event) => {
     const selectedCountry = countries.find(country => country.id === event.target.value);
     const getCode = allCountries.find(country => country.name === selectedCountry.name);
-    console.log(getCode,'getCode');
     
     setSelectedCountryCode(getCode.iso2)
     setFormData({
@@ -124,7 +114,7 @@ const ProfilePage = () => {
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: "" })); // Clear errors when typing
+    setErrors((prev) => ({ ...prev, [field]: "" })); 
   };
 
   const validate = () => {
@@ -185,8 +175,6 @@ const ProfilePage = () => {
     });
     setErrors({});
     fetchData();
-
-    console.log("Form reset.");
   };
 
   const handleCancelPassword = () => {
@@ -217,7 +205,6 @@ const ProfilePage = () => {
           }
         );
         showToast('Profile updated successfully', 'success');
-        console.log("Profile updated successfully:", response.data);
       } catch (error) {
         if (error.response.data.message) {
           showToast( error.response.data.message, 'error');
@@ -230,7 +217,7 @@ const ProfilePage = () => {
         }
       }
     } else {
-      console.log("Form validation failed.");
+      console.error("Form validation failed.");
     }
   };
   const changePassword = async () => {
@@ -250,8 +237,6 @@ const ProfilePage = () => {
       confirm_password: confirmPassword
     };
 
-    console.log(payload, 'payload');
-
     try {
       const response = await axios.post(apiUrl, payload, {
         headers: {
@@ -261,8 +246,6 @@ const ProfilePage = () => {
       });
 
       showToast('Password changed successfully', 'success');
-      console.log(response, 'response');
-
       // Reset input fields
       setCurrentPassword('');
       setNewPassword('');
@@ -408,20 +391,7 @@ const ProfilePage = () => {
                       <FormLabel style={{ fontSize: "16px", fontWeight: "600" }}>
                         Country of Residence
                       </FormLabel>
-                      {/* <Select
-                        style={{ ...commonStyles }}
-                        fullWidth
-                        value={formData.country}
-                        onChange={handleCountryChange}
-                      >
-                        {countries.map((country) => (
-                          <MenuItem key={country.id} value={country.id}>
-                            {country.name}
-                          </MenuItem>
-                        ))}
-                      </Select> */}
                       <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
-
                     </FormControl>
                   </motion.div>
 

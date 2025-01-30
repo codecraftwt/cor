@@ -77,9 +77,6 @@ function MyVerticallyCenteredModal(props) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(name, 'name');
-        console.log(value, 'value');
-
         // Update form data
         setFormData({ ...formData, [name]: value });
 
@@ -102,7 +99,6 @@ function MyVerticallyCenteredModal(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            console.log("Form Data:", formData);
             props.onSubmit(formData);
             setFormData({
                 first_name: "",
@@ -123,7 +119,6 @@ function MyVerticallyCenteredModal(props) {
 
         >
             <Modal.Header closeButton>
-                {/* <Modal.Title id="contained-modal-title-vcenter">Modal Form</Modal.Title> */}
             </Modal.Header>
             <Modal.Body >
                 <h4>Invitation  Form</h4>
@@ -197,8 +192,6 @@ function MyVerticallyCenteredModal(props) {
                                 >
                                     <option value="">Select Role</option>
                                     {roleOptions?.map((role, index) => (
-                                        // console.log(role, 'role'),
-
                                         <option key={role} value={role.id}>
                                             {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                                         </option>
@@ -277,17 +270,12 @@ const TeamsTable = () => {
                 role_id: user.role?.id || 'N/A',
             })) || [];
 
-            console.log(users, 'users');
-
             // Fetch team member invitations
             const responseInvitations = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            console.log(responseInvitations, 'responseInvitations');
-
             // Process invitations data
             usersInvite = responseInvitations?.data?.team_member_invitations?.map((user, index) => ({
                 id: `${user.id}-${index}+2`,
@@ -302,9 +290,6 @@ const TeamsTable = () => {
                     : 'Unknown',
                 role_id: user.role?.id || 'N/A',
             })) || [];
-
-            console.log(usersInvite, 'usersInvite');
-
             // Combine and set rows
             const combinedRows = [...users, ...usersInvite];
             setRows(combinedRows);
@@ -320,10 +305,6 @@ const TeamsTable = () => {
     };
     // Function to handle role change
     const handleRoleChange = async (id, newRole, data) => {
-        console.log(data);
-        console.log(newRole, 'newRole');
-        console.log(id, 'id');
-
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
@@ -332,15 +313,12 @@ const TeamsTable = () => {
                     role_id: newRole
                 }
                 const realId = data.id.split('-')[0];
-                console.log(realId, 'realId');
 
-                // console.log(payload, 'payload');
                 const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}/update-role`, payload, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response, 'response pending');
                 if (response.status === 200) {
                     showToast('Role updated successfully!', 'success');
                 }
@@ -354,26 +332,16 @@ const TeamsTable = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response,'response');
                 
                 if (response.status === 200) {
                     showToast('Role updated successfully!', 'success');
                 }
-                // console.log(response, 'response2');
 
             }
-            // const updatedRows = rows.map((row) =>
-            //     row.id === id ? { ...row, role: newRole } : row
-            // );
-            // setRows(updatedRows);
-            // setFilteredRows(updatedRows);
         } catch (error) {
             if (error.response.data.message) {
                 showToast( error.response.data.message, 'error');
               }
-            
-            // console.error('Error updating role:', error);
-            // showToast('Role updated successfully!', 'success');
 
         } finally {
             fetchData();
@@ -390,7 +358,6 @@ const TeamsTable = () => {
         setFilteredRows(filtered);
     };
     const handleFormSubmit = async (formData) => {
-        console.log("Received Form Data:", formData);
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
@@ -398,7 +365,6 @@ const TeamsTable = () => {
                 ...formData,
                 role_id: Number(formData.role_id)
             }
-            console.log(payload, 'payload');
 
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/request`, payload, {
                 headers: {
@@ -406,7 +372,6 @@ const TeamsTable = () => {
                 },
             });
             showToast('Invitation sent successfully!', 'success');
-            console.log(response, 'response');
             fetchData();
 
         } catch (error) {
@@ -420,66 +385,7 @@ const TeamsTable = () => {
                 });
               }
         }
-        // You can perform additional actions with the form data here
     };
-    // const handleDelete = async (data) => {
-    //     console.log(data, 'data');
-
-    //     // console.log(id, 'id');
-    //     const realId = data.id.split('-')[0];
-    //     console.log(realId, 'realId');
-    //     const authData = JSON.parse(localStorage.getItem("authData"));
-    //     const token = authData?.token;
-    //     // try {
-    //     //     const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
-    //     //         headers: {
-    //     //             Authorization: `Bearer ${token}`,
-    //     //         },
-    //     //     });
-    //     //     // const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
-    //     //     //     headers: {
-    //     //     //         Authorization: `Bearer ${token}`,
-    //     //     //     },
-    //     //     // });
-    //     //     console.log(response, 'response');
-
-    //     // } catch (error) {
-    //     //     console.error('Error deleting user:', error);
-
-    //     // }
-
-    //     try {
-    //         if (data.last_active == 'Pending Invite') {
-    //             const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-member-invitations/${realId}`, {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             });
-    //             console.log(response, 'response');
-    //             if (response.status === 200) {
-    //                 showToast('User deleted successfully!', 'success');
-    //             }
-    //         } else {
-    //             const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/team-members/${realId}`, {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             });
-    //             console.log(response, 'response');
-    //             if (response.status === 200) {
-    //                 showToast('User deleted successfully!', 'success');
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error('Error deleting user:', error);
-
-    //     } finally {
-    //         fetchData();
-    //     }
-    // }
-
-    // DataGrid columns configuration
-    
     const handleDelete = async (data) => {
         // Show confirmation dialog
         Swal.fire({
@@ -575,7 +481,6 @@ const TeamsTable = () => {
             headerName: 'Role',
             width: 280,
             renderCell: (params) => {
-                // console.log(JSON.parse(localStorage.getItem('authData')).user.role_id,'localStorage.getItem');
                 
                 const isAdmin = JSON.parse(localStorage.getItem('authData')).user.role_id == 2;
                 const companyRoles = roles.filter((role) => role.type === 'COMPANY_ROLE'); // Check if the role is admin
@@ -692,9 +597,9 @@ const TeamsTable = () => {
 
                             <Box sx={{ height: '400px', width: '100%' }}>
                                 <DataGrid
-                                    rows={filteredRows} // Pass filtered rows here
+                                    rows={filteredRows} 
                                     columns={columns}
-                                    hideFooterPagination // Hides pagination
+                                    hideFooterPagination 
                                     disableSelectionOnClick
                                 />
                             </Box>

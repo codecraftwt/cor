@@ -70,9 +70,12 @@ input[type="password"]::placeholder {
 }
 
 .card-hover .card-buttons {
-  opacity: 0;
-  visibility: hidden;
+  opacity: 1;
+  visibility: visible;
   transition: opacity 0.3s ease, visibility 0s ease 0.3s;
+}
+.card-hover .card-buttons button:hover {
+  background-color: #eab364 !important;
 }
 
 .card-hover:hover .card-buttons {

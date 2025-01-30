@@ -54,7 +54,7 @@ const CardComponent = ({ icon, title, description, button1, button2, bgColor, ro
       //  onClick={() => handleRoute(false)}
       className="card-hover mt-3 " 
       style={{
-        borderRadius: '20px', border: 'none', boxShadow: '2px 2px 5px 1px rgba(0, 0, 0, 0.03)', borderRadius: '20px',cursor: 'pointer'
+        borderRadius: '20px', border: 'none', boxShadow: '2px 2px 5px 1px rgba(0, 0, 0, 0.03)',cursor: 'pointer'
       }}>
         <Card.Body className="d-flex align-items-center justify-content-between dashboard-card" 
         style={{ 

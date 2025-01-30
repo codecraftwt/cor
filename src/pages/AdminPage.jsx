@@ -23,7 +23,6 @@ const AdminPage = () => {
     useEffect(() => {
         const authData = JSON.parse(localStorage.getItem("authData"));
         const userData = authData?.user;
-        console.log(userData, 'userData');
         setSelectedCountry(userData?.country);
     }, []);
     useEffect(() => {
@@ -35,18 +34,6 @@ const AdminPage = () => {
     const fadeIn = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
-    };
-
-    const handleSave = () => {
-        const data = {
-            companyName,
-            companyLocations,
-            websites,
-            // currentPassword,
-            // newPassword,
-            // confirmPassword,
-        };
-        console.log('Saved Data:', data);
     };
 
     const changePassword = async () => {
@@ -67,7 +54,6 @@ const AdminPage = () => {
             })
 
             showToast('password change successfully', 'success');
-            console.log(response, 'response');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -80,9 +66,6 @@ const AdminPage = () => {
 
     };
     const addWebsite = async () => {
-        // console.log(companyLocations[0], 'companyLocations');
-        // const data = countries.filter((item) => item.name == companyLocations[0])
-
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/companies`;
@@ -102,8 +85,6 @@ const AdminPage = () => {
             });
 
             showToast('Websites added successfully!', 'success');
-            console.log('Response:', response);
-
             // Refresh data
             getCompany();
             getWebSite();
@@ -115,8 +96,6 @@ const AdminPage = () => {
                 const formattedErrors = errors.map(
                   (error) => `${error.field}: ${error.message}`
                 );
-                console.log(formattedErrors,'formattedErrors');
-                
                 // setErrorMessages(formattedErrors);
                 showToast(...formattedErrors, 'error');
               }
@@ -168,10 +147,9 @@ const AdminPage = () => {
                     }
                 }
             )
-            console.log(response.data.website_links, 'response website');
             setWebsites(response.data.website_links.map((item) => item.link))
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
     const getCompany = async () => {
@@ -187,23 +165,18 @@ const AdminPage = () => {
                 }
             )
             setCompany(response.data.company)
-            const companyData = response.data.company
             setCompanyName(response.data.company.name)
             const data = await countries.filter((item) => item.id == response.data.company.location_id)
-            console.log(data, 'data');
             const authData = JSON.parse(localStorage.getItem("authData"));
             const userData = authData?.user;
-                // console.log(data[0], 'data'); 
             if (userData.country == null && data.length==1) {
-                console.log('user country');
-                
                 setSelectedCountry(data[0])
             } else if(response.data.company.location_id){
                 handleCountryChange({target:{value:response.data.company.location_id}})
             }
             // setCompanyLocations([data[0].name])
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
         }
     }
@@ -213,7 +186,6 @@ const AdminPage = () => {
     };
 
     const commonStyles = {
-        // width: '333px',
         height: '52px',
         boxShadow: "inset 0 4px 8px #0C39440F, 0 4px 8px #517EB814",
         backgroundBlendMode: "overlay",
@@ -223,21 +195,11 @@ const AdminPage = () => {
     };
 
     const handleCountryChange = (e) => {
-        console.log(e.target.value, 'e.target.value');
-        console.log(countries, 'countries');
-        
         const selected = countries.find(country => country.id === parseInt(e.target.value));
-        console.log(selected, 'selected');
-
         setSelectedCountry(selected);
     };
     const handleCountryChange2 = (id) => {
-        // console.log(e.target.value, 'e.target.value');
-        console.log(countries, 'countries');
-        
         const selected = countries.find(country => country.id === parseInt(id));
-        console.log(selected, 'selected');
-
         setSelectedCountry(selected);
     };
 
@@ -260,11 +222,8 @@ const AdminPage = () => {
             //         'Authorization': `Bearer ${token}`
             //     },
             // })
-            console.log(responce, 'responce');
             localStorage.removeItem('authData')
             navigate('/sign-in')
-
-
         } catch (error) {
 
         }
@@ -318,20 +277,6 @@ const AdminPage = () => {
                                         <Col md={5}>
                                             <Form.Group className="mb-3 d-flex flex-column">
                                                 <Form.Label style={{ ...labelStyle }}>Company Location</Form.Label>
-                                                
-                                                {/* <Form.Control
-                                                    as="select"
-                                                    style={commonStyles}
-                                                    name="location"
-                                                    value={selectedCountry ? selectedCountry.id : ""}
-                                                    onChange={handleCountryChange}
-                                                // isInvalid={!!errors.location}
-                                                >
-                                                    <option value="">Select Location</option>
-                                                    {countries.map(country => (
-                                                        <option key={country.id} value={country.id}>{country.name}</option>
-                                                    ))}
-                                                </Form.Control> */}
                                             <CustomDropdown value={selectedCountry} countries={countries} onchangeMethod={handleCountryChange2}/>
                                             {selectedCountry==null && <span className="text-danger">*Company location is required</span>}
                                             
@@ -372,88 +317,7 @@ const AdminPage = () => {
                                     </Row>
                                 </motion.div>
                                 <hr style={{ margin: '30px 0px' }} />
-
-                                {/* Current Password */}
-                                {/* <motion.div variants={fadeIn} transition={{ delay: 0.8 }}>
-                                    <Row>
-                                        <Col md={5}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label style={{ ...labelStyle }}>Enter Current Password</Form.Label>
-                                                <Form.Control
-                                                    style={{
-                                                        ...commonStyles, fontSize: '23px',
-                                                        fontWeight: '900'
-                                                    }}
-                                                    type="password"
-                                                    placeholder="Enter current password"
-                                                    value={currentPassword}
-                                                    onChange={(e) => setCurrentPassword(e.target.value)}
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
-                                </motion.div>
-                                <motion.div variants={fadeIn} transition={{ delay: 1 }}>
-                                    <Row>
-                                        <Col md={5}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label style={{ ...labelStyle }}>New Password</Form.Label>
-                                                <Form.Control
-                                                    style={{
-                                                        ...commonStyles, fontSize: '23px',
-                                                        fontWeight: '900'
-                                                    }}
-                                                    type="password"
-                                                    placeholder="Enter new password"
-                                                    value={newPassword}
-                                                    onChange={(e) => setNewPassword(e.target.value)}
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col md={5}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label style={{ ...labelStyle }}>Confirm Password</Form.Label>
-                                                <Form.Control
-                                                    style={{
-                                                        ...commonStyles, fontSize: '23px',
-                                                        fontWeight: '900'
-                                                    }}
-                                                    type="password"
-                                                    placeholder="Confirm new password"
-                                                    value={confirmPassword}
-                                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
-                                    <div className="d-flex justify-content-start gap-2">
-                                        <Button style={{
-                                            width: '100px',
-                                            height: '40px',
-                                            borderRadius: '30px',
-                                            background: 'white',
-                                            color: 'black',
-                                            borderColor: 'black',
-                                            fontSize: '14px',
-                                            fontWeight: '800',
-                                        }} onClick={handleCancel}>Cancel</Button>
-                                        <Button style={{
-                                            width: '100px',
-                                            height: '40px',
-                                            borderRadius: '30px',
-                                            background: 'black',
-                                            color: 'white',
-                                            borderColor: 'black',
-                                            fontSize: '14px',
-                                            fontWeight: '800',
-                                        }} onClick={changePassword}>Save</Button>
-                                    </div>
-                                </motion.div> */}
-
-
                             </Card.Body>
-
-                            {/* <hr style={{ margin: '30px 0px' }} /> */}
 
                             {/* Reset Password Section */}
                             <Row className='my-5'>
@@ -462,7 +326,6 @@ const AdminPage = () => {
                                         background: '#F6F5FE',
                                         borderRadius: '20px',
                                         padding: '19px',
-                                        // height: '102px',
                                     }}>
                                         <Row>
                                             <Col md={8}>

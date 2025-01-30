@@ -45,14 +45,12 @@ const GenerativePress = () => {
 
     const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get('id'); // Extract the id parameter
-  console.log(id,'ids');
+  const id = searchParams.get('id'); 
 
 
     const [loading, setLoading] = useState(false);
     const [contentVisible, setContentVisible] = useState(false);
     const navigate = useNavigate();
-    // const { id } = useParams();
     const { showToast } = useToast();
     const [allData, setAllData] = useState([]);
   const [pressData, setPressData] = useState({});
@@ -77,15 +75,12 @@ const GenerativePress = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response, 'response');
-            console.log(response.data.press_release, 'response.data.press_release');
 
             setEditorData(response.data.press_release.content_as_html);
             setAllData(response.data.press_release);
             setPressData(response.data.press_release)
         } catch (error) {
-            console.log(error);
-
+            console.error(error);
         }
     }
 
@@ -110,9 +105,6 @@ const GenerativePress = () => {
             press_release_content: formData.releaseReason,
         };
 
-        // console.log(payload, 'payload');
-
-
         try {
             setLoading(true);
             const authData = JSON.parse(localStorage.getItem("authData"));
@@ -126,7 +118,6 @@ const GenerativePress = () => {
                 });
 
                 if (response.status === 200) {
-                    console.log('Press release generated successfully:', response.data);
                     showToast('Press release generated successfully!', 'success');
                     // Update the editor data with the response content_as_html
                     setAllData(response.data);
@@ -147,7 +138,6 @@ const GenerativePress = () => {
     };
 
     const handleSaveAndDocumenet = async () => {
-        console.log(editorData, 'editorData');
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
@@ -163,7 +153,6 @@ const GenerativePress = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(response, 'response');
                 showToast('Press release updated successfully!', 'success');
                 navigate('/drafts');
             } else {
@@ -184,19 +173,17 @@ const GenerativePress = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(response, 'response');
                 showToast('Press release updated successfully!', 'success');
                 navigate('/drafts');
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         } finally {
             setLoading(false);
         }
 
     }
     const handleSavePublish = async () => {
-        console.log(editorData, 'editorData');
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
@@ -211,7 +198,6 @@ const GenerativePress = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(response, 'response');
                 showToast('Press release updated successfully!', 'success');
                 navigate('/press-release');
             } else {
@@ -232,17 +218,15 @@ const GenerativePress = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(response, 'response');
                 showToast('Press release updated successfully!', 'success');
                 navigate('/press-release');
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
     };
     const handleSavePublishwithDonBtn = async () => {
-        console.log(editorData, 'editorData');
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         try {
@@ -257,7 +241,6 @@ const GenerativePress = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(response, 'response');
                 // setPressData(response.data.press_release)
                 setPressData(response.data)
                 showToast('Press release updated successfully!', 'success');
@@ -280,20 +263,17 @@ const GenerativePress = () => {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(response, 'response');
                 setPressData(response.data.press_release)
                 showToast('Press release updated successfully!', 'success');
                 // navigate('/drafts');
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
     };
     const generateCopyLink = () => {
-        console.log("hiiii", id);
         if(id){
-            
             // const link = `http://localhost:5173/pressShare?id=${id}`;
             const link = `https://appstage.thecor.ai/pressShare?id=${pressData.id}`;
             // Copy the link to the clipboard

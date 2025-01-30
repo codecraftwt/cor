@@ -22,7 +22,6 @@ import { styled } from "@mui/system";
 import './../css/DraftPage.css';
 import editIcon from '../assets/edit.svg';
 import deleteIcon from '../assets/delete.svg';
-import Press from '../assets/press.svg';
 import doc from '../assets/document-text.svg';
 import doc2 from '../assets/document-text2.svg';
 import { Image } from "react-bootstrap";
@@ -38,9 +37,7 @@ const StyledTableCell = styled(TableCell)({
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    // display:'flex',
-    // alignItems:'center',
-    // gap:'5px'
+   
 });
 
 // TableRow Animation Variants
@@ -205,6 +202,8 @@ const PressRelease = () => {
     const [loading, setLoading] = useState(true);
     const [dummyData, setDummyData] = useState([])
     const [data, setData] = useState([]);
+
+    
     useEffect(() => {
         fetchData();
     }, []);
@@ -273,8 +272,6 @@ const PressRelease = () => {
 
     const handleDelete = async (data) => {
         try {
-            console.log("Deleting data:", data);
-
             // Show confirmation dialog
             Swal.fire({
                 title: "Are you sure?",
@@ -297,7 +294,6 @@ const PressRelease = () => {
                             },
                         });
 
-                        console.log("Data deleted successfully");
                         fetchData();
                         // Show success message
                         Swal.fire({
@@ -322,11 +318,8 @@ const PressRelease = () => {
         }
     };
     const handleEdit = (data) => {
-        console.log("Edit data:", data);
-
         navigate(`/generativepress?id=${data.id}`);
     }
-
 
     const [sortConfig, setSortConfig] = useState({ key: "date", order: "asc" });
     const { recent, yesterday, pastWeek } = categorizeData(dummyData);

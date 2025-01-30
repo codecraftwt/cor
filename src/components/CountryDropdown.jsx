@@ -1,35 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// API response
-// const countries = [
-//     {
-//         id: 45,
-//         name: "China",
-//         country_code: "CHN",
-//         image: "https://flagcdn.com/w320/cn.png",
-//     },
-//     {
-//         id: 46,
-//         name: "Colombia",
-//         country_code: "COL",
-//         image: "https://flagcdn.com/w320/co.png",
-//     },
-//     {
-//         id: 47,
-//         name: "Comoros",
-//         country_code: "COM",
-//         image: "https://flagcdn.com/w320/km.png",
-//     },
-//     {
-//         id: 48,
-//         name: "Cook Islands",
-//         country_code: "COK",
-//         image: "https://flagcdn.com/w320/ck.png",
-//     },
-// ];
-
 const CustomDropdown = ({countries,value,onchangeMethod}) => {
-    // console.log(value,'value');
     
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +10,7 @@ const CustomDropdown = ({countries,value,onchangeMethod}) => {
 
     // Default value setup
     useEffect(() => {
-        const defaultCountry = countries.find((country) => country.id === value?.id); // Example: Set Colombia as default
+        const defaultCountry = countries.find((country) => country.id === value?.id); 
         setSelectedCountry(defaultCountry);
     }, [value?.id]);
 
@@ -56,13 +27,8 @@ const CustomDropdown = ({countries,value,onchangeMethod}) => {
 
     // Filter countries based on search term
     useEffect(() => {
-        // setFilteredCountries(
-        //     countries.filter((country) =>
-        //         country.name.toLowerCase().includes(searchTerm.toLowerCase())
-        //     )
-        // );
         if (searchTerm.trim() === "") {
-            setFilteredCountries(countries); // Show all countries if no search term
+            setFilteredCountries(countries); 
         } else {
             setFilteredCountries(
                 countries.filter((country) =>
@@ -74,12 +40,9 @@ const CustomDropdown = ({countries,value,onchangeMethod}) => {
 
     // Handle selection
     const handleSelect = (country) => {
-        console.log(country,'country');
-        
         setSelectedCountry(country);
         setIsOpen(false);
-        setSearchTerm(""); // Reset search term on selection
-
+        setSearchTerm("");
         onchangeMethod(country.id)
     };
 
@@ -89,8 +52,6 @@ const CustomDropdown = ({countries,value,onchangeMethod}) => {
             <div
                 onClick={() => setIsOpen((prev) => !prev)}
                 style={{
-                    // border: "1px solid #ccc",
-                    borderRadius: "5px",
                     padding: "10px",
                     display: "flex",
                     alignItems: "center",

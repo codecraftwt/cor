@@ -18,12 +18,11 @@ const PresssharePage = () => {
             //     Authorization: `Bearer ${token}`,
             // },
         });
-        // console.log(response, 'response');
 
         setEditorData(response.data.press_release.content_as_html);
         // setAllData(response.data.press_release);
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
     }
   }

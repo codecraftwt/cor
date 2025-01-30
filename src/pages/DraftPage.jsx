@@ -204,6 +204,9 @@ const DraftPage = () => {
     const [loading, setLoading] = useState(true);
     const [dummyData, setDummyData] = useState([])
     const [data, setData] = useState([]);
+
+    
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -217,12 +220,6 @@ const DraftPage = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            // const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/press-releases?page_size=5&offset=2&is_draft=true`, {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`,
-            //     },
-            // });
-            console.log("Response:", response);
 
             const pressReleases = response.data.press_releases.map(pr => {
                 const date = new Date(pr.updated_at);
@@ -290,8 +287,6 @@ const DraftPage = () => {
 
     const handleDelete = async (data) => {
         try {
-            console.log("Deleting data:", data);
-
             // Show confirmation dialog
             Swal.fire({
                 title: "Are you sure?",
@@ -316,7 +311,6 @@ const DraftPage = () => {
                                 },
                             });
 
-                            console.log("Data deleted successfully");
                             fetchData();
                             // Show success message
                             Swal.fire({
@@ -343,7 +337,6 @@ const DraftPage = () => {
                                 },
                             });
 
-                            console.log("Data deleted successfully");
                             fetchData();
                             // Show success message
                             Swal.fire({
@@ -369,7 +362,6 @@ const DraftPage = () => {
         }
     };
     const handleEdit = (data) => {
-        console.log("Edit data:", data);
         if (data.app === "Press Release") {
             navigate(`/generativepress?id=${data.id}`);
         } else {
@@ -377,6 +369,7 @@ const DraftPage = () => {
         }
         // navigate(`/generativepress/${data.id}`);
     }
+
 
 
     const [sortConfig, setSortConfig] = useState({ key: "date", order: "asc" });

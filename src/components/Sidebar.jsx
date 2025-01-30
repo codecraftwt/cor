@@ -3,6 +3,7 @@ import { Container, Row, Col, ListGroup, Image } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../assets/COR_logo.svg';
 import Draft from '../assets/drafts.svg';
+import StartC from '../assets/startCreating.svg';
 import Press from '../assets/press.svg';
 import Blog from '../assets/blog.svg';
 import Admin from '../assets/admin.svg';
@@ -27,8 +28,9 @@ const Sidebar = () => {
     }, []);
     const sidebarData = [
         {
-            section: "Start creating please",
+            section: "Brand Space",
             items: [
+                { title: "Start Creating", icon: StartC, bgColor: "#4C6DEE", activeColor: "#C3CFFF", borderRadius: "5px", path: "/" },
                 { title: "Drafts", icon: Draft, bgColor: "#4C6DEE", activeColor: "#C3CFFF", borderRadius: "5px", path: "/drafts" },
                 { title: "Press Releases", icon: Press, bgColor: "#4C6DEE",activeColor: "#C3CFFF", borderRadius: "5px", path: "/press-release" },
                 { title: "Blogs", icon: Blog, bgColor: "#4C6DEE",activeColor: "#C3CFFF", borderRadius: "5px", path: "/blog" },

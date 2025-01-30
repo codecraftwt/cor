@@ -20,12 +20,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import './../css/DraftPage.css';
-// import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-// import { ReactComponent as EditIcon }from '../assets/edit.svg';
 import editIcon from '../assets/edit.svg';
 import deleteIcon from '../assets/delete.svg';
-import Press from '../assets/press.svg';
 import doc from '../assets/document-text.svg';
 import doc2 from '../assets/document-text2.svg';
 import { Image } from "react-bootstrap";
@@ -41,9 +37,6 @@ const StyledTableCell = styled(TableCell)({
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    // display:'flex',
-    // alignItems:'center',
-    // gap:'5px'
 });
 
 // TableRow Animation Variants
@@ -86,7 +79,6 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                         active={sortBy === "app"}
                                         direction={sortBy === "app" ? sortOrder : "asc"}
                                         onClick={() => onSort("app")}
-                                    // style={{width:'90px'}}
                                     >
                                         App
                                     </TableSortLabel>
@@ -106,8 +98,6 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                         active={sortBy === "date"}
                                         direction={sortBy === "date" ? sortOrder : "asc"}
                                         onClick={() => onSort("date")}
-
-
                                     >
                                         Date
                                     </TableSortLabel>
@@ -132,7 +122,6 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                             : row.app === "Blog Post"
                                                 ? "#FAEECD"
                                                 : "#E0E0E0"}
-                                    // borderRadius={isActive ? item.borderRadius : "20px"}
                                     >
                                         {
                                             row.app === "Press Release" && (
@@ -149,7 +138,6 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                         }
                                     </CustomDiv>
                                     <StyledTableCell>
-                                        {/* <Image src={Press} width="20" height="20" className="mr-2" /> */}
                                         {row.title}</StyledTableCell>
                                 </TableCell>
                                 <TableCell style={{ width: '132px' }}>
@@ -214,16 +202,6 @@ const BlogPage = () => {
     const [dummyData, setDummyData] = useState([])
     const [loading, setLoading] = useState(true);
 
-    // const dummyData1 = [
-    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Press Release", by: "mo@02com", date: "2024-12-19" },
-    //     { title: "Lorem ipsum dolor sit amet, consectetur1234567...", app: "Blog Post", by: "mo@02com", date: "2024-12-19" },
-    //     { title: "Sed do eiusmod tempor incididunt ut labore1234567...", app: "Blog Post", by: "john@domain.com", date: "2024-12-19" },
-    //     { title: "Ut enim ad minim veniam, quis nostrud12345345...", app: "Blog Post", by: "jane@domain.com", date: "2024-12-19" },
-    //     { title: "Duis aute irure dolor in reprehenderit1234567...", app: "Blog Post", by: "alex@domain.com", date: "2024-12-12" },
-
-    //     { title: 'd Announces New Advertising Initiative', app: 'Press Release', by: 'ahmad@test.com', date: '2024-12-11' }
-    // ];
-
     const [data, setData] = useState([]);
     useEffect(() => {
         fetchBlog();
@@ -287,7 +265,6 @@ const BlogPage = () => {
 
     const handleDelete = async (data) => {
         try {
-            console.log("Deleting data:", data);
 
             // Show confirmation dialog
             Swal.fire({
@@ -311,7 +288,6 @@ const BlogPage = () => {
                             },
                         });
 
-                        console.log("Data deleted successfully");
                         fetchBlog();
                         // Show success message
                         Swal.fire({
@@ -370,18 +346,7 @@ const BlogPage = () => {
                     <Typography variant="h4" gutterBottom>
                         Blog
                     </Typography>
-                    {/* {sections.map((section, index) => (
-                        <TableSection
-                            key={index}
-                            title={section.title}
-                            data={section.data}
-                            showHeader={section.showHeader}
-                            onSort={handleSort}
-                            sortBy={sortConfig.key}
-                            sortOrder={sortConfig.order}
-                            deleteData={handleDelete}
-                        />
-                    ))} */}
+                    
                     {loading ? (<div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                         <CircularProgress />
                     </div>) : dummyData.length > 0 ? (

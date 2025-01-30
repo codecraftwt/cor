@@ -5,9 +5,6 @@ import leftArrow from '../assets/arrow-left.svg';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '../utils/ToastContext';
-// import { useToast } from './ToastContext';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
 
 const SignInForm = () => {
 
@@ -16,24 +13,19 @@ const SignInForm = () => {
 
         const state = queryParams.get('state');
         const code = queryParams.get('code');
-        const scope = queryParams.get('scope');
-        const authuser = queryParams.get('authuser');
-        const hd = queryParams.get('hd');
-        const prompt = queryParams.get('prompt');
+        // const scope = queryParams.get('scope');
+        // const authuser = queryParams.get('authuser');
+        // const hd = queryParams.get('hd');
+        // const prompt = queryParams.get('prompt');
 
-        console.log({ state, code, scope, authuser, hd, prompt });
-
-        const rawQueryString = window.location.search.substring(1); // Remove the '?' at the beginning
-        console.log("Raw Query String:", rawQueryString);
+        const rawQueryString = window.location.search.substring(1);
 
         if (state && code) {
-            console.log('State and code found. Logging in...');
             axios.get(`${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback?${rawQueryString}`, {
                 state,
                 code
             })
                 .then(response => {
-                    console.log('Response:', response);
                     localStorage.setItem('authData', JSON.stringify(response.data));
                     navigate('/');
                 })
@@ -43,7 +35,6 @@ const SignInForm = () => {
         }
     }, []);
 
-    // ?state=randomstate&code=4%2F0AanRRrvhtMAmf_FwXp0TfnqhtAJHqASfoiJ0i-7jYiVx1kUzpgBuVl3xs5CQwAXN0sRMZQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&hd=corlabs.co&prompt=none
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -105,7 +96,6 @@ const SignInForm = () => {
                 });
 
                 if (response.data && response.data.message) {
-                    // localStorage.setItem('emailverify', response.data.message);
                     showToast('Password reset email sent.', 'success');
                     localStorage.removeItem('resetPass')
                     setShowForgotPassword(false);
@@ -125,7 +115,6 @@ const SignInForm = () => {
 
     useEffect(() => {
         const resetPass = localStorage.getItem('resetPass')
-        console.log(resetPass, 'resetPass');
         if (resetPass) {
             setShowForgotPassword(true)
         }
@@ -194,46 +183,6 @@ const SignInForm = () => {
                         >
                             <img src={googlelogo} alt="" /> Sign in with Google
                         </Button>
-
-                        {/* <GoogleLogin onSuccess={async(res) => {
-                            console.log(res, 'res');
-                            const token = res.credential; // This is your JWT
-                            console.log("Token:", token);
-
-                            // Send token to backend
-                            // fetch(` http://appstage.thecor.ai/auth/callback`, {
-                            //     method: "POST",
-                            //     headers: {
-                            //         "Content-Type": "application/json",
-                            //     },
-                            //     body: JSON.stringify({ token }),
-                            // })
-                            //     .then((res) => res.json())
-                            //     .then((data) => {
-                            //         console.log("Callback API Response:", data);
-                            //     })
-                            //     .catch((error) => {
-                            //         console.error("Error calling API:", error);
-                            //     });
-
-
-                            const response = await axios.get(`${import.meta.env.VITE_API_GOOGLE_SIGNIN_URL}/auth/callback`,
-                                {
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Authorization': `Bearer ${token}`
-                                    }
-                                }
-                            )
-                            console.log(response, 'response');
-                            
-
-                            // console.log(jwtDecode(res.credential),'jwt');
-                            // localStorage.setItem('authData', JSON.stringify({'token':res.credential}));
-                            // navigate("/");
-                        }} onError={(errors) => {
-                            console.log(errors, 'errors');
-                        }} /> */}
 
                         <div className="text-center mb-3 d-flex align-items-center">
                             <hr className='w-50' />

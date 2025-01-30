@@ -31,7 +31,7 @@ const GenerativeAndBlogLayout = ({
   editor,
   onGenerate,
   allData,
-  editorData,// New prop for handling generate button click
+  editorData,
   id,
   generateCopyLink,
   doneBtn,
@@ -39,28 +39,19 @@ const GenerativeAndBlogLayout = ({
 }) => {
   const navigate = useNavigate();
 
-  console.log(typeof(editorData),'editorData');
-  console.log(editorData,'editorData2');
-  
-  // const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [showModals, setShowModals] = useState(false);
   const [isGenerateDisabled, setIsGenerateDisabled] = useState(true);
 
   const location = useLocation();
   const isPreview = location.state?.isPreview;
-  // console.log(isPreview, 'isPreview');
-  // console.log(location, 'location');
-
 
   useEffect(() => {
     if (isPreview) {
       if (location.pathname == '/generativepress') {
-        console.log(location.pathname == '/generativepress', 'location pathname');
         setShowModals(true)
       }
       if (location.pathname == '/blog-post') {
-        console.log(location.pathname == '/blog-post', 'location pathname');
         setShowModals(true)
       }
     }
@@ -195,7 +186,6 @@ const GenerativeAndBlogLayout = ({
                   color: '#000000',
                   borderColor: '#000000',
                   borderRadius: '30px',
-                  // width: '100px',
                   fontSize: '14px',
                   fontWeight: '800'
                 }}

@@ -20,17 +20,14 @@ import TeamsPage from './pages/TeamsPage';
 import ProfilePage from './pages/ProfilePage';
 import DraftPage from './pages/DraftPage';
 import BlogPage from './pages/BlogPage';
-// import TeamMemberInvitations from './pages/teamMemberInvitations';
 import TeamMemberInvitations from './pages/TeamMemberInvitations';
 import PressRelease from './pages/PressRelease';
 import { motion, AnimatePresence } from 'framer-motion';
 import BlogsharePage from './pages/BlogsharePage';
 import PresssharePage from './pages/PresssharePage';
-// import CountryDropdown from './components/CountryDropdown';
 
 const initialRouteConfig = [
   { path: '/', element: <Dashboard />, hideSidebar: false, hideHeader: false },
-  // { path: '/CountryDropdown', element: <CountryDropdown />, hideSidebar: false, hideHeader: false },
   { path: '/admin', element: <AdminPage />, hideSidebar: false, hideHeader: false },
   { path: '/blogShare', element: <BlogsharePage />, hideSidebar: true, hideHeader: true },
   { path: '/pressShare', element: <PresssharePage />, hideSidebar: true, hideHeader: true },
@@ -59,18 +56,12 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
   const [isSidebarVisible, setSidebarVisible] = useState(!hideSidebar);
   const [isHeaderVisible, setHeaderVisible] = useState(!hideHeader);
   useEffect(() => {
-    console.log(id,'id');
-    console.log(location,'location');
     const matchPressId = matchPath('/generativepress/:id', location.pathname);
     const matchBlogId = matchPath('/blog-posts/:id', location.pathname);
-    console.log(matchBlogId,'matchBlogId');
     
-    // console.log(match,'match');
     // Check if it matches
   const isMatch = !!matchPressId || !!matchBlogId // `true` if it matches, `false` otherwise
 
-  console.log(isMatch, 'Does it match?');
-    
     if (location.pathname == '/sign-in' || location.pathname == '/sign-up' || location.pathname == '/create-pass' || location.pathname == '/team-member-invitations' || location.pathname == '/auth' || location.pathname == '/generativepress' || location.pathname == '/generativepress/id' || location.pathname == '/blog-post' || location.pathname == '/blog-posts/:id') {
       setSidebarVisible(true);
 
@@ -81,13 +72,9 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
   }, [id]);
 
   useEffect(()=>{
-    console.log(id,'id');
-    console.log(location,'location');
     const matchPressId = matchPath('/generativepress/:id', location.pathname);
     const matchBlogId = matchPath('/blog-posts/:id', location.pathname);
-    console.log(matchBlogId,'matchBlogId');
     
-    // console.log(match,'match');
     // Check if it matches
   const isMatch = !!matchPressId || !!matchBlogId 
   if(isMatch){
@@ -144,12 +131,12 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
           </Col>
         )}
         <AnimatePresence>
-          {!isSidebarVisible && ( // Render only when visible
+          {!isSidebarVisible && ( 
             <motion.div
-              initial={{ x: '-100%' }} // Start off-screen (left)
-              animate={{ x: 0 }}      // Animate to visible position
-              exit={{ x: '-100%' }}   // Animate back to off-screen when hiding
-              transition={{ type: 'spring', stiffness: 100, damping: 20 }} // Smooth animation
+              initial={{ x: '-100%' }} 
+              animate={{ x: 0 }}      
+              exit={{ x: '-100%' }}   
+              transition={{ type: 'spring', stiffness: 100, damping: 20 }}
               style={{
                 boxShadow: '0px 3.5px 5.5px 0px rgba(0, 0, 0, 0.02)',
                 position: 'fixed',
@@ -174,7 +161,6 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
           className="body-content"
           style={{
             marginLeft: hideSidebar ? '1%' : '17.67%',
-            // transition: 'margin-left 0.3s ease',
           }}
         >
           <AnimatePresence>
@@ -187,7 +173,6 @@ const Layout = ({ hideSidebar, hideHeader, children, onToggle }) => {
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-
             {children}
           </motion.div>
 
@@ -257,7 +242,7 @@ const AppRoutes = () => {
 
 const App = () => {
   useEffect(() => {
-    startTokenWatcher(); // Start watching token expiration
+    startTokenWatcher();
   }, []);
 
   return (

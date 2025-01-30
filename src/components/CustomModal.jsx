@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Button, Dropdown } from 'react-bootstrap';
 import '../css/CustomModal.css';
-import { Chips } from 'primereact/chips';
-import Swal from 'sweetalert2';
 
 const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) => {
-    const [contact, setContact] = useState([]);
+    const [selectedValue, setSelectedValue] = useState("Editor"); // Default value
     const [people, setPeople] = useState([
         { name: 'Mohammed Jomani', email: 'mm@o2.com', role: 'Admin' },
         { name: 'Ahmed Khalifa', email: 'ak@eo2.com', role: 'Collaborator' },
@@ -37,36 +35,6 @@ const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) 
         });
     };
 
-    // const BlogsharePage = () => {
-
-    // }
-    // const generateCopyLink = () => {
-    //     console.log("hiiii", id);
-
-    //     const link = `http://localhost:5173/blogShare?id=${id}`;
-    //     // Copy the link to the clipboard
-    //     navigator.clipboard
-    //       .writeText(link)
-    //       .then(() => {
-    //         Swal.fire({
-    //           icon: "success",
-    //           title: "Link Copied!",
-    //           text: "The blog link has been copied to your clipboard.",
-    //           showConfirmButton: false,
-    //           timer: 2000, // Alert will automatically close after 2 seconds
-    //         });
-    //       })
-    //       .catch((err) => {
-    //         Swal.fire({
-    //           icon: "error",
-    //           title: "Failed to Copy!",
-    //           text: "An error occurred while copying the link.",
-    //           footer: err.message,
-    //         });
-    //       });
-    // }
-
-    const [selectedValue, setSelectedValue] = useState("Editor"); // Default value
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey); // Update the state with the selected value

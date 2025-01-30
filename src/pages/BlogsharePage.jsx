@@ -6,7 +6,6 @@ const BlogsharePage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id'); // Extract the id parameter
-  console.log(id,'id***********');
   
   const [editorData, setEditorData] = useState('');
 
@@ -19,19 +18,15 @@ const BlogsharePage = () => {
         //   Authorization: `Bearer ${token}`,
         // },
       });
-      console.log(response.data.blog,'response.data.blog');
     //   setAllData(response.data.blog);
       setEditorData(response.data.blog.content_as_html);
     } catch (error) {
-      console.log(error);
-
+      console.error(error);
     }
   }
 
   useEffect(() => {
       if (id) {
-        console.log('id--------------',id);
-        
         featchBlogData()
       }
     }, []);
