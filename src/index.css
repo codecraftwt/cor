@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
   font-weight: 400;
 
@@ -37,7 +36,6 @@ input[type="password"]::placeholder {
   color: gray;
   font-size: 15px;
   font-weight: 400;
-  /* font-style: italic; */
 }
 
 .onboard-left-side {

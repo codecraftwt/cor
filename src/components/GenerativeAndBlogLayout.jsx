@@ -35,7 +35,9 @@ const GenerativeAndBlogLayout = ({
   id,
   generateCopyLink,
   doneBtn,
-  isPublic
+  isPublic,
+  generalAccessStatus,
+  handalgeneralAccess
 }) => {
   const navigate = useNavigate();
 
@@ -257,7 +259,7 @@ const GenerativeAndBlogLayout = ({
           </Col>
         </Row>
       </Card>
-      <CustomModal id={id} show={showModal} onHide={handleCloseModal} generateCopyLink={generateCopyLink} doneBtn={doneBtn} isPublic={isPublic} />
+      <CustomModal id={id} show={showModal} onHide={handleCloseModal} generateCopyLink={generateCopyLink} doneBtn={doneBtn} isPublic={isPublic} generalAccessStatus={generalAccessStatus} handalgeneralAccess={handalgeneralAccess} />
       <ModalPopup editorData={editorData} allData={allData} show={showModals} onHide={handleCloseDraftModal} handlePublish={handlePublish} />
     </>
   );

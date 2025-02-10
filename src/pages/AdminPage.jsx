@@ -65,7 +65,14 @@ const AdminPage = () => {
 
 
     };
+    const handleBlur = (e) => {
+        const inputValue = e.target.value.trim(); // Get any remaining input value
+        if (inputValue) {
+            setWebsites([...websites, inputValue]); // Add it to the chips list
+        }
+    };
     const addWebsite = async () => {
+        event.preventDefault();
         const authData = JSON.parse(localStorage.getItem("authData"));
         const token = authData?.token;
         const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/companies`;
@@ -75,19 +82,20 @@ const AdminPage = () => {
             location_id: selectedCountry.id,
             website_links: websites,
         };
-
+        console.log(payload,'payload');
+        
         try {
-            const response = await axios.put(apiUrl, payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+            // const response = await axios.put(apiUrl, payload, {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${token}`,
+            //     },
+            // });
 
-            showToast('Websites added successfully!', 'success');
-            // Refresh data
-            getCompany();
-            getWebSite();
+            // showToast('Websites added successfully!', 'success');
+            // // Refresh data
+            // getCompany();
+            // getWebSite();
         } catch (err) {
             // console.error('Error:', error.response.data.errors                            );
             if (err.response && err.response.status === 400) {
@@ -299,6 +307,8 @@ const AdminPage = () => {
                                                     placeholder="Add website"
                                                     value={websites}
                                                     onChange={(e) => setWebsites(e.value)}
+                                                    onBlur={(e) => handleBlur(e)}
+                                                    addOnBlur
                                                 />
                                             {websites.length==0 && <span className="text-danger">*Websites is required</span>}
 

@@ -44,8 +44,8 @@ const formFields = [
 const GenerativePress = () => {
 
     const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get('id'); 
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get('id');
 
 
     const [loading, setLoading] = useState(false);
@@ -53,7 +53,8 @@ const GenerativePress = () => {
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [allData, setAllData] = useState([]);
-  const [pressData, setPressData] = useState({});
+    const [pressData, setPressData] = useState({});
+    const [generalAccessStatus, setGeneralAccessStatus] = useState('0');
 
     useEffect(() => {
         setTimeout(() => {
@@ -79,6 +80,9 @@ const GenerativePress = () => {
             setEditorData(response.data.press_release.content_as_html);
             setAllData(response.data.press_release);
             setPressData(response.data.press_release)
+            console.log( String(response.data.press_release.status),' String(response.data.press_release.status)');
+            
+            setGeneralAccessStatus( String(response.data.press_release.status));
         } catch (error) {
             console.error(error);
         }
@@ -124,6 +128,8 @@ const GenerativePress = () => {
                     setEditorData(response.data.content_as_html);
                     setConetent(response.data.content);
                     setTitle(response.data.title);
+                    setGeneralAccessStatus(response.data.status);
+
                 } else {
                     console.error('Failed to generate press release:', response.statusText);
                     // Optionally, display an error message
@@ -273,7 +279,7 @@ const GenerativePress = () => {
 
     };
     const generateCopyLink = () => {
-        if(id){
+        if (id) {
             // const link = `http://localhost:5173/pressShare?id=${id}`;
             const link = `https://appstage.thecor.ai/pressShare?id=${pressData.id}`;
             // Copy the link to the clipboard
@@ -296,29 +302,77 @@ const GenerativePress = () => {
                         footer: err.message,
                     });
                 });
-        }else{
+        } else {
             // const link = `http://localhost:5173/pressShare?id=${id}`;
-        const link = `https://appstage.thecor.ai/pressShare?id=${pressData.content_as_html}`;
-        // Copy the link to the clipboard
-        navigator.clipboard
-            .writeText(link)
-            .then(() => {
-                Swal.fire({
-                    icon: "success",
-                    title: "Link Copied!",
-                    text: "The Press link has been copied to your clipboard.",
-                    showConfirmButton: false,
-                    timer: 2000,
+            const link = `https://appstage.thecor.ai/pressShare?id=${pressData.content_as_html}`;
+            // Copy the link to the clipboard
+            navigator.clipboard
+                .writeText(link)
+                .then(() => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Link Copied!",
+                        text: "The Press link has been copied to your clipboard.",
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                })
+                .catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Failed to Copy!",
+                        text: "An error occurred while copying the link.",
+                        footer: err.message,
+                    });
                 });
-            })
-            .catch((err) => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Failed to Copy!",
-                    text: "An error occurred while copying the link.",
-                    footer: err.message,
+        }
+    }
+
+    const handalgeneralAccess = async (status) => {
+        console.log(status, 'status');
+        const authData = JSON.parse(localStorage.getItem("authData"));
+        const token = authData?.token;
+        try {
+            if (id) {
+                const payload = {
+                    content: editorData,
+                    status: Number(status),
+                    is_public: Number(status)==1?true:false
+
+                };
+                const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/update-press-release/${id}`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
                 });
-            });
+                console.log(response.data, 'response.data');
+                
+                showToast('Press release updated successfully!', 'success');
+                // navigate('/press-release');
+            } else {
+                const payload = {
+                    press_release_type: formData.pressType,
+                    press_release_company: formData.companyDescription,
+                    spokes_mens: formData.spokesperson,
+                    press_release_facts: formData.factsNotes,
+                    press_release_content: formData.releaseReason,
+                    content_as_html: editorData,
+                    content: content,
+                    title: title,
+                    status: Number(status),
+                    is_public: Number(status)==1?true:false
+
+                };
+                const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/press-releases/`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                showToast('Press release updated successfully!', 'success');
+                navigate('/press-release');
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -343,6 +397,8 @@ const GenerativePress = () => {
                     allData={allData}
                     editorData={editorData}
                     generateCopyLink={generateCopyLink}
+                    generalAccessStatus={generalAccessStatus}
+                    handalgeneralAccess={handalgeneralAccess}
                     doneBtn={handleSavePublishwithDonBtn}
                     isPublic={pressData?.is_public}
                 />

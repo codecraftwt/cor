@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button, Dropdown } from 'react-bootstrap';
 import '../css/CustomModal.css';
 
-const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) => {
-    const [selectedValue, setSelectedValue] = useState("Editor"); // Default value
+const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic,generalAccessStatus,handalgeneralAccess }) => {
+    const [selectedValue, setSelectedValue] = useState(generalAccessStatus); // Default value
     const [people, setPeople] = useState([
         { name: 'Mohammed Jomani', email: 'mm@o2.com', role: 'Admin' },
         { name: 'Ahmed Khalifa', email: 'ak@eo2.com', role: 'Collaborator' },
@@ -22,6 +22,10 @@ const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) 
         backgroundColor: '#FFFFFF',
     };
 
+    useEffect(() => {
+        setSelectedValue(generalAccessStatus);
+    },[generalAccessStatus]);
+
     const getInitials = (name) => {
         const nameParts = name.split(' ');
         return nameParts.map(part => part.charAt(0).toUpperCase()).join('');
@@ -38,6 +42,7 @@ const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) 
 
     const handleSelect = (eventKey) => {
         setSelectedValue(eventKey); // Update the state with the selected value
+        handalgeneralAccess(eventKey);
     };
 
     return (
@@ -123,13 +128,13 @@ const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) 
                                             fontSize: "13px",
                                         }}
                                     >
-                                        {selectedValue}
+                                        {selectedValue === "1" ? "Visible" : "Not Visible"}
                                     </Dropdown.Toggle>
 
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item eventKey="Visible">Visible</Dropdown.Item>
-                                        <Dropdown.Item eventKey="Not Visible">Not Visible</Dropdown.Item>
-                                    </Dropdown.Menu>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item eventKey="1">Visible</Dropdown.Item>
+                                            <Dropdown.Item eventKey="0">Not Visible</Dropdown.Item>
+                                        </Dropdown.Menu>
                                 </Dropdown>
                             </div>
                         </div>
@@ -145,7 +150,7 @@ const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) 
                             border: '1px solid grey',
                         }}
                         onClick={generateCopyLink}
-                        disabled={!isPublic}
+                    // disabled={!isPublic}
                     >
                         Copy Link
                     </Button>
@@ -157,7 +162,8 @@ const CustomModal = ({ show, onHide, id, generateCopyLink, doneBtn, isPublic }) 
                             border: 'none',
                             width: '100px',
                         }}
-                        onClick={doneBtn}
+                        onClick={onHide}
+                    // onHide={onHide}
                     >
                         Done
                     </Button>

@@ -22,6 +22,7 @@ import { styled } from "@mui/system";
 import './../css/DraftPage.css';
 import editIcon from '../assets/edit.svg';
 import deleteIcon from '../assets/delete.svg';
+import notdeleteIcon from '../assets/not_delete.svg';
 import doc from '../assets/document-text.svg';
 import doc2 from '../assets/document-text2.svg';
 import { Image } from "react-bootstrap";
@@ -179,9 +180,10 @@ const TableSection = ({ title, data, showHeader, onSort, sortBy, sortOrder, dele
                                         color="secondary"
                                         size="small"
                                         onClick={() => deleteDraft(row)}
-                                        style={{ marginLeft: "10px", border: 'none', minWidth: '20px' }}
+                                        disabled={true}
+                                        style={{ marginLeft: "10px", border: 'none',cursor: "not-allowed", minWidth: '20px' }}
                                     >
-                                        <img src={deleteIcon} alt="Edit Icon" />
+                                        <img src={notdeleteIcon} alt="Edit Icon" />
 
                                     </Button>
                                 </TableCell>

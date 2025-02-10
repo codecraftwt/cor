@@ -61,6 +61,9 @@ const BlogPost = () => {
   const [contentVisible, setContentVisible] = useState(false);
   const [allData, setAllData] = useState([]);
   const [blogData, setBlogData] = useState({});
+  const [generalAccessStatus, setGeneralAccessStatus] = useState('0');
+  
+
   useEffect(() => {
     setTimeout(() => {
       setContentVisible(true); // Show content after delay
@@ -82,6 +85,8 @@ const BlogPost = () => {
       setAllData(response.data.blog);
       setBlogData(response.data.blog);
       setEditorData(response.data.blog.content_as_html);
+      setGeneralAccessStatus( String(response.data.blog.status));
+
     } catch (error) {
       console.error(error);
 
@@ -128,6 +133,7 @@ const BlogPost = () => {
           setConetent(response.data.content);
           setTitle(response.data.title);
           setAllData(response.data);
+          setGeneralAccessStatus( String(response.data.status));
 
         } else {
           console.error('Failed to generate press release:', response.statusText);
@@ -159,7 +165,7 @@ const BlogPost = () => {
           }
         });
         showToast('Blog updated successfully!', 'success');
-        navigate('/blog');
+        navigate('/drafts');
       } catch (error) {
         console.error(error);
       }
@@ -188,7 +194,7 @@ const BlogPost = () => {
           }
         });
         showToast('Blog saved successfully!', 'success');
-        navigate('/blog');
+        navigate('/drafts');
       } catch (error) {
         console.error(error);
       }
@@ -353,6 +359,62 @@ const BlogPost = () => {
         });
     }
   }
+  const handalgeneralAccess = async (status) => {
+    const authData = JSON.parse(localStorage.getItem("authData"));
+    const token = authData?.token;
+    
+    if (id) {
+      try {
+        const payload = {
+          content: editorData,
+          status: Number(status),
+          is_public: Number(status)==1?true:false
+        };
+        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/blogs/${id}`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        setBlogData(response.data.blog)
+        showToast('Blog published successfully!', 'success');
+        // navigate('/blog');
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        const payload = {
+          blog_topic: formData.pressType,
+          blog_length_and_tone: formData.companyDescription,
+          main_points: formData.spokesperson,
+          blog_goal: formData.factsNotes,
+          target_audience: formData.releaseReason,
+          keywords: formData.companyDescription2,
+          content_as_html: editorData,
+          content: content,
+          title: title,
+          status: Number(status),
+          is_public: Number(status)==1?true:false
+
+        };
+        // const payload = { 
+        //   content: editorData,
+        //   status:0
+        // };
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/blogs`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        showToast('Blog published successfully!', 'success');
+        setBlogData(response.data.blog)
+
+        // navigate('/blog');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+}
 
   return (
     <>
@@ -378,6 +440,8 @@ const BlogPost = () => {
           generateCopyLink={generateCopyLink}
           doneBtn={handleSavePublishwithDoneBtn}
           isPublic={blogData?.is_public}
+          generalAccessStatus={generalAccessStatus}
+          handalgeneralAccess={handalgeneralAccess}
         />
       </motion.div>
       {loading && (
