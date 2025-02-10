@@ -85,17 +85,17 @@ const AdminPage = () => {
         console.log(payload,'payload');
         
         try {
-            // const response = await axios.put(apiUrl, payload, {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${token}`,
-            //     },
-            // });
+            const response = await axios.put(apiUrl, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
 
-            // showToast('Websites added successfully!', 'success');
-            // // Refresh data
-            // getCompany();
-            // getWebSite();
+            showToast('Websites added successfully!', 'success');
+            // Refresh data
+            getCompany();
+            getWebSite();
         } catch (err) {
             // console.error('Error:', error.response.data.errors                            );
             if (err.response && err.response.status === 400) {
